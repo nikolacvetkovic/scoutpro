@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="~{fragments/header :: header(~{::title}, ~{::link#pageStyle})}">
+    <title th:text="${'ScoutPro | ' + player.playerName}">ScoutPro | Show Player</title>
+    <link id="pageStyle" rel="stylesheet" th:href="@{/css/showPlayerStyle.css}" href="../static/css/showPlayerStyle.css" type="text/css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="https://kit.fontawesome.com/9b0a4a2ea0.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" type="text/javascript"></script>
+</head>
+<body>
+
+    <div th:replace="~{fragments/mainContainer :: main(~{::div#showPlayer})}">
+        <div id="showPlayer">
+            <div id="playerCoreData" class="row">
+                <div th:text="${player.playerName}+ '  (' +${player.age}+ ')'" class="col-lg-3"><span ></span></div>
+                <div id="mainPosition" th:text="${player.position}" class="col-lg-1"></div>
+                <div id="mainOverall" th:text="${player.overallRating}" class="col-lg-1"></div>
+                <div th:class="${player.clubTeam == null}?'col-lg-4':'col-lg-5'"></div>
+                <div class="col-lg-2" style="text-align: right;">
+                    <a class="btn btn-info" th:href="'/player/' + ${player.id} + '/edit'">Edit</a>
+                    <a id="unfollowPlayer" th:if="${player.clubTeam != null}" class="btn btn-danger" th:href="'/player/' + ${player.id} + '/unfollow'">Unfollow</a>
+                    <a id="followPlayer" th:if="${player.clubTeam == null}" class="btn btn-danger" th:href="'/player/' + ${player.id} + '/false/follow'">Follow</a>
+                </div>
+                <div class="col-lg-1" th:if="${player.clubTeam == null}">
+                    <label for="myPlayer">My Player</label>
+                    <input id="myPlayer" type="checkbox" name="myPlayer">
+                </div>
+            </div>
+            <hr>
+            <div id="overlay" th:if="${player.clubTeam == null}"></div>
+            <div class="row">
+                <div id="first-col" class="col-lg-3">
+                    <div class="wrapper">
+                        <h6 class="separator">Player Data</h6>
+                        <table id="corePlayerData" class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Date of birth</td>
+                                    <td th:text="${player.dateOfBirth}"></td>
+                                </tr>
+                                <tr>
+                                    <td>Nationality</td>
+                                    <td th:text="${player.nationality}"></td>
+                                </tr>
+                                <tr>
+                                    <td>National team</td>
+                                    <td th:text="${player.nationalTeam}"></td>
+                                </tr>
+                                <tr>
+                                    <td>Club team</td>
+                                    <td th:text="${player.clubTeam}"></td>
+                                </tr>
+                                <tr>
+                                    <td>Contract until</td>
+                                    <td id="contractUntil" th:text="${player.contractUntil}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="wrapper">
+                        <h6 class="separator">Psml Data <span style="font-size: 12px;" th:text="'('+ ${player.psmlLastCheck} +')'"></span> <span class="badge badge-primary measure" th:data-url="'/psml/scrape/full/'+${player.id}">Measure Now!</span></h6>
+                        <table id="psmlData" class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <td>Psml Team</td>
+                                <td th:text="${player.psmlTeam}"></td>
+                            </tr>
+                            <tr>
+                                <td>Psml Value</td>
+                                <td th:text="'€ ' + ${player.psmlValue}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <h6 class="separator" style="background-color: white; text-decoration: underline;">Transfers</h6>
+                        <table id="psmlTransfers" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Fee</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="psmlTransfer : ${player.psmlTransferDTOS}">
+                                    <td th:text="${psmlTransfer.dateOfTransfer}"></td>
+                                    <td th:text="${psmlTransfer.fromTeam}"></td>
+                                    <td th:text="${psmlTransfer.toTeam}"></td>
+                                    <td th:text="'€ ' + ${psmlTransfer.transferFee}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="characteristics" class="wrapper">
+                        <h6 class="separator">Characteristics</h6>
+                        <div class="row">
+                            <div id="strengths" class="col-lg-4">
+                                <div style="font-weight: 500; color: white; background-color: green;">Strengths</div>
+                                <th:block th:each="s : ${player.strengths}">
+                                    <div th:text="${s}">Strengths</div>
+                                </th:block>
+                            </div>
+                            <div id="weaknesses" class="col-lg-4">
+                                <div style="font-weight: 500; color: white; background-color: red;">Weaknesses</div>
+                                <th:block th:each="w : ${player.weaknesses}">
+                                    <div th:text="${w}"></div>
+                                </th:block>
+                            </div>
+                            <div id="styleOfPlay" class="col-lg-4">
+                                <div style="font-weight: 500; color: white; background-color: deeppink;">Style of Play</div>
+                                <th:block th:each="st : ${player.stylesOfPlay}">
+                                    <div th:text="${st}"></div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrapper">
+                        <h6 class="separator">Position Statistics</h6>
+                        <table id="positionStats" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Apps</th>
+                                <th>Goals</th>
+                                <th>Assists</th>
+                                <th>Rating</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="ps : ${player.positionStatisticDTOS}">
+                                <td th:text="${ps.position}"></td>
+                                <td th:text="${ps.apps}"></td>
+                                <td th:text="${ps.goals}"></td>
+                                <td th:text="${ps.assists}"></td>
+                                <td th:text="${ps.rating}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="wrapper">
+                        <h6 class="separator">MarketValues <span style="font-size: 12px;" th:text="'(' +${player.marketValueLastCheck}+ ')'"></span> <span class="badge badge-primary measure" th:data-url="'/tm/scrape/full/'+${player.id}">Measure Now!</span></h6>
+                        <canvas id="marketValuesChart"></canvas>
+                    </div>
+                    <div class="wrapper">
+                        <h6 class="separator" >Real Life Transfers <span style="font-size: 12px;" th:text="'(' +${player.transferLastCheck}+ ')'"></span> <span class="badge badge-primary measure" th:data-url="'/tm/scrape/full/'+${player.id}">Measure Now!</span></h6>
+                        <table id="transfers" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>MV</th>
+                                <th>Fee</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="transfer : ${player.transferDTOS}">
+                                <td th:text="${transfer.dateOfTransfer}"></td>
+                                <td th:text="${transfer.fromTeam}"></td>
+                                <td th:text="${transfer.toTeam}"></td>
+                                <td th:text="${transfer.marketValue}"></td>
+                                <td th:text="${transfer.transferFee}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="wrapper">
+                        <h6 class="separator">Competition Statistics <span style="font-size: 12px;" th:text="'(' +${player.statisticLastCheck}+ ')'"></span> <span class="badge badge-primary measure" th:data-url="'/ws/scrape/full/'+${player.id}">Measure Now!</span></h6>
+                        <table id="competitionStats" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Competition</th>
+                                <th>Apps</th>
+                                <th>Mins</th>
+                                <th>Goals</th>
+                                <th>Assists</th>
+                                <th>Yel</th>
+                                <th>Red</th>
+                                <th>SpG</th>
+                                <th>PS</th>
+                                <th>Aerials Won</th>
+                                <th>MotM</th>
+                                <th>Rating</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="cs : ${player.competitionStatisticDTOS}">
+                                <td th:text="${cs.competition}"></td>
+                                <td th:text="${cs.startedApps} + '(' + ${cs.subApps} + ')'"></td>
+                                <td th:text="${cs.mins}"></td>
+                                <td th:text="${cs.goals}"></td>
+                                <td th:text="${cs.assists}"></td>
+                                <td th:text="${cs.yellowCards}"></td>
+                                <td th:text="${cs.redCards}"></td>
+                                <td th:text="${cs.shotsPerGame}"></td>
+                                <td th:text="${cs.passSuccess}"></td>
+                                <td th:text="${cs.aerialsWon}"></td>
+                                <td th:text="${cs.manOfTheMatch}"></td>
+                                <td th:text="${cs.rating}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div id="pesDb" class="" style="border-bottom: solid green 2px; padding: 10px 0px">
+                        <h6 class="separator">PesDB Data <span id="pesDbLastCheck" style="font-size: 12px;" th:text="'(' +${player.pesDbLastCheck}+ ')'"></span> <span class="badge badge-primary measure" th:data-url="'/pesdb/scrape/'+${player.id}">Measure Now!</span></h6>
+                        <div class="row" style="margin-left: 0px; margin-right: 0px;">
+                            <div class="col-sm-4 col-lg-4" style="padding: 0">
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td>Name:</td>
+                                        <td th:text="${player.pesDbPlayerName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Team:</td>
+                                        <td th:text="${player.pesDbTeamName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Foot:</td>
+                                        <td th:text="${player.foot}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Condition:</td>
+                                        <td th:text="${player.weekCondition}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Primary position:</td>
+                                        <td id="primaryPosition" th:text="${player.position}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Other position:</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Strong</td>
+                                        <td id="otherStrongPositions">
+                                            <th:block th:each="p, iterStat : ${player.otherStrongPositions}">
+                                                <span  th:text="${p}"></span>
+                                            </th:block>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Weak</td>
+                                        <td id="otherWeakPositions">
+                                            <th:block th:each="p, iterStat : ${player.otherWeakPositions}">
+                                                <span  th:text="${p}"></span>
+                                            </th:block>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-sm-4 col-lg-4">
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td>Offensive Awareness:</td>
+                                        <td id="offensiveAwareness" th:text="${player.offensiveAwareness}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ball Control:</td>
+                                        <td id="ballControl" th:text="${player.ballControl}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dribbling:</td>
+                                        <td id="dribbling" th:text="${player.dribbling}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tight Possession:</td>
+                                        <td id="tightPossession" th:text="${player.tightPossession}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Low Pass:</td>
+                                        <td id="lowPass" th:text="${player.lowPass}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lofted Pass:</td>
+                                        <td id="loftedPass" th:text="${player.loftedPass}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Finishing:</td>
+                                        <td id="finishing" th:text="${player.finishing}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Heading:</td>
+                                        <td id="heading" th:text="${player.heading}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Place Kicking:</td>
+                                        <td id="placeKicking" th:text="${player.placeKicking}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Curl:</td>
+                                        <td id="curl" th:text="${player.curl}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Speed:</td>
+                                        <td id="speed" th:text="${player.speed}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Acceleration:</td>
+                                        <td id="acceleration" th:text="${player.acceleration}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kicking Power:</td>
+                                        <td id="kickingPower" th:text="${player.kickingPower}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jump:</td>
+                                        <td id="jump" th:text="${player.jump}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Physical Contact:</td>
+                                        <td id="physicalContact" th:text="${player.physicalContact}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Balance:</td>
+                                        <td id="balance" th:text="${player.balance}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-sm-4 col-lg-4">
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td>Stamina:</td>
+                                        <td id="stamina" th:text="${player.stamina}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Defensive Awareness:</td>
+                                        <td id="defensiveAwareness" th:text="${player.defensiveAwareness}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ball Winning:</td>
+                                        <td id="ballWinning" th:text="${player.ballWinning}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Aggression:</td>
+                                        <td id="aggression" th:text="${player.aggression}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GK Awareness:</td>
+                                        <td id="gkAwareness" th:text="${player.gkAwareness}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GK Catching:</td>
+                                        <td id="gkCatching" th:text="${player.gkCatching}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GK Clearing:</td>
+                                        <td id="gkClearing" th:text="${player.gkClearing}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GK Reflexes:</td>
+                                        <td id="gkReflexes" th:text="${player.gkReflexes}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GK Reach:</td>
+                                        <td id="gkReach" th:text="${player.gkReach}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Weak Foot Usage:</td>
+                                        <td id="weakFootUsage" th:text="${player.weakFootUsage}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Weak Foot Accuracy:</td>
+                                        <td id="weakFootAccuracy" th:text="${player.weakFootAccuracy}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Form:</td>
+                                        <td id="form" th:text="${player.form}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Injury Resistance:</td>
+                                        <td id="injuryResistance" th:text="${player.injuryResistance}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Overall Rating:</td>
+                                        <td id="overallRating" th:text="${player.overallRating}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 10px;">
+                            <div id="playingStyle" class="col-lg-4">
+                                <div style="font-weight: 500; color: white; background-color: cadetblue;">Playing Style</div>
+                                <div th:text="${player.playingStyle}"></div>
+                            </div>
+                            <div id="playerSkills" class="col-lg-4">
+                                <div style="font-weight: 500; color: white; background-color: crimson;">Player Skills</div>
+                                <th:block th:each="ps : ${player.playerSkills}">
+                                    <div th:text="${ps}"></div>
+                                </th:block>
+                            </div>
+                            <div id="comPlayingStyles" class="col-lg-4">
+                                <div style="font-weight: 500; color: white; background-color: slateblue;">COM Playing Styles</div>
+                                <th:block th:each="cps : ${player.comPlayingStyles}">
+                                    <div th:text="${cps}"></div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="" style="border-bottom: solid green 2px; padding: 10px 0px;">
+                        <h6 class="separator">Game Statistics</h6>
+                        <table id="gameStats" class="table table-hover">
+                            <tbody>
+                                <tr th:each="gs : ${player.gameStatisticDTOS}">
+                                    <td th:text="${gs.competition}"></td>
+                                    <td th:text="${gs.dateOfGame}"></td>
+                                    <td th:text="${gs.team1}"></td>
+                                    <td th:text="${gs.result}"></td>
+                                    <td th:text="${gs.team2}"></td>
+                                    <td data-attribute="motm" th:text="${gs.manOfTheMatch}"></td>
+                                    <td data-attribute="goals" th:text="${gs.goals}"></td>
+                                    <td data-attribute="assists" th:text="${gs.assists}"></td>
+                                    <td data-attribute="yellow" th:text="${gs.yellowCard}"></td>
+                                    <td data-attribute="red" th:text="${gs.redCard}"></td>
+                                    <td data-attribute="minutesPlayed" th:text="${gs.minutesPlayed}"></td>
+                                    <td th:text="${gs.rating}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="marketValuesData" style="display: none;">
+                <div th:each="mv : ${player.marketValueDTOS}">
+                    <span th:text="${mv.datePoint}"></span>
+                    <span th:text="${mv.worth}"></span>
+                    <span th:text="${mv.clubTeam}"></span>
+                </div>
+            </div>
+            <script th:src="@{/js/showPlayer.js}" src="../static/js/showPlayer.js" type="text/javascript"></script>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

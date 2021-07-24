@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration level="info" status="info">
+    <Properties>
+        <Property name="logs-path">D:/scoutpro</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--<PatternLayout pattern="%highlight{%d [%t] %-5level: %msg%n%throwable}{STYLE=Logback}" />-->
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5p [%-21t] %-38x %-45.45logger{1.} line:%4.4L : %msg %rEx%n" />
+<!--            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5p %x %msg %rEx%n" />-->
+        </Console>
+        <RollingFile name="RollingFileRegular" fileName="${logs-path}/scoutpro.log" filePattern="${logs-path}/$${date:yyyy-MM}/scoutpro-%d{dd-MM-yyyy}-%i.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5p %x %msg %rEx%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="20 MB" />
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${logs-path}" maxDepth="2">
+                    <IfFileName glob="*/scoutpro-*.log"/>
+                    <IfAny>
+                        <IfLastModified age="30d" />
+                        <IfAccumulatedFileSize exceeds="500 MB">
+                            <IfLastModified age="5d" />
+                        </IfAccumulatedFileSize>
+                    </IfAny>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <RollingFile name="RollingFileError" fileName="${logs-path}/scoutpro_error.log" filePattern="${logs-path}/$${date:yyyy-MM}/scoutpro_error-%d{dd-MM-yyyy}-%i.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5p [%-21t] %-38x %-45.45logger{1.} line:%4.4L : %msg %rEx%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="20 MB" />
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${logs-path}" maxDepth="2">
+                    <IfFileName glob="*/scoutpro_error-*.log"/>
+                    <IfAny>
+                        <IfLastModified age="30d" />
+                        <IfAccumulatedFileSize exceeds="500 MB">
+                            <IfLastModified age="5d" />
+                        </IfAccumulatedFileSize>
+                    </IfAny>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <!--        <JDBC name="Jdbc" tableName="customer_auth_api_log.logs">-->
+        <!--            <DataSource jndiName="jdbc/customer_auth_api_logs" />-->
+        <!--            <Column name="log_uid" pattern="%x" />-->
+        <!--            <Column name="log_date" isEventTimestamp="true" />-->
+        <!--            <Column name="log_priority" pattern="%level" />-->
+        <!--            <Column name="log_category" pattern="%logger:%L" />-->
+        <!--            <Column name="log_message" pattern="%message" isClob="true"/>-->
+        <!--        </JDBC>-->
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="RollingFileError" level="error"/>
+        </Root>
+        <AsyncLogger name="org.hibernate.SQL" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="RollingFileRegular" />
+        </AsyncLogger>
+        <!--        <Logger name="org.hibernate.type.descriptor.sql" level="trace" additivity="false">-->
+        <!--            <AppenderRef ref="Console" />-->
+        <!--        </Logger>-->
+        <!--        <Logger level="info" name="org.spring" additivity="false">
+                    <AppenderRef ref="Console" />
+                </Logger>-->
+    </Loggers>
+</Configuration>

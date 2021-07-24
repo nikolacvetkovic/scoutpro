@@ -1,0 +1,42 @@
+h6{
+    text-align: center;
+    margin-top: 0.5rem;
+}
+table{
+    font-size: 15px;
+}
+.table td{
+    padding: 0.1rem;
+}
+.data td{
+    text-align: center;
+}
+.first-column{
+    width: 10%;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: 3rem;
+}
+#compare td{
+    height: 1.69rem;
+}
+#compare input{
+    height: 1.7rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+}
+#searchResultPlayer-1, #searchResultPlayer-2, #searchResultPlayer-3, #searchResultPlayer-4, #searchResultPlayer-5 {
+    background-color: rgba(61, 201, 179, 1);
+    position: absolute;
+    z-index: 2;
+    width: 25em;
+    border-radius: 5px;
+    color: rgba(255, 255, 255, 0.8);
+}
+#searchResultPlayer-1 tr, #searchResultPlayer-2 tr, #searchResultPlayer-3 tr, #searchResultPlayer-4 tr, #searchResultPlayer-5 tr {
+    border-bottom: 0.5px solid rgba(255,255,255, 0.5);
+}
+#searchResultPlayer-1 tr:hover, #searchResultPlayer-2 tr:hover, #searchResultPlayer-3 tr:hover, #searchResultPlayer-4 tr:hover, #searchResultPlayer-5 tr:hover {
+    color: rgba(255, 255, 255, 1);
+    cursor: pointer;
+}

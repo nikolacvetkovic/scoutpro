@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header(~{::title}, ~{::link#pageStyle})}">
+    <title>ScoutPro | Compare players</title>
+    <link id="pageStyle" rel="stylesheet" th:href="@{/css/compareStyle.css}" href="../static/css/compareStyle.css" type="text/css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="https://kit.fontawesome.com/9b0a4a2ea0.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" type="text/javascript"></script>
+    <script src="http://localhost:35729/livereload.js"></script>
+</head>
+<body>
+    <nav th:remove="all" class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(61, 201, 179, 1); height: 78px;">
+
+        <a class="navbar-brand" href="/">
+            <img src="../../static/logo.png" width="50px" height="50px" class="d-inline-block">
+            <span class="align-middle ml-1" style="font-size: 35px">ScoutPro</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar" aria-controls="myNavbar" aria-expanded="false" aria-label="Toggle">
+            <!-- <i class="fa fa-bars"></i> -->
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="navbar-nav ml-auto mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="./dashboard.html">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./playerForm.html">Add Player</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Compare players</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./transfersAndNews.html">Transfers and News</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto mr-auto ">
+                <li class="nav-item mr-2" style="width: 25em">
+                    <input id="search" class="form-control" type="search" placeholder="Search players" autocomplete="off" name="s">
+                </li>
+            </ul>
+            <form class="form-inline my-2">
+                <button class="btn btn-outline-light my-sm-0" type="button" name="logout" >Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div th:replace="~{fragments/mainContainer :: main(~{::div#compare})}">
+        <div id="compare">
+            <div id="playerNamesAndInputs" class="row">
+                    <div class="first-column"></div>
+                    <div id="player-name-1" class="col-lg-2">
+                        <input th:if="${player1.playerName == null}" class="form-control" type="text" name="player-name-input-1" placeholder="Search player to compare" autocomplete="off">
+                        <table th:if="${player1.playerName == null}" id="searchResultPlayer-1">
+                            <tbody></tbody>
+                        </table>
+                        <h6 th:if="${player1.playerName != null}" th:text="${player1.playerName}"></h6>
+                        <h6 th:if="${player1.playerName == null}" style="display: none;"></h6>
+                    </div>
+                    <div id="player-name-2" class="col-lg-2">
+                        <input class="form-control" type="text" name="player-name-input-2" placeholder="Search player to compare" autocomplete="off">
+                        <table id="searchResultPlayer-2">
+                            <tbody></tbody>
+                        </table>
+                        <h6 style="display: none"></h6>
+                    </div>
+                    <div id="player-name-3" class="col-lg-2">
+                        <input class="form-control" type="text" name="player-name-input-3" placeholder="Search player to compare" autocomplete="off">
+                        <table id="searchResultPlayer-3">
+                            <tbody></tbody>
+                        </table>
+                        <h6 style="display: none"></h6>
+                    </div>
+                    <div id="player-name-4" class="col-lg-2">
+                        <input class="form-control" type="text" name="player-name-input-4" placeholder="Search player to compare" autocomplete="off">
+                        <table id="searchResultPlayer-4">
+                            <tbody></tbody>
+                        </table>
+                        <h6 style="display: none"></h6>
+                    </div>
+                    <div id="player-name-5" class="col-lg-2">
+                        <input class="form-control" type="text" name="player-name-input-5" placeholder="Search player to compare" autocomplete="off">
+                        <table id="searchResultPlayer-5">
+                            <tbody></tbody>
+                        </table>
+                        <h6 style="display: none"></h6>
+                    </div>
+            </div>
+            <div class="row">
+                <div class="data first-column">
+                    <table class="table table-hover table-striped">
+                        <tbody>
+                            <tr>
+                                <td>Age</td>
+                            </tr>
+                            <tr>
+                                <td>Nationality</td>
+                            </tr>
+                            <tr>
+                                <td>Club</td>
+                            </tr>
+                            <tr>
+                                <td>Contract Until</td>
+                            </tr>
+                            <tr>
+                                <td>PSML Team</td>
+                            </tr>
+                            <tr>
+                                <td>PSML Value</td>
+                            </tr>
+                            <tr>
+                                <td>PES Name</td>
+                            </tr>
+                            <tr>
+                                <td>PES Team Name</td>
+                            </tr>
+                            <tr>
+                                <td>Primary Position</td>
+                            </tr>
+                            <tr>
+                                <td>Other Position</td>
+                            </tr>
+                            <tr>
+                                <td>Condition</td>
+                            </tr>
+                            <tr>
+                                <td>Offensive Awareness</td>
+                            </tr>
+                            <tr>
+                                <td>Ball Control</td>
+                            </tr>
+                            <tr>
+                                <td>Dribbling</td>
+                            </tr>
+                            <tr>
+                                <td>Tight Possession</td>
+                            </tr>
+                            <tr>
+                                <td>Low Pass</td>
+                            </tr>
+                            <tr>
+                                <td>Lofted Pass</td>
+                            </tr>
+                            <tr>
+                                <td>Finishing</td>
+                            </tr>
+                            <tr>
+                                <td>Heading</td>
+                            </tr>
+                            <tr>
+                                <td>Place Kicking</td>
+                            </tr>
+                            <tr>
+                                <td>Curl</td>
+                            </tr>
+                            <tr>
+                                <td>Speed</td>
+                            </tr>
+                            <tr>
+                                <td>Acceleration</td>
+                            </tr>
+                            <tr>
+                                <td>Kicking Power</td>
+                            </tr>
+                            <tr>
+                                <td>Jump</td>
+                            </tr>
+                            <tr>
+                                <td>Physical Contact</td>
+                            </tr>
+                            <tr>
+                                <td>Balance</td>
+                            </tr>
+                            <tr>
+                                <td>Stamina</td>
+                            </tr>
+                            <tr>
+                                <td>Defensive Awareness</td>
+                            </tr>
+                            <tr>
+                                <td>Ball Winning</td>
+                            </tr>
+                            <tr>
+                                <td>Aggression</td>
+                            </tr>
+                            <tr>
+                                <td>GK Awareness</td>
+                            </tr>
+                            <tr>
+                                <td>GK Catching</td>
+                            </tr>
+                            <tr>
+                                <td>GK Clearing</td>
+                            </tr>
+                            <tr>
+                                <td>GK Reflexes</td>
+                            </tr>
+                            <tr>
+                                <td>GK Reach</td>
+                            </tr>
+                            <tr>
+                                <td>Weak Foot Usage</td>
+                            </tr>
+                            <tr>
+                                <td>Weak Foot Accuracy</td>
+                            </tr>
+                            <tr>
+                                <td>Form</td>
+                            </tr>
+                            <tr>
+                                <td>Injury Resistance</td>
+                            </tr>
+                            <tr>
+                                <td>Overall Rating</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="player1" class="col-lg-2 data">
+                    <table class="table table-hover table-striped">
+                        <tbody>
+                            <tr>
+                                <td th:text="${player1.age}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.nationality}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.clubTeam}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.contractUntil}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.psmlTeam}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.psmlValue}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.pesDbPlayerName}"></td>
+                            </tr>
+                            <tr>
+                               <td th:text="${player1.pesDbTeamName}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.position}"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span th:each="strongPosition : ${player1.otherStrongPositions}" th:text="${strongPosition}" data-strong="true" style="padding-right: 10px;"></span>
+                                    <span th:each="weakPosition : ${player1.otherWeakPositions}" th:text="${weakPosition}" data-weak="true" style="padding-right: 10px;"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.weekCondition}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.offensiveAwareness != 0 ? player1.offensiveAwareness : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.ballControl != 0 ? player1.ballControl : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.dribbling != 0 ? player1.dribbling : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.tightPossession != 0 ? player1.tightPossession : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.lowPass != 0 ? player1.lowPass : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.loftedPass != 0 ? player1.loftedPass : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.finishing != 0 ? player1.finishing : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.heading != 0 ? player1.heading : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.placeKicking != 0 ? player1.placeKicking : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.curl != 0 ? player1.curl : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.speed != 0 ? player1.speed : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.acceleration != 0 ? player1.acceleration : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.kickingPower != 0 ? player1.kickingPower : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.jump != 0 ? player1.jump : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.physicalContact != 0 ? player1.physicalContact : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.balance != 0 ? player1.balance : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.stamina != 0 ? player1.stamina : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.defensiveAwareness != 0 ? player1.defensiveAwareness : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.ballWinning != 0 ? player1.ballWinning : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.aggression != 0 ? player1.aggression : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.gkAwareness != 0 ? player1.gkAwareness : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.gkCatching != 0 ? player1.gkCatching : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.gkClearing != 0 ? player1.gkClearing : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.gkReflexes != 0 ? player1.gkReflexes : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.gkReach != 0 ? player1.gkReach : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.weakFootUsage != 0 ? player1.weakFootUsage : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.weakFootAccuracy != 0 ? player1.weakFootAccuracy : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.form != 0 ? player1.form : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.injuryResistance != 0 ? player1.injuryResistance : ''}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${player1.overallRating != 0 ? player1.overallRating : ''}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="player2" class="col-lg-2 data">
+                    <table class="table table-hover table-striped">
+                        <tbody>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="player3" class="col-lg-2 data">
+                    <table class="table table-hover table-striped">
+                        <tbody>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="player4" class="col-lg-2 data">
+                    <table class="table table-hover table-striped">
+                        <tbody>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="player5" class="col-lg-2 data">
+                    <table class="table table-hover table-striped">
+                        <tbody>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <script th:src="@{/js/compare.js}" src="../static/js/compare.js" type="text/javascript"></script>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

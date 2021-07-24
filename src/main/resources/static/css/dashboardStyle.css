@@ -1,0 +1,157 @@
+html, body {
+    height: 100%;
+}
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+.container-fluid {
+    max-height: 100%;
+}
+.table td, .table th {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 5px;
+    text-align: center;
+}
+#left tbody td {
+    cursor: pointer;
+}
+.table-scroll tbody {
+    position: absolute;
+    overflow-y: scroll;
+    height: 250px;
+}
+.table-scroll tr {
+    width: 100%;
+    table-layout: fixed;
+    display: inline-table;
+}
+.table-scroll thead > tr > th {
+    border: none;
+}
+h6 {
+    text-align: center;
+    margin-bottom: 0;
+    margin-top: 8px;
+}
+hr {
+    margin-top: 0px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid green;
+}
+#right-side .row {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+}
+p {
+    margin: 0;
+}
+#pesDb table tr td, #ws table tr td, #tm table tr td, #psml table tr td {
+    padding: 0;
+}
+span.badge {
+    cursor: pointer;
+}
+span.lastMeasured {
+    font-size: 10px;
+}
+#overallRating {
+    font-weight: bold;
+}
+#right-side .table {
+    margin-bottom: 3px;
+}
+.fa-external-link {
+    font-size: 12px;
+    color: #000;
+}
+.fa-arrow-circle-down {
+    color: red;
+}
+.fa-arrow-circle-up {
+    color: green;
+}
+#ws th{
+    font-size: 12px;
+}
+#pesDb tr td:nth-of-type(1){
+    width: 70%;
+}
+#tm tr td:nth-of-type(1), #psml tr td:nth-of-type(1){
+    width: 50%;
+    text-align: left;
+    padding-left: 10%;
+}
+#pages{
+    padding: 2px 0px;
+}
+#pages span{
+    padding: 0px 3px;
+    margin: 0px 1.2px;
+    font-size: 16px;
+    font-weight: 400;
+
+}
+#pages span[enabled=true]{
+    cursor: pointer;
+    background-color: #3DC9B3;
+}
+#pages span[enabled=false]{
+    cursor: not-allowed;
+    color: black;
+    background-color: lightcoral;
+}
+#pages i{
+    cursor: pointer;
+    color: #3DC9B3;
+}
+#pages i[enabled=false]{
+    cursor: not-allowed;
+}
+#pages i.fa-chevron-circle-left{
+    margin-right: 5px;
+}
+#pages i.fa-chevron-circle-right{
+    margin-left: 5px;
+}
+#pages i.fa-angle-double-left{
+    margin-right: 10px;
+}
+#pages i.fa-angle-double-right{
+    margin-left: 10px;
+}
+#dashboard div.text-center span[id*=position], #allPlayersButton, #myPlayersButton, #freePlayersButton{
+    color: rgba(255, 255, 255, 1);
+}
+#allPlayersButton, #myPlayersButton, #freePlayersButton{
+    background-color: rgba(61, 201, 179, 1);
+    border-color: rgba(61, 201, 179, 1);
+    font-size: 90%
+}
+#position-gk {
+    background-color: rgba(219, 161, 17, 1);
+    border-color: rgba(219, 161, 17, 1);
+}
+#position-cb, #position-lb, #position-rb{
+    background-color: rgba(35, 105, 217, 1);
+    border-color: rgba(35, 105, 217, 1);
+}
+#position-dmf, #position-cmf, #position-lmf, #position-rmf, #position-amf{
+    background-color: rgba(75, 159, 35, 1);
+    border-color: rgba(75, 159, 35, 1);
+}
+#position-lwf, #position-rwf, #position-ss, #position-cf{
+    background-color: rgba(190, 38, 46, 1);
+    border-color: rgba(190, 38, 46, 1);
+}
+#dashboard div.text-center span[id*=position][active=true]{
+    width: 3rem;
+    border-style: solid;
+    border-width: 0.12rem;
+    border-color: transparent;
+}
