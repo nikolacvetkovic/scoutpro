@@ -39,7 +39,12 @@ public class ScrapeHelper {
 
     public static Document getPage(String url) {
         try {
-            return Jsoup.connect(url).get();
+            return Jsoup.connect(url)
+                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+                    .header("Accept-Encoding", "gzip, deflate, br")
+                    .header("Accept-Language", "en-US,en;q=0.9")
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36")
+                    .get();
         } catch(IOException ex) {
             throw new GetDocumentConnectionException(ex);
         }
