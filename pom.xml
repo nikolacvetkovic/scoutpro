@@ -20,6 +20,7 @@
     <start-class>xyz.riocode.scoutpro.ScoutProApp</start-class>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>11</java.version>
+    <jsoup.version>1.13.1</jsoup.version>
     <jquery.version>3.3.1</jquery.version>
     <bootstrap.version>4.3.1</bootstrap.version>
     <popper.version>1.14.7</popper.version>
@@ -83,7 +84,7 @@
       <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.11.3</version>
+            <version>${jsoup.version}</version>
       </dependency>
                       <!--Json Processing-->
       <dependency>
