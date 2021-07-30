@@ -38,7 +38,7 @@ class TMTransferScrapeTemplateImplTest {
         transfer.setDateOfTransfer(LocalDate.of(2020, 10, 5));
         transfer.setMarketValue("€48.00m");
         tmTransferScrapeTemplate.scrapeTransfers(document, player);
-        assertThat(player.getTransfers(), hasSize(3));
+        assertThat(player.getTransfers(), hasSize(4));
         assertThat(player.getTransfers(), hasItem(transfer));
     }
 }
