@@ -17,10 +17,10 @@ public class PsmlTransferConverter {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withLocale(Locale.US);
         return psmlTransfers.stream().map(psmlTransfer -> {
             PsmlTransferDTO psmlTransferDTO = new PsmlTransferDTO();
-            psmlTransferDTO.setDateOfTransfer(psmlTransfer.getDateOfTransfer().format(dateTimeFormatter));
+            psmlTransferDTO.setDateOfTransfer(psmlTransfer.getDateOfTransfer() != null ? psmlTransfer.getDateOfTransfer().format(dateTimeFormatter) : " - ");
             psmlTransferDTO.setFromTeam(psmlTransfer.getFromTeam());
             psmlTransferDTO.setToTeam(psmlTransfer.getToTeam());
-            psmlTransferDTO.setTransferFee(psmlTransfer.getTransferFee().toString());
+            psmlTransferDTO.setTransferFee(psmlTransfer.getTransferFee() != null ? psmlTransfer.getTransferFee().toString() : " - ");
             return psmlTransferDTO;
         }).collect(Collectors.toList());
     }
