@@ -3,10 +3,7 @@ package xyz.riocode.scoutpro.converter;
 import org.hibernate.LazyInitializationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import xyz.riocode.scoutpro.dto.DashboardDTO;
-import xyz.riocode.scoutpro.dto.PlayerCompleteDTO;
-import xyz.riocode.scoutpro.dto.PlayerDashboardDTO;
-import xyz.riocode.scoutpro.dto.PlayerFormDTO;
+import xyz.riocode.scoutpro.dto.*;
 import xyz.riocode.scoutpro.model.*;
 
 import java.time.format.DateTimeFormatter;
@@ -261,30 +258,30 @@ public class PlayerConverter {
         return playerCompleteDTO;
     }
 
-    public List<PlayerDashboardDTO> playersToAddPlayerSearchDTO(List<Player> players, String username) {
+    public List<PlayerSearchDTO> playersToAddPlayerSearchDTO(List<Player> players, String username) {
         return players.stream()
                 .map(player -> {
-                    PlayerDashboardDTO playerDashboardDTO = new PlayerDashboardDTO();
-                    playerDashboardDTO.setId(player.getId().toString());
-                    playerDashboardDTO.setPlayerName(player.getPlayerName());
-                    playerDashboardDTO.setPosition(player.getPrimaryPosition());
-                    playerDashboardDTO.setOverallRating(player.getOverallRating());
-                    playerDashboardDTO.setTmCurrentValue(player.getMarketValues().stream().findFirst().get().getWorth().toString());
-                    playerDashboardDTO.setPsmlValue(player.getPsmlValue().toString());
-                    playerDashboardDTO.setPsmlTeam(player.getPsmlTeam());
-                    return playerDashboardDTO;
+                    PlayerSearchDTO playerSearchDTO = new PlayerSearchDTO();
+                    playerSearchDTO.setId(player.getId().toString());
+                    playerSearchDTO.setPlayerName(player.getPlayerName());
+                    playerSearchDTO.setPosition(player.getPrimaryPosition());
+                    playerSearchDTO.setOverallRating(player.getOverallRating());
+                    playerSearchDTO.setTmCurrentValue(player.getMarketValues().stream().findFirst().get().getWorth().toString());
+                    playerSearchDTO.setPsmlValue(player.getPsmlValue().toString());
+                    playerSearchDTO.setPsmlTeam(player.getPsmlTeam());
+                    return playerSearchDTO;
                 }).collect(Collectors.toList());
     }
 
-    public List<PlayerDashboardDTO> playersToPlayerSearchDTO(List<Player> players, String username){
+    public List<PlayerSearchDTO> playersToPlayerSearchDTO(List<Player> players, String username){
         return players.stream()
                     .map(player -> {
-                        PlayerDashboardDTO playerDashboardDTO = new PlayerDashboardDTO();
-                        playerDashboardDTO.setId(player.getId().toString());
-                        playerDashboardDTO.setPlayerName(player.getPlayerName());
-                        playerDashboardDTO.setPosition(player.getPrimaryPosition());
-                        playerDashboardDTO.setOverallRating(player.getOverallRating());
-                        return playerDashboardDTO;
+                        PlayerSearchDTO playerSearchDTO = new PlayerSearchDTO();
+                        playerSearchDTO.setId(player.getId().toString());
+                        playerSearchDTO.setPlayerName(player.getPlayerName());
+                        playerSearchDTO.setPosition(player.getPrimaryPosition());
+                        playerSearchDTO.setOverallRating(player.getOverallRating());
+                        return playerSearchDTO;
                     }).collect(Collectors.toList());
     }
 }

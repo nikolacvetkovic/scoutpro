@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import xyz.riocode.scoutpro.converter.PlayerConverter;
 import xyz.riocode.scoutpro.dto.DashboardDTO;
 import xyz.riocode.scoutpro.dto.PlayerCompleteDTO;
-import xyz.riocode.scoutpro.dto.PlayerDashboardDTO;
 import xyz.riocode.scoutpro.dto.PlayerFormDTO;
+import xyz.riocode.scoutpro.dto.PlayerSearchDTO;
 import xyz.riocode.scoutpro.service.PlayerService;
 
 import javax.validation.Valid;
@@ -84,13 +84,13 @@ public class PlayerController {
     }
 
     @GetMapping("/{playerName}/name")
-    public ResponseEntity<List<PlayerDashboardDTO>> getPlayerByName(@PathVariable String playerName){
-        return new ResponseEntity<List<PlayerDashboardDTO>>(playerConverter.playersToPlayerSearchDTO(playerService.getByName(playerName), "cvele"), HttpStatus.OK);
+    public ResponseEntity<List<PlayerSearchDTO>> getPlayerByName(@PathVariable String playerName){
+        return new ResponseEntity<List<PlayerSearchDTO>>(playerConverter.playersToPlayerSearchDTO(playerService.getByName(playerName), "cvele"), HttpStatus.OK);
     }
 
     @GetMapping("/{playerName}/name/unfollowed")
-    public ResponseEntity<List<PlayerDashboardDTO>> getPlayerByNameUnfollowed(@PathVariable String playerName){
-        return new ResponseEntity<List<PlayerDashboardDTO>>(playerConverter.playersToAddPlayerSearchDTO(playerService.getByNameAndUserUnfollowed(playerName, "cvele"), "cvele"), HttpStatus.OK);
+    public ResponseEntity<List<PlayerSearchDTO>> getPlayerByNameUnfollowed(@PathVariable String playerName){
+        return new ResponseEntity<List<PlayerSearchDTO>>(playerConverter.playersToAddPlayerSearchDTO(playerService.getByNameAndUserUnfollowed(playerName, "cvele"), "cvele"), HttpStatus.OK);
     }
 
     @GetMapping("/{playerId}/compare")
