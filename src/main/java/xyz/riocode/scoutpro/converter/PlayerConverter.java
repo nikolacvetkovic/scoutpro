@@ -83,8 +83,11 @@ public class PlayerConverter {
                     .findFirst()
                     .get());
 
-            playerDashboardDTO.setTmCurrentValue(player.getMarketValues().stream().findFirst().get().getWorth().toString());
-            playerDashboardDTO.setTmValueLastChanged(player.getMarketValues().stream().findFirst().get().getDatePoint().format(dateFormatter));
+            if (player.getMarketValues().size() != 0) {
+                MarketValue currentMarketValue = player.getMarketValues().stream().findFirst().get();
+                playerDashboardDTO.setTmCurrentValue(currentMarketValue.getWorth().toString());
+                playerDashboardDTO.setTmValueLastChanged(currentMarketValue.getDatePoint().format(dateFormatter));
+            }
             playerDashboardDTO.setTmValueLastCheck(player.getMarketValueLastCheck().format(dateTimeFormatter));
             playerDashboardDTO.setAge(String.valueOf(player.getAge()));
             playerDashboardDTO.setNationalTeam(player.getNationalTeam());
@@ -134,32 +137,32 @@ public class PlayerConverter {
             playerDashboardDTO.setPesDbLastCheck(player.getPesDbLastCheck().format(dateTimeFormatter));
 
             playerDashboardDTO.setPsmlTeam(player.getPsmlTeam());
-            playerDashboardDTO.setPsmlValue(player.getPsmlValue().toString());
+            playerDashboardDTO.setPsmlValue(player.getPsmlValue() != null ? player.getPsmlValue().toString() : " - ");
             Optional<PsmlTransfer> optionalPsmlTransfer = player.getPsmlTransfers().stream().findFirst();
             if (optionalPsmlTransfer.isPresent()) {
                 PsmlTransfer psmlTransfer = optionalPsmlTransfer.get();
-                playerDashboardDTO.setPsmlLastTransferDate(psmlTransfer.getDateOfTransfer().format(dateTimeFormatter));
+                playerDashboardDTO.setPsmlLastTransferDate(psmlTransfer.getDateOfTransfer() != null ? psmlTransfer.getDateOfTransfer().format(dateTimeFormatter) : " - ");
                 playerDashboardDTO.setPsmlLastTransferFromTeam(psmlTransfer.getFromTeam());
                 playerDashboardDTO.setPsmlLastTransferToTeam(psmlTransfer.getToTeam());
-                playerDashboardDTO.setPsmlLastTransferFee(psmlTransfer.getTransferFee().toString());
+                playerDashboardDTO.setPsmlLastTransferFee(psmlTransfer.getTransferFee() != null ? psmlTransfer.getTransferFee().toString() : " - ");
             }
             playerDashboardDTO.setPsmlLastCheck(player.getPsmlLastCheck().format(dateTimeFormatter));
 
-            Optional<CompetitionStatistic> competitionStatisticOptional = player.getCompetitionStatistics().stream().findFirst();
-            if (competitionStatisticOptional.isPresent()) {
-                CompetitionStatistic competitionStatistic = competitionStatisticOptional.get();
-                playerDashboardDTO.setTotalStartedApps(String.valueOf(competitionStatistic.getStartedApps()));
-                playerDashboardDTO.setTotalMins(String.valueOf(competitionStatistic.getMins()));
-                playerDashboardDTO.setTotalAssists(String.valueOf(competitionStatistic.getAssists()));
-                playerDashboardDTO.setTotalGoals(String.valueOf(competitionStatistic.getGoals()));
-                playerDashboardDTO.setTotalAssists(String.valueOf(competitionStatistic.getAssists()));
-                playerDashboardDTO.setAverageShotsPerGame(competitionStatistic.getShotsPerGame().toString());
-                playerDashboardDTO.setAveragePassSuccess(competitionStatistic.getPassSuccess().toString());
-                playerDashboardDTO.setAverageAerialsWon(competitionStatistic.getAerialsWon().toString());
-                playerDashboardDTO.setTotalManOfTheMatch(String.valueOf(competitionStatistic.getManOfTheMatch()));
-                playerDashboardDTO.setAverageRating(competitionStatistic.getRating().toString());
-                playerDashboardDTO.setStatisticsLastCheck(player.getStatisticLastCheck().format(dateTimeFormatter));
-            }
+//            Optional<CompetitionStatistic> competitionStatisticOptional = player.getCompetitionStatistics().stream().findFirst();
+//            if (competitionStatisticOptional.isPresent()) {
+//                CompetitionStatistic competitionStatistic = competitionStatisticOptional.get();
+//                playerDashboardDTO.setTotalStartedApps(String.valueOf(competitionStatistic.getStartedApps()));
+//                playerDashboardDTO.setTotalMins(String.valueOf(competitionStatistic.getMins()));
+//                playerDashboardDTO.setTotalAssists(String.valueOf(competitionStatistic.getAssists()));
+//                playerDashboardDTO.setTotalGoals(String.valueOf(competitionStatistic.getGoals()));
+//                playerDashboardDTO.setTotalAssists(String.valueOf(competitionStatistic.getAssists()));
+//                playerDashboardDTO.setAverageShotsPerGame(competitionStatistic.getShotsPerGame().toString());
+//                playerDashboardDTO.setAveragePassSuccess(competitionStatistic.getPassSuccess().toString());
+//                playerDashboardDTO.setAverageAerialsWon(competitionStatistic.getAerialsWon().toString());
+//                playerDashboardDTO.setTotalManOfTheMatch(String.valueOf(competitionStatistic.getManOfTheMatch()));
+//                playerDashboardDTO.setAverageRating(competitionStatistic.getRating().toString());
+//                playerDashboardDTO.setStatisticsLastCheck(player.getStatisticLastCheck().format(dateTimeFormatter));
+//            }
 
             playerDashboardDTOS.add(playerDashboardDTO);
         }
@@ -194,17 +197,17 @@ public class PlayerConverter {
             playerCompleteDTO.setTmPosition(player.getTransfermarktPosition());
 
             playerCompleteDTO.setTransferDTOS(transferConverter.transfersToTransferDTOs(player.getTransfers()));
-            playerCompleteDTO.setTransferLastCheck(player.getTransferLastCheck().format(dateTimeFormatter));
+            playerCompleteDTO.setTransferLastCheck(player.getTransferLastCheck() != null ? player.getTransferLastCheck().format(dateTimeFormatter) : " - ");
             playerCompleteDTO.setMarketValueDTOS(marketValueConverter.marketValuesToMarketValueDTOs(player.getMarketValues()));
-            playerCompleteDTO.setMarketValueLastCheck(player.getMarketValueLastCheck().format(dateTimeFormatter));
+            playerCompleteDTO.setMarketValueLastCheck(player.getMarketValueLastCheck() != null ? player.getMarketValueLastCheck().format(dateTimeFormatter) : " - ");
 
-            playerCompleteDTO.setCompetitionStatisticDTOS(competitionStatisticConverter.competitionStatisticsToCompetitionStatisticDTOs(player.getCompetitionStatistics()));
-            playerCompleteDTO.setPositionStatisticDTOS(positionStatisticConverter.positionStatisticsToPositionStatisticDTOs(player.getPositionStatistics()));
-            playerCompleteDTO.setGameStatisticDTOS(gameStatisticConverter.gameStatisticsToGameStatisticDTOs(player.getGameStatistics()));
-            playerCompleteDTO.setStatisticLastCheck(player.getStatisticLastCheck().format(dateTimeFormatter));
-            playerCompleteDTO.setStrengths(player.getStrengths());
-            playerCompleteDTO.setWeaknesses(player.getWeaknesses());
-            playerCompleteDTO.setStylesOfPlay(player.getStylesOfPlay());
+//            playerCompleteDTO.setCompetitionStatisticDTOS(competitionStatisticConverter.competitionStatisticsToCompetitionStatisticDTOs(player.getCompetitionStatistics()));
+//            playerCompleteDTO.setPositionStatisticDTOS(positionStatisticConverter.positionStatisticsToPositionStatisticDTOs(player.getPositionStatistics()));
+//            playerCompleteDTO.setGameStatisticDTOS(gameStatisticConverter.gameStatisticsToGameStatisticDTOs(player.getGameStatistics()));
+//            playerCompleteDTO.setStatisticLastCheck(player.getStatisticLastCheck().format(dateTimeFormatter));
+//            playerCompleteDTO.setStrengths(player.getStrengths());
+//            playerCompleteDTO.setWeaknesses(player.getWeaknesses());
+//            playerCompleteDTO.setStylesOfPlay(player.getStylesOfPlay());
 
             playerCompleteDTO.setPesDbPlayerName(player.getPesDbPlayerName());
             playerCompleteDTO.setPesDbTeamName(player.getPesDbTeamName());
@@ -250,7 +253,7 @@ public class PlayerConverter {
             playerCompleteDTO.setPsmlTeam(player.getPsmlTeam());
             playerCompleteDTO.setPsmlValue(player.getPsmlValue().toString());
             playerCompleteDTO.setPsmlTransferDTOS(psmlTransferConverter.psmlTransfersToPsmlTransferDTOs(player.getPsmlTransfers()));
-            playerCompleteDTO.setPsmlLastCheck(player.getPsmlLastCheck().format(dateTimeFormatter));
+            playerCompleteDTO.setPsmlLastCheck(player.getPsmlLastCheck() != null ? player.getPsmlLastCheck().format(dateTimeFormatter) : " - ");
         } catch (LazyInitializationException exception){
 
         }
