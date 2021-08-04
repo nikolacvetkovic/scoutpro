@@ -1,8 +1,9 @@
 insert into app_user (username, pass, enabled) values ('cvele', '1111', 1);
 
 insert into player values
-(1, 90, 34, 50, 96, 96, 50, 'Without Club', 'Early Cross,Trickster,Speeding Bullet,Mazing Run,Incisive Run', '-', 90, 'Jun 24, 1987 ', 45, 97, 95, 'LEFT', 8, 40, 40, 40, 40, 40, 70, 2, NULL, 63, 82, 91, 90, TIMESTAMP '2021-07-29 18:06:27.396607', 'Argentina', 'Argentina', 95, 'SS,CF', 'LWF,AMF,RMF', 94, TIMESTAMP '2021-07-29 18:06:27.395608', 'L. MESSI', 'FC BARCELONA', 'https://pesdb.net/pes2021/?id=7511', 70, 94, 'Lionel Messi', 'Long Range Drive,Captaincy,Through Passing,One-touch Pass,Penalty Specialist,Dipping Shot,Chip Shot Control,Long Range Shooting,Double Touch,First-time Shot', 'Creative Playmaker', 'RWF', TIMESTAMP '2021-07-29 18:06:55.026275', 'AC Milan', 'https://psml.rs/index.php?action=shwply&playerID=7511', 80000000.00, 81, 78, NULL, NULL, NULL, 96, TIMESTAMP '2021-07-29 18:06:27.420604', 'attack - Right Winger', 'https://www.transfermarkt.com/lionel-messi/profil/spieler/28003', 3, 1, NULL, 'C', 'https://www.whoscored.com/Players/279423/Show/Frenkie-de-Jong'),
-(2, 83, 24, 78, 80, 86, 75, 'FC Barcelona', 'Long Ball Expert,Mazing Run', 'Jun 30, 2026', 71, 'May 12, 1997 ', 71, 85, 67, 'RIGHT', 5, 40, 40, 40, 40, 40, 74, 2, NULL, 78, 74, 87, 89, TIMESTAMP '2021-07-29 18:10:32.771326', 'Netherlands', 'Netherlands', 77, 'DMF', 'AMF,CB', 87, TIMESTAMP '2021-07-29 18:10:32.688323', 'F. DE JONG', 'FC BARCELONA', 'https://pesdb.net/pes2021/?id=108662', 72, 70, 'Frenkie de Jong', 'Step On Skill Control,Weighted Pass,Through Passing,Outside Curler,One-touch Pass,Heel Trick,Gamesmanship,Cut Behind & Turn,Scotch Move,Double Touch', 'Orchestrator', 'CMF', TIMESTAMP '2021-07-29 18:11:06.930629', 'Atomic Ants FC', 'https://psml.rs/index.php?action=shwply&playerID=108662', 40000000.00, 81, 84, NULL, NULL, NULL, 88, TIMESTAMP '2021-07-29 18:10:32.773324', 'midfield - Central Midfield', 'https://www.transfermarkt.com/frenkie-de-jong/profil/spieler/326330', 3, 3, NULL, 'C', 'https://www.whoscored.com/Players/279423/Show/Frenkie-de-Jong');
+(1, 90, 34, 50, 96, 96, 50, 'Without Club', 'Early Cross,Trickster,Speeding Bullet,Mazing Run,Incisive Run', '-', 90, 'Jun 24, 1987 ', 45, 97, 95, 'LEFT', 8, 40, 40, 40, 40, 40, 70, 2, NULL, 63, 82, 91, 90, TIMESTAMP '2021-07-29 18:06:27.396607', 'Argentina', 'Argentina', 95, 'SS,CF', 'LWF,AMF,RMF', 94, TIMESTAMP '2021-07-29 18:06:27.395608', 'L. MESSI', 'FC BARCELONA', 'https://pesdb.net/pes2021/?id=7511', 70, 94, 'Lionel Messi', 'Long Range Drive,Captaincy,Through Passing,One-touch Pass,Penalty Specialist,Dipping Shot,Chip Shot Control,Long Range Shooting,Double Touch,First-time Shot', 'Creative Playmaker', 'RWF', TIMESTAMP '2021-07-29 18:06:55.026275', 'AC Milan', 'https://psml.rs/index.php?action=shwply&playerID=7511', 80000000.00, 81, 78, NULL, NULL, NULL, 96, TIMESTAMP '2021-07-29 18:06:27.420604', 'attack - Right Winger', 'https://www.transfermarkt.com/lionel-messi/profil/spieler/28003', 3, 1, NULL, 'C', 'https://www.whoscored.com/Players/11119/Show/Lionel-Messi'),
+(2, 83, 24, 78, 80, 86, 75, 'FC Barcelona', 'Long Ball Expert,Mazing Run', 'Jun 30, 2026', 71, 'May 12, 1997 ', 71, 85, 67, 'RIGHT', 5, 40, 40, 40, 40, 40, 74, 2, NULL, 78, 74, 87, 89, TIMESTAMP '2021-07-29 18:10:32.771326', 'Netherlands', 'Netherlands', 77, 'DMF', 'AMF,CB', 87, TIMESTAMP '2021-07-29 18:10:32.688323', 'F. DE JONG', 'FC BARCELONA', 'https://pesdb.net/pes2021/?id=108662', 72, 70, 'Frenkie de Jong', 'Step On Skill Control,Weighted Pass,Through Passing,Outside Curler,One-touch Pass,Heel Trick,Gamesmanship,Cut Behind & Turn,Scotch Move,Double Touch', 'Orchestrator', 'CMF', TIMESTAMP '2021-07-29 18:11:06.930629', 'Atomic Ants FC', 'https://psml.rs/index.php?action=shwply&playerID=108662', 40000000.00, 81, 84, NULL, NULL, NULL, 88, TIMESTAMP '2021-07-29 18:10:32.773324', 'midfield - Central Midfield', 'https://www.transfermarkt.com/frenkie-de-jong/profil/spieler/326330', 3, 3, NULL, 'C', 'https://www.whoscored.com/Players/279423/Show/Frenkie-de-Jong'),
+(3, 81, 28, 82, 72, 76, 50, 'Inter Milan', 'Mazing Run', 'Jun 30, 2024', 80, 'May 13, 1993 ', 50, 80, 87, 'LEFT', 6, 40, 40, 40, 40, 40, 86, 2, NULL, 84, 87, 77, 72, TIMESTAMP '2021-08-03 10:58:47.809075', 'Belgium', 'Belgium', 86, 'SS', NULL, 86, TIMESTAMP '2021-08-03 10:58:48.220076', 'R. LUKAKU', 'LOMBARDIA NA', 'https://pesdb.net/pes2021/?id=40122', 95, 70, 'Romelu Lukaku', 'Long Range Drive,Heading,Captaincy,Outside Curler,Penalty Specialist,Gamesmanship,First-time Shot,Fighting Spirit', 'Fox in the Box', 'CF', TIMESTAMP '2021-08-03 10:59:08.209608', 'Hull City', 'https://psml.rs/index.php?action=shwply&playerID=40122', 30000000.00, 88, 82, NULL, NULL, NULL, 73, TIMESTAMP '2021-08-03 10:58:47.89531', 'attack - Centre-Forward', 'https://www.transfermarkt.com/romelu-lukaku/profil/spieler/96341', 3, 2, NULL, 'C', 'https://www.whoscored.com/Players/78498/Show/Romelu-Lukaku');
 
 insert into app_user_player values
 (1, 0, 1),
@@ -25,7 +26,18 @@ insert into transfer values
 (14, DATE '2014-09-01', 'Willem II U18', '-', 'Willem II U19', '-', 2),
 (15, DATE '2015-05-01', 'Willem II U21', '-', 'Willem II', '-', 2),
 (16, DATE '2014-05-10', 'Willem II/RKC-17', '-', 'Willem II U18', '-', 2),
-(17, DATE '2013-07-01', 'Willem II/RKC Y.', '-', 'Willem II/RKC-17', '-', 2);
+(17, DATE '2013-07-01', 'Willem II/RKC Y.', '-', 'Willem II/RKC-17', '-', 2),
+(18, DATE '2019-08-08', 'Man Utd', STRINGDECODE('\u20ac75.00m'), 'Inter', STRINGDECODE('\u20ac74.00m'), 3),
+(19, DATE '2011-08-08', 'RSC Anderlecht', STRINGDECODE('\u20ac15.00m'), 'Chelsea', STRINGDECODE('\u20ac15.00m'), 3),
+(20, DATE '2014-05-31', 'Everton', STRINGDECODE('\u20ac25.00m'), 'Chelsea', 'End of loan', 3),
+(21, DATE '2012-08-10', 'Chelsea', STRINGDECODE('\u20ac14.00m'), 'West Brom', 'loan transfer', 3),
+(22, DATE '2009-07-01', 'Anderlecht U17', STRINGDECODE('\u20ac400Th.'), 'RSC Anderlecht', '-', 3),
+(23, DATE '2008-07-01', 'Anderlecht Yth.', '-', 'Anderlecht U17', '-', 3),
+(24, DATE '2017-07-10', 'Everton', STRINGDECODE('\u20ac50.00m'), 'Man Utd', STRINGDECODE('\u20ac84.70m'), 3),
+(25, DATE '2006-07-01', 'Lierse SK Yth.', '-', 'Anderlecht Yth.', '?', 3),
+(26, DATE '2013-09-02', 'Chelsea', STRINGDECODE('\u20ac24.00m'), 'Everton', STRINGDECODE('Loan fee: \u20ac3.50m'), 3),
+(27, DATE '2013-05-31', 'West Brom', STRINGDECODE('\u20ac19.00m'), 'Chelsea', 'End of loan', 3),
+(28, DATE '2014-07-30', 'Chelsea', STRINGDECODE('\u20ac25.00m'), 'Everton', STRINGDECODE('\u20ac35.36m'), 3);
 
 insert into market_value values
 (1, 'FC Barcelona B', DATE '2004-12-20', 3000000.00, 1),
@@ -85,4 +97,17 @@ insert into market_value values
 (55, 'Ajax Amsterdam', DATE '2017-10-26', 3500000.00, 2),
 (56, 'Ajax Amsterdam', DATE '2017-01-18', 750000.00, 2),
 (57, 'Ajax Amsterdam', DATE '2018-12-28', 60000000.00, 2),
-(58, 'Willem II Tilburg', DATE '2015-07-01', 250000.00, 2);
+(58, 'Willem II Tilburg', DATE '2015-07-01', 250000.00, 2),
+(59, 'Chelsea FC', DATE '2012-06-24', 14000000.00, 3),
+(60, 'Everton FC', DATE '2015-07-01', 28000000.00, 3),
+(61, 'Everton FC', DATE '2017-02-20', 50000000.00, 3),
+(62, 'Inter Milan', DATE '2020-08-25', 85000000.00, 3),
+(63, 'Manchester United', DATE '2018-05-28', 90000000.00, 3),
+(64, 'Inter Milan', DATE '2019-12-12', 75000000.00, 3),
+(65, 'RSC Anderlecht U17', DATE '2009-05-27', 400000.00, 3),
+(66, 'Manchester United', DATE '2018-07-16', 100000000.00, 3),
+(67, 'Manchester United', DATE '2017-08-16', 60000000.00, 3),
+(68, 'Inter Milan', DATE '2021-05-26', 100000000.00, 3),
+(69, 'Everton FC', DATE '2017-06-28', 50000000.00, 3),
+(70, 'Manchester United', DATE '2018-12-19', 85000000.00, 3),
+(71, 'Inter Milan', DATE '2020-03-03', 85000000.00, 3);
