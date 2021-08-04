@@ -86,7 +86,12 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public List<Player> getByNameAndUserUnfollowed(String playerName, String username) {
-        return playerRepository.findByPlayerNameWithUser(playerName, username);
+        return playerRepository.findByPlayerNameContainsAndWithouUser(playerName, username);
+    }
+
+    @Override
+    public List<Player> getByNameAndUserFollowed(String playerName, String username) {
+        return playerRepository.findByPlayerNameContainsAndUser(playerName, username);
     }
 
     @Override

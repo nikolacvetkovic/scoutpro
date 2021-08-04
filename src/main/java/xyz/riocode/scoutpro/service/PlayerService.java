@@ -13,6 +13,7 @@ public interface PlayerService {
     Player getByIdAndUser(Long id, String username);
     Player getByIdAndUserComplete(Long id, String username);
     List<Player> getByNameAndUserUnfollowed(String playerName, String username);
+    List<Player> getByNameAndUserFollowed(String playerName, String username);
     List<Player> getByName(String playerName);
     Page<Player> getByUserPaging(String username, int page);
     Page<Player> getByUserAndPositionPaging(String username, String position, int page);

@@ -62,7 +62,14 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             "                JOIN u.appUser au" +
             "                WHERE au.username = :username)" +
             "AND p.playerName LIKE LOWER(CONCAT('%', :playerName, '%'))")
-    List<Player> findByPlayerNameWithUser(String playerName, String username);
+    List<Player> findByPlayerNameContainsAndWithouUser(String playerName, String username);
+
+    @Query("SELECT DISTINCT p FROM Player p " +
+            "WHERE p IN (SELECT p FROM p.users u" +
+            "                JOIN u.appUser au" +
+            "                WHERE au.username = :username)" +
+            "AND p.playerName LIKE LOWER(CONCAT('%', :playerName, '%'))")
+    List<Player> findByPlayerNameContainsAndUser(String playerName, String username);
 
     Player findByTransfermarktUrl(String transfermarktUrl);
 

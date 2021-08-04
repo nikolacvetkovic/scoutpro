@@ -110,4 +110,10 @@ public class PlayerController {
         List<PlayerSearchDTO> playerSearchDTOS = playerConverter.playersToAddPlayerSearchDTO(playerService.getByNameAndUserUnfollowed(playerName, "cvele"), "cvele");
         return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
     }
+
+    @GetMapping("/{playerName}/name/followed")
+    public ResponseEntity<List<PlayerSearchDTO>> getPlayerByNameFollowed(@PathVariable String playerName){
+        List<PlayerSearchDTO> playerSearchDTOS = playerConverter.playersToPlayerSearchDTO(playerService.getByNameAndUserFollowed(playerName, "cvele"), "cvele");
+        return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
+    }
 }

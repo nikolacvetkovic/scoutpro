@@ -10,7 +10,7 @@ function setListenerOnInputs() {
         var searchResults = $('#searchResultPlayer-'+playerNumber+ ' tbody').get(0);
         $(searchResults).empty();
         if(this.value.length > 2){
-            $.get('/player/'+this.value+'/name', function(data){
+            $.get('/player/'+this.value+'/name/followed', function(data){
                 if(data.length > 0) {
                     data.forEach(function (player) {
                         $(searchResults).append($('<tr>').attr('id', player.id)
