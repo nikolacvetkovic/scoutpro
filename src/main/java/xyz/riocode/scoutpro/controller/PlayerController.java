@@ -57,23 +57,8 @@ public class PlayerController {
 
     @GetMapping("/{playerId}/{isUserPlayer}/follow")
     public String follow(@PathVariable Long playerId, @PathVariable Boolean isUserPlayer){
-        playerConverter.playerToPlayerCompleteDTO(playerService.addExistingPlayerToUser(playerId, isUserPlayer, "cvele"), "cvele");
+        playerService.addExistingPlayerToUser(playerId, isUserPlayer, "cvele");
         return "redirect:/player/"+ playerId + "/show";
-    }
-
-    @GetMapping(value = "/{pageNumber}/page", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DashboardDTO> getPlayers(@PathVariable int pageNumber, @RequestParam(required = false) String position){
-        log.info("Get players by page number: {}", pageNumber);
-        if (position == null) {
-            return new ResponseEntity<>(playerConverter.playersToDashboardDTO(playerService.getByUserPaging("cvele", pageNumber), "cvele"), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(playerConverter.playersToDashboardDTO(playerService.getByUserAndPositionPaging("cvele", position, pageNumber), "cvele"), HttpStatus.OK);
-        }
-    }
-
-    @GetMapping(value = "/{playerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PlayerCompleteDTO> getPlayerById(@PathVariable Long playerId, ModelMap modelMap){
-        return new ResponseEntity<>(playerConverter.playerToPlayerCompleteDTO(playerService.getByIdAndUserComplete(playerId, "cvele"), "cvele"), HttpStatus.OK);
     }
 
     @GetMapping("/{playerId}/show")
@@ -83,19 +68,10 @@ public class PlayerController {
         return "player/showPlayer";
     }
 
-    @GetMapping("/{playerName}/name")
-    public ResponseEntity<List<PlayerSearchDTO>> getPlayerByName(@PathVariable String playerName){
-        return new ResponseEntity<List<PlayerSearchDTO>>(playerConverter.playersToPlayerSearchDTO(playerService.getByName(playerName), "cvele"), HttpStatus.OK);
-    }
-
-    @GetMapping("/{playerName}/name/unfollowed")
-    public ResponseEntity<List<PlayerSearchDTO>> getPlayerByNameUnfollowed(@PathVariable String playerName){
-        return new ResponseEntity<List<PlayerSearchDTO>>(playerConverter.playersToAddPlayerSearchDTO(playerService.getByNameAndUserUnfollowed(playerName, "cvele"), "cvele"), HttpStatus.OK);
-    }
-
     @GetMapping("/{playerId}/compare")
     public String compare(@PathVariable Long playerId, ModelMap modelMap){
-        modelMap.addAttribute("player1", playerConverter.playerToPlayerCompleteDTO(playerService.getByIdAndUserComplete(playerId, "cvele"), "cvele"));
+        PlayerCompleteDTO playerCompleteDTO = playerConverter.playerToPlayerCompleteDTO(playerService.getByIdAndUserComplete(playerId, "cvele"), "cvele");
+        modelMap.addAttribute("player1", playerCompleteDTO);
         return "player/compare";
     }
 
@@ -103,5 +79,35 @@ public class PlayerController {
     public String unfollow(@PathVariable Long playerId){
         playerService.delete(playerId, "cvele");
         return "redirect:/dashboard";
+    }
+
+    @GetMapping(value = "/{pageNumber}/page", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DashboardDTO> getPlayers(@PathVariable int pageNumber, @RequestParam(required = false) String position){
+        log.info("Get players by page number: {}", pageNumber);
+        DashboardDTO dashboardDTO;
+        if (position == null) {
+            dashboardDTO = playerConverter.playersToDashboardDTO(playerService.getByUserPaging("cvele", pageNumber), "cvele");
+        } else {
+            dashboardDTO = playerConverter.playersToDashboardDTO(playerService.getByUserAndPositionPaging("cvele", position, pageNumber), "cvele");
+        }
+        return new ResponseEntity<>(dashboardDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{playerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PlayerCompleteDTO> getPlayerById(@PathVariable Long playerId, ModelMap modelMap){
+        PlayerCompleteDTO playerCompleteDTO = playerConverter.playerToPlayerCompleteDTO(playerService.getByIdAndUserComplete(playerId, "cvele"), "cvele");
+        return new ResponseEntity<>(playerCompleteDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/{playerName}/name")
+    public ResponseEntity<List<PlayerSearchDTO>> getPlayerByName(@PathVariable String playerName){
+        List<PlayerSearchDTO> playerSearchDTOS = playerConverter.playersToPlayerSearchDTO(playerService.getByName(playerName), "cvele");
+        return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/{playerName}/name/unfollowed")
+    public ResponseEntity<List<PlayerSearchDTO>> getPlayerByNameUnfollowed(@PathVariable String playerName){
+        List<PlayerSearchDTO> playerSearchDTOS = playerConverter.playersToAddPlayerSearchDTO(playerService.getByNameAndUserUnfollowed(playerName, "cvele"), "cvele");
+        return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
     }
 }
