@@ -23,8 +23,7 @@ function setWindowAndFont(){
     }
     $('#left').css('height', window.innerHeight - 160);
     $('#left table tbody').css('height', $('#left').height()-34);
-    $('#right').css('height', window.innerHeight - 145);
-    $('#right table tbody').css('height', $('#right').height()-34);
+    $('#right').css('height', window.innerHeight - 160);
 }
 
 function getPlayersAndFillTable(url){
