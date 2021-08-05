@@ -51,8 +51,11 @@ public class PlayerController {
             modelMap.addAttribute("player", player);
             return "player/playerForm";
         }
-        playerService.createOrUpdate(playerConverter.playerFormDTOToPlayer(player), "cvele");
-        return "redirect:/dashboard";
+        PlayerCompleteDTO createdPlayer = playerConverter.playerToPlayerCompleteDTO(
+                                            playerService.createOrUpdate(
+                                                playerConverter.playerFormDTOToPlayer(player), "cvele"), "cvele");
+
+        return "redirect:/player/"+ createdPlayer.getId() +"/show";
     }
 
     @GetMapping("/{playerId}/{isUserPlayer}/follow")
