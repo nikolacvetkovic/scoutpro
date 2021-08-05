@@ -17,6 +17,7 @@ import xyz.riocode.scoutpro.repository.PlayerRepository;
 import xyz.riocode.scoutpro.scrape.template.async.ScrapeAsyncWrapper;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -49,6 +50,7 @@ public class PlayerServiceImpl implements PlayerService {
             p = scrapeAll(player);
             AppUser appUser = appUserRepository.findByUsername(username).get();
             p.getUsers().stream().findFirst().get().setAppUser(appUser);
+            p.setInserted(LocalDateTime.now());
         } else {
             p = update(player, username);
         }

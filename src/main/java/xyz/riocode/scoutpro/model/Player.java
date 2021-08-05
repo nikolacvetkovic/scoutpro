@@ -318,7 +318,7 @@ public class Player implements Serializable {
     @Column(name = "statistic_last_check")
     private LocalDateTime statisticLastCheck;
 
-    @Column(name = "inserted", columnDefinition = "timestamp default current_timestamp")
+    @Column(name = "inserted")
     private LocalDateTime inserted;
 
     public void addUser(AppUser appUser){
