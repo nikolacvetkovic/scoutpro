@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import xyz.riocode.scoutpro.scrape.service.ScrapeRegExpressionService;
+import xyz.riocode.scoutpro.scrape.service.ScrapeFieldService;
 import xyz.riocode.scoutpro.service.AppUserService;
 
 @Controller
@@ -15,17 +15,16 @@ import xyz.riocode.scoutpro.service.AppUserService;
 public class AdminController {
 
     private final AppUserService userService;
-    private final ScrapeRegExpressionService scrapeRegExpService;
+    private final ScrapeFieldService scrapeFieldService;
 
-    public AdminController(AppUserService userService, ScrapeRegExpressionService scrapeRegExpService) {
+    public AdminController(AppUserService userService, ScrapeFieldService scrapeFieldService) {
         this.userService = userService;
-        this.scrapeRegExpService = scrapeRegExpService;
+        this.scrapeFieldService = scrapeFieldService;
     }
 
 
     @GetMapping("/dashboard")
     public String showAdminDashboard(){
-
         return "admin/dashboard";
     }
 
