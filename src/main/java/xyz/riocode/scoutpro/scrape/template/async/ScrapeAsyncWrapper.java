@@ -5,29 +5,24 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.model.Player;
 import xyz.riocode.scoutpro.scrape.helper.ScrapeHelper;
-import xyz.riocode.scoutpro.scrape.page.PsmlPageSupplierImpl;
+import xyz.riocode.scoutpro.scrape.page.PageSupplier;
 import xyz.riocode.scoutpro.scrape.template.*;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Async
 @Component
 public class ScrapeAsyncWrapper {
-    
-    private final PsmlPageSupplierImpl pageSupplier;
 
-    public ScrapeAsyncWrapper(PsmlPageSupplierImpl pageSupplier) {
-        this.pageSupplier = pageSupplier;
-    }
-
-    public CompletableFuture<Player> tmAllScrape(Player player){
+    public CompletableFuture<Player> tmAllScrape(Player player, Map<String, String> scrapeFields){
 
         Document page = ScrapeHelper.getPage(player.getTransfermarktUrl());
 
-        CompletableFuture<Player> tmCore = tmCoreScrape(player, page);
-        CompletableFuture<Player> tmMarketValues = tmMarketValueScrape(player, page);
-        CompletableFuture<Player> tmTransfers = tmTransferScrape(player, page);
+        CompletableFuture<Player> tmCore = tmCoreScrape(player, page, scrapeFields);
+        CompletableFuture<Player> tmMarketValues = tmMarketValueScrape(player, page, scrapeFields);
+        CompletableFuture<Player> tmTransfers = tmTransferScrape(player, page, scrapeFields);
 
         CompletableFuture.allOf(tmCore, tmMarketValues, tmTransfers).join();
         Player p = null;
@@ -43,93 +38,50 @@ public class ScrapeAsyncWrapper {
         return CompletableFuture.completedFuture(p);
     }
 
-    public CompletableFuture<Player> tmCoreScrape(Player player){
-        TMCoreScrapeTemplateImpl tmCoreScrapeTemplate = new TMCoreScrapeTemplateImpl();
+    public CompletableFuture<Player> tmCoreScrape(Player player, Map<String, String> scrapeFields){
+        TMCoreScrapeTemplateImpl tmCoreScrapeTemplate = new TMCoreScrapeTemplateImpl(scrapeFields);
         tmCoreScrapeTemplate.scrape(player);
         return CompletableFuture.completedFuture(player);
     }
 
-    private CompletableFuture<Player> tmCoreScrape(Player player, Document page){
-        TMCoreScrapeTemplateImpl tmCoreScrapeTemplate = new TMCoreScrapeTemplateImpl();
+    private CompletableFuture<Player> tmCoreScrape(Player player, Document page, Map<String, String> scrapeFields){
+        TMCoreScrapeTemplateImpl tmCoreScrapeTemplate = new TMCoreScrapeTemplateImpl(scrapeFields);
         tmCoreScrapeTemplate.scrape(player, page);
         return CompletableFuture.completedFuture(player);
     }
 
-    public CompletableFuture<Player> tmMarketValueScrape(Player player){
-        TMMarketValueScrapeTemplateImpl tmMarketValueScrapeTemplate = new TMMarketValueScrapeTemplateImpl();
+    public CompletableFuture<Player> tmMarketValueScrape(Player player, Map<String, String> scrapeFields){
+        TMMarketValueScrapeTemplateImpl tmMarketValueScrapeTemplate = new TMMarketValueScrapeTemplateImpl(scrapeFields);
         tmMarketValueScrapeTemplate.scrape(player);
         return CompletableFuture.completedFuture(player);
     }
 
-    private CompletableFuture<Player> tmMarketValueScrape(Player player, Document page){
-        TMMarketValueScrapeTemplateImpl tmMarketValueScrapeTemplate = new TMMarketValueScrapeTemplateImpl();
+    private CompletableFuture<Player> tmMarketValueScrape(Player player, Document page, Map<String, String> scrapeFields){
+        TMMarketValueScrapeTemplateImpl tmMarketValueScrapeTemplate = new TMMarketValueScrapeTemplateImpl(scrapeFields);
         tmMarketValueScrapeTemplate.scrape(player, page);
         return CompletableFuture.completedFuture(player);
     }
 
-    public CompletableFuture<Player> tmTransferScrape(Player player){
-        TMTransferScrapeTemplateImpl tmTransferScrapeTemplate = new TMTransferScrapeTemplateImpl();
+    public CompletableFuture<Player> tmTransferScrape(Player player, Map<String, String> scrapeFields){
+        TMTransferScrapeTemplateImpl tmTransferScrapeTemplate = new TMTransferScrapeTemplateImpl(scrapeFields);
         tmTransferScrapeTemplate.scrape(player);
         return CompletableFuture.completedFuture(player);
     }
 
-    public CompletableFuture<Player> tmTransferScrape(Player player, Document page){
-        TMTransferScrapeTemplateImpl tmTransferScrapeTemplate = new TMTransferScrapeTemplateImpl();
+    public CompletableFuture<Player> tmTransferScrape(Player player, Document page, Map<String, String> scrapeFields){
+        TMTransferScrapeTemplateImpl tmTransferScrapeTemplate = new TMTransferScrapeTemplateImpl(scrapeFields);
         tmTransferScrapeTemplate.scrape(player, page);
         return CompletableFuture.completedFuture(player);
     }
 
-    public CompletableFuture<Player> wsAllScrape(Player player){
-        Document page = ScrapeHelper.getPageWithWebDriver(player.getWhoScoredUrl());
-
-        CompletableFuture<Player> statistics = statisticsScrape(player, page);
-        CompletableFuture<Player> characteristics = characteristicsScrape(player, page);
-
-        CompletableFuture.allOf(statistics, characteristics).join();
-        Player p = null;
-
-        try {
-            p = statistics.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return CompletableFuture.completedFuture(p);
-    }
-
-    public CompletableFuture<Player> statisticsScrape(Player player){
-        StatisticsScrapeTemplateImpl statisticsScrapeTemplate = new StatisticsScrapeTemplateImpl();
-        statisticsScrapeTemplate.scrape(player);
-        return CompletableFuture.completedFuture(player);
-    }
-
-    private CompletableFuture<Player> statisticsScrape(Player player, Document page){
-        StatisticsScrapeTemplateImpl statisticsScrapeTemplate = new StatisticsScrapeTemplateImpl();
-        statisticsScrapeTemplate.scrape(player, page);
-        return CompletableFuture.completedFuture(player);
-    }
-
-    public CompletableFuture<Player> characteristicsScrape(Player player){
-        CharacteristicsScrapeTemplateImpl characteristicsScrapeTemplate = new CharacteristicsScrapeTemplateImpl();
-        characteristicsScrapeTemplate.scrape(player);
-        return CompletableFuture.completedFuture(player);
-    }
-
-    private CompletableFuture<Player> characteristicsScrape(Player player, Document page){
-        CharacteristicsScrapeTemplateImpl characteristicsScrapeTemplate = new CharacteristicsScrapeTemplateImpl();
-        characteristicsScrapeTemplate.scrape(player, page);
-        return CompletableFuture.completedFuture(player);
-    }
-
-    public CompletableFuture<Player> pesDbScrape(Player player){
-        PesDbScrapeTemplateImpl pesDbScrapeTemplate = new PesDbScrapeTemplateImpl();
+    public CompletableFuture<Player> pesDbScrape(Player player, Map<String, String> scrapeFields){
+        PesDbScrapeTemplateImpl pesDbScrapeTemplate = new PesDbScrapeTemplateImpl(scrapeFields);
         pesDbScrapeTemplate.scrape(player);
         return CompletableFuture.completedFuture(player);
     }
 
-    public CompletableFuture<Player> psmlScrape(Player player){
-        PsmlScrapeTemplateImpl psmlScrapeTemplate = new PsmlScrapeTemplateImpl(pageSupplier);
+    public CompletableFuture<Player> psmlScrape(Player player, Map<String, String> scrapeFields, PageSupplier pageSupplier){
+        PsmlScrapeTemplateImpl psmlScrapeTemplate = new PsmlScrapeTemplateImpl(scrapeFields, pageSupplier);
         psmlScrapeTemplate.scrape(player);
         return CompletableFuture.completedFuture(player);
     }

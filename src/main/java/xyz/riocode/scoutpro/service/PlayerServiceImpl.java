@@ -14,13 +14,18 @@ import xyz.riocode.scoutpro.model.Player;
 import xyz.riocode.scoutpro.repository.AppUserPlayerRepository;
 import xyz.riocode.scoutpro.repository.AppUserRepository;
 import xyz.riocode.scoutpro.repository.PlayerRepository;
+import xyz.riocode.scoutpro.scrape.model.ScrapeField;
+import xyz.riocode.scoutpro.scrape.page.PsmlPageSupplierImpl;
+import xyz.riocode.scoutpro.scrape.repository.ScrapeFieldRepository;
 import xyz.riocode.scoutpro.scrape.template.async.ScrapeAsyncWrapper;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,12 +35,16 @@ public class PlayerServiceImpl implements PlayerService {
     private final AppUserRepository appUserRepository;
     private final AppUserPlayerRepository appUserPlayerRepository;
     private final ScrapeAsyncWrapper scrapeAsyncWrapper;
+    private final PsmlPageSupplierImpl psmlPageSupplier;
+    private final ScrapeFieldRepository scrapeFieldRepository;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, AppUserRepository appUserRepository, AppUserPlayerRepository appUserPlayerRepository, ScrapeAsyncWrapper scrapeAsyncWrapper) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, AppUserRepository appUserRepository, AppUserPlayerRepository appUserPlayerRepository, ScrapeAsyncWrapper scrapeAsyncWrapper, PsmlPageSupplierImpl psmlPageSupplier, ScrapeFieldRepository scrapeFieldRepository) {
         this.playerRepository = playerRepository;
         this.appUserRepository = appUserRepository;
         this.appUserPlayerRepository = appUserPlayerRepository;
         this.scrapeAsyncWrapper = scrapeAsyncWrapper;
+        this.psmlPageSupplier = psmlPageSupplier;
+        this.scrapeFieldRepository = scrapeFieldRepository;
     }
 
     @Override
@@ -125,12 +134,23 @@ public class PlayerServiceImpl implements PlayerService {
         Player foundPlayer = playerRepository.findByTransfermarktUrl(player.getTransfermarktUrl());
         if(foundPlayer != null) throw new DuplicatePlayerException();
 
-        CompletableFuture<Player> tmAll = scrapeAsyncWrapper.tmAllScrape(player);
-        CompletableFuture<Player> pesDb = scrapeAsyncWrapper.pesDbScrape(player);
-//        CompletableFuture<Player> wsAll = scrapeAsyncWrapper.wsAllScrape(player);
-        CompletableFuture<Player> psml = scrapeAsyncWrapper.psmlScrape(player);
+        List<ScrapeField> scrapeFields = scrapeFieldRepository.findAll();
+        Map<String, String> tmScrapeFields = scrapeFields.stream()
+                .filter(scrapeField -> scrapeField.getScrapeSite().getName().equals("transfermarkt"))
+                .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
 
-//        CompletableFuture.allOf(tmAll, pesDb, wsAll, psml).join();
+        Map<String, String> pesdbScrapeFields = scrapeFields.stream()
+                .filter(scrapeField -> scrapeField.getScrapeSite().getName().equals("pesdb"))
+                .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
+
+        Map<String, String> psmlScrapeFields = scrapeFields.stream()
+                .filter(scrapeField -> scrapeField.getScrapeSite().getName().equals("psml"))
+                .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
+
+        CompletableFuture<Player> tmAll = scrapeAsyncWrapper.tmAllScrape(player, tmScrapeFields);
+        CompletableFuture<Player> pesDb = scrapeAsyncWrapper.pesDbScrape(player, pesdbScrapeFields);
+        CompletableFuture<Player> psml = scrapeAsyncWrapper.psmlScrape(player, psmlScrapeFields, psmlPageSupplier);
+
         CompletableFuture.allOf(tmAll, pesDb, psml).join();
         Player p = null;
 

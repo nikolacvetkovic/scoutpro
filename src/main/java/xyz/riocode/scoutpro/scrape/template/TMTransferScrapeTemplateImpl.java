@@ -11,8 +11,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Map;
 
 public class TMTransferScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
+
+    public TMTransferScrapeTemplateImpl(Map<String, String> scrapeFields) {
+        super(scrapeFields);
+    }
 
     @Override
     public Player scrape(Player player) {
@@ -27,19 +32,19 @@ public class TMTransferScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
 
 
     protected Player scrapeTransfers(Document doc, Player player){
-        Elements elements = ScrapeHelper.getElements(doc, "div.responsive-table tr.zeile-transfer");
+        Elements elements = ScrapeHelper.getElements(doc, scrapeFields.get("transferTable"));
         for(Element e : elements){
             Transfer transfer = new Transfer();
-            String dateString = ScrapeHelper.getElementData(e, "td:nth-of-type(2)");
+            String dateString = ScrapeHelper.getElementData(e, scrapeFields.get("dateOfTransfer"));
             LocalDate dateOfTransfer = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("MMM d, yyyy").withLocale(Locale.US));
             transfer.setDateOfTransfer(dateOfTransfer);
-            String fromTeam = ScrapeHelper.getElementData(e, "td:nth-of-type(5) a");
+            String fromTeam = ScrapeHelper.getElementData(e, scrapeFields.get("fromTeam"));
             transfer.setFromTeam(fromTeam);
-            String toTeam = ScrapeHelper.getElementData(e, "td:nth-of-type(8) a");
+            String toTeam = ScrapeHelper.getElementData(e, scrapeFields.get("toTeam"));
             transfer.setToTeam(toTeam);
-            String marketValue = ScrapeHelper.getElementData(e, "td.zelle-mw");
+            String marketValue = ScrapeHelper.getElementData(e, scrapeFields.get("marketValue"));
             transfer.setMarketValue(marketValue);
-            String transferFee = ScrapeHelper.getElementData(e, "td.zelle-abloese");
+            String transferFee = ScrapeHelper.getElementData(e, scrapeFields.get("transferFee"));
             transfer.setTransferFee(transferFee);
             transfer.setPlayer(player);
             player.getTransfers().add(transfer);

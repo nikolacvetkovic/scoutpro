@@ -8,12 +8,14 @@ import xyz.riocode.scoutpro.scrape.page.PageSupplier;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class PsmlScrapeTemplateImpl extends WebDriverAbstractScrapeTemplate {
 
     private final PageSupplier pageSupplier;
 
-    public PsmlScrapeTemplateImpl(PageSupplier pageSupplier){
+    public PsmlScrapeTemplateImpl(Map<String, String> scrapeFields, PageSupplier pageSupplier){
+        super(scrapeFields);
         this.pageSupplier = pageSupplier;
     }
 
@@ -30,9 +32,9 @@ public class PsmlScrapeTemplateImpl extends WebDriverAbstractScrapeTemplate {
     }
 
     protected void scrapeCoreData(Document doc, Player player){
-        String teamName = ScrapeHelper.getElementData(doc, "table.innerTable tbody tr:nth-of-type(2) td:nth-of-type(2) p:nth-of-type(2) a");
+        String teamName = ScrapeHelper.getElementData(doc, scrapeFields.get("teamName"));
         player.setPsmlTeam(teamName != null?teamName:"Free");
-        String teamValue = ScrapeHelper.getElementDataOwn(doc, "table.innerTable tbody tr:nth-of-type(2) td:nth-of-type(3) p:nth-of-type(1)");
+        String teamValue = ScrapeHelper.getElementDataOwn(doc, scrapeFields.get("teamValue"));
         if(teamValue != null){
             teamValue = teamValue.replaceAll("[^0-9,]", "").replace(",", "");
         }

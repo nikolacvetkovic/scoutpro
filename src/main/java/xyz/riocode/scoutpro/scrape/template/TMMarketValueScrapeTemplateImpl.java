@@ -13,8 +13,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Map;
 
 public class TMMarketValueScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
+
+    public TMMarketValueScrapeTemplateImpl(Map<String, String> scrapeFields) {
+        super(scrapeFields);
+    }
+
     @Override
     public Player scrape(Player player) {
         Document page = getPage(player.getTransfermarktUrl());
