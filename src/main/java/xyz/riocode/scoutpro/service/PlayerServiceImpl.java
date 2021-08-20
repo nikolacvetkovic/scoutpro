@@ -97,7 +97,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public List<Player> getByNameAndUserUnfollowed(String playerName, String username) {
-        return playerRepository.findByPlayerNameContainsAndWithouUser(playerName, username);
+        return playerRepository.findByPlayerNameContainsAndWithoutUser(playerName, username);
     }
 
     @Override
@@ -108,6 +108,11 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public List<Player> getByName(String playerName) {
         return playerRepository.findByPlayerNameContains(playerName);
+    }
+
+    @Override
+    public Page<Player> getAllPaging(int page, int pageSize) {
+        return playerRepository.findAll(PageRequest.of(page, pageSize));
     }
 
     @Override

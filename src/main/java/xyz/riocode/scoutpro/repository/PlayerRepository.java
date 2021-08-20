@@ -19,6 +19,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
                 " WHERE u.username = :username",
             countQuery = "SELECT count(p) FROM Player p JOIN p.users up JOIN up.appUser u WHERE u.username = :username")
     Page<Player> findPlayersByUsername(String username, Pageable pageable);
+
     @Query(value = "SELECT p FROM Player p " +
             " LEFT JOIN FETCH p.psmlTransfers " +
             " LEFT JOIN FETCH p.marketValues " +
@@ -27,10 +28,18 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             " JOIN FETCH up.appUser u " +
             " WHERE u.username = :username" +
             " AND p.primaryPosition = :position",
-            countQuery = "SELECT count(p) FROM Player p JOIN p.users up JOIN up.appUser u WHERE u.username = :username AND p.primaryPosition = :position")
+            countQuery =    "SELECT count(p) FROM Player p " +
+                            "JOIN p.users up " +
+                            "JOIN up.appUser u " +
+                            "WHERE u.username = :username " +
+                            "AND p.primaryPosition = :position")
     Page<Player> findPlayersByUsernameAndPosition(String username, String position, Pageable pageable);
 
-    @Query("SELECT p FROM Player p JOIN FETCH p.users up JOIN FETCH up.appUser u WHERE p.id = :id AND u.username = :username")
+    @Query("SELECT p FROM Player p " +
+            "JOIN FETCH p.users up " +
+            "JOIN FETCH up.appUser u " +
+            "WHERE p.id = :id " +
+            "AND u.username = :username")
     Optional<Player> findPlayerByIdAndUsername(Long id, String username);
 
     @Query("SELECT p FROM Player p " +
@@ -46,14 +55,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             " AND u.username = :username ")
     Optional<Player> findPlayerByIdAndUsernameComplete(Long id, String username);
 
-    @Query("SELECT DISTINCT p FROM Player p " +
-            "LEFT JOIN FETCH p.marketValues " +
-            "JOIN FETCH p.users up " +
-            "JOIN FETCH up.appUser u " +
-            "WHERE p.playerName LIKE LOWER(CONCAT('%', :playerName, '%')) " +
-            "AND u.username = :username")
-    List<Player> findByPlayerNameAndUsername(String playerName, String username);
-
     List<Player> findByPlayerNameContains(String playerName);
 
     @Query("SELECT DISTINCT p FROM Player p " +
@@ -62,7 +63,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             "                JOIN u.appUser au" +
             "                WHERE au.username = :username)" +
             "AND p.playerName LIKE LOWER(CONCAT('%', :playerName, '%'))")
-    List<Player> findByPlayerNameContainsAndWithouUser(String playerName, String username);
+    List<Player> findByPlayerNameContainsAndWithoutUser(String playerName, String username);
 
     @Query("SELECT DISTINCT p FROM Player p " +
             "WHERE p IN (SELECT p FROM p.users u" +
@@ -73,6 +74,10 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     Player findByTransfermarktUrl(String transfermarktUrl);
 
-    @Query("SELECT p FROM Player p JOIN FETCH p.users up JOIN FETCH up.appUser u WHERE p.pesDbPlayerName = :pesDbName AND u.username = :username")
-    Player findByPesDbName(String pesDbName, String username);
+    @Query("SELECT p FROM Player p " +
+            "JOIN FETCH p.users up " +
+            "JOIN FETCH up.appUser u " +
+            "WHERE p.pesDbPlayerName = :pesDbName " +
+            "AND u.username = :username")
+    Player findByPesDbNameAndUser(String pesDbName, String username);
 }
