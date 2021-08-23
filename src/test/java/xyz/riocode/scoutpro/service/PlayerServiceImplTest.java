@@ -1,26 +1,7 @@
 package xyz.riocode.scoutpro.service;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import xyz.riocode.scoutpro.exception.PlayerNotFoundException;
-import xyz.riocode.scoutpro.model.AppUser;
-import xyz.riocode.scoutpro.model.AppUserPlayer;
-import xyz.riocode.scoutpro.model.Player;
-import xyz.riocode.scoutpro.repository.PlayerRepository;
-import xyz.riocode.scoutpro.scrape.template.async.ScrapeAsyncWrapper;
-
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerServiceImplTest {
