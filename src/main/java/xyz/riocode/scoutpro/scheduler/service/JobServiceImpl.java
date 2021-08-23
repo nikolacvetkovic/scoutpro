@@ -48,6 +48,7 @@ public class JobServiceImpl implements JobService{
                     job.getJobGroup(),
                     job.getCustomConfigData());
             scheduler.addJob(jobDetail, true);
+            job.setJobStatus("CREATED");
         } catch (ClassNotFoundException | SchedulerException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
@@ -191,7 +192,6 @@ public class JobServiceImpl implements JobService{
             foundedJob.setCronExpression(job.getCronExpression());
             foundedJob.setRepeatIntervalInSeconds(job.getRepeatIntervalInSeconds());
             foundedJob.setRepeatCount(job.getRepeatCount());
-            foundedJob.setJobStatus("SCHEDULED");
         } catch (SchedulerException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
