@@ -15,6 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import xyz.riocode.scoutpro.error.AppError;
 import xyz.riocode.scoutpro.exception.DuplicatePlayerException;
+import xyz.riocode.scoutpro.exception.JobNotFoundException;
 import xyz.riocode.scoutpro.exception.ParseException;
 import xyz.riocode.scoutpro.exception.PlayerNotFoundException;
 
@@ -31,8 +32,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
     
     private static final Logger LOG = LogManager.getLogger(GlobalExceptionHandler.class);
     
-    @ExceptionHandler(PlayerNotFoundException.class)
-    public ResponseEntity<AppError> handlePlayerNotFound(HttpServletRequest req, PlayerNotFoundException ex){
+    @ExceptionHandler({PlayerNotFoundException.class, JobNotFoundException.class})
+    public ResponseEntity<AppError> handlePlayerNotFound(HttpServletRequest req, RuntimeException ex){
         LOG.error(ex.getLocalizedMessage(), ex);
         AppError err = new AppError(ThreadContext.pop(), HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND, 
                                     ex.getLocalizedMessage(), req.getRequestURI());
