@@ -85,29 +85,29 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player getByIdAndUser(Long id, String username) {
-        return playerRepository.findPlayerByIdAndUsername(id, username).orElseThrow(PlayerNotFoundException::new);
+        return playerRepository.findByIdAndUsername(id, username).orElseThrow(PlayerNotFoundException::new);
     }
 
     @Override
     public Player getByIdAndUserComplete(Long id, String username) {
-        Player foundPlayer = playerRepository.findPlayerByIdAndUsernameComplete(id, username).orElse(null);
+        Player foundPlayer = playerRepository.findByIdAndUsernameComplete(id, username).orElse(null);
         if(foundPlayer != null) return foundPlayer;
         return playerRepository.findById(id).orElseThrow(PlayerNotFoundException::new);
     }
 
     @Override
     public List<Player> getByNameAndUserUnfollowed(String playerName, String username) {
-        return playerRepository.findByPlayerNameContainsAndWithoutUser(playerName, username);
+        return playerRepository.findByNameContainsAndWithoutUser(playerName, username);
     }
 
     @Override
     public List<Player> getByNameAndUserFollowed(String playerName, String username) {
-        return playerRepository.findByPlayerNameContainsAndUser(playerName, username);
+        return playerRepository.findByNameContainsAndUser(playerName, username);
     }
 
     @Override
     public List<Player> getByName(String playerName) {
-        return playerRepository.findByPlayerNameContains(playerName);
+        return playerRepository.findByNameContains(playerName);
     }
 
     @Override
@@ -117,17 +117,17 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Page<Player> getByUserPaging(String username, int page) {
-        return playerRepository.findPlayersByUsername(username, PageRequest.of(page, 25, Sort.by(Sort.Direction.DESC, "inserted")));
+        return playerRepository.findByUsername(username, PageRequest.of(page, 25, Sort.by(Sort.Direction.DESC, "inserted")));
     }
 
     @Override
     public Page<Player> getByUserAndPositionPaging(String username, String position, int page) {
-        return playerRepository.findPlayersByUsernameAndPosition(username, position, PageRequest.of(page, 25, Sort.by(Sort.Direction.DESC, "inserted")));
+        return playerRepository.findByUsernameAndPosition(username, position, PageRequest.of(page, 25, Sort.by(Sort.Direction.DESC, "inserted")));
     }
 
     @Override
     public void delete(Long playerId, String username) {
-        Player foundPlayer = playerRepository.findPlayerByIdAndUsername(playerId, username).orElseThrow(PlayerNotFoundException::new);
+        Player foundPlayer = playerRepository.findByIdAndUsername(playerId, username).orElseThrow(PlayerNotFoundException::new);
 
         AppUserPlayer appUserPlayer = foundPlayer.getUsers().stream().findFirst().get();
         AppUser appUser = appUserPlayer.getAppUser();
@@ -171,7 +171,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     private Player update(Player player, String username) {
-        Player foundPlayer = playerRepository.findPlayerByIdAndUsername(player.getId(), username).orElseThrow(PlayerNotFoundException::new);
+        Player foundPlayer = playerRepository.findByIdAndUsername(player.getId(), username).orElseThrow(PlayerNotFoundException::new);
 
         AppUserPlayer foundAppUserPlayer = foundPlayer.getUsers().stream().findFirst().get();
         foundAppUserPlayer.setMyPlayer(player.getUsers().stream().findFirst().get().isMyPlayer());
