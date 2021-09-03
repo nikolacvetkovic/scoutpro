@@ -62,14 +62,14 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             "WHERE p NOT IN (SELECT p FROM p.users u" +
             "                JOIN u.appUser au" +
             "                WHERE au.username = :username)" +
-            "AND p.playerName LIKE LOWER(CONCAT('%', :playerName, '%'))")
+            "AND p.name LIKE LOWER(CONCAT('%', :playerName, '%'))")
     List<Player> findByNameContainsAndWithoutUser(String playerName, String username);
 
     @Query("SELECT DISTINCT p FROM Player p " +
             "WHERE p IN (SELECT p FROM p.users u" +
             "                JOIN u.appUser au" +
             "                WHERE au.username = :username)" +
-            "AND p.playerName LIKE LOWER(CONCAT('%', :playerName, '%'))")
+            "AND p.name LIKE LOWER(CONCAT('%', :playerName, '%'))")
     List<Player> findByNameContainsAndUser(String playerName, String username);
 
     Player findByTransfermarktUrl(String transfermarktUrl);
@@ -77,7 +77,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Query("SELECT p FROM Player p " +
             "JOIN FETCH p.users up " +
             "JOIN FETCH up.appUser u " +
-            "WHERE p.pesDbPlayerName = :pesDbName " +
-            "AND u.username = :username")
-    Player findByPesDbNameAndUser(String pesDbName, String username);
+            "WHERE p.pesDbPlayerName = :pesDbName")
+    Player findByPesDbName(String pesDbName);
 }

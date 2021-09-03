@@ -39,7 +39,7 @@ public class PlayerConverter {
     public PlayerFormDTO playerToPlayerFormDTO(Player player, String username) {
         PlayerFormDTO playerFormDTO = new PlayerFormDTO();
         playerFormDTO.setId(player.getId().toString());
-        playerFormDTO.setPlayerName(player.getPlayerName());
+        playerFormDTO.setPlayerName(player.getName());
         playerFormDTO.setMyPlayer(player.getUsers().stream()
                 .filter(appUserPlayer -> appUserPlayer.getAppUser().getUsername().equals(username))
                 .map(AppUserPlayer::isMyPlayer)
@@ -76,7 +76,7 @@ public class PlayerConverter {
         for (Player player : playersPage.getContent()) {
             PlayerDashboardDTO playerDashboardDTO = new PlayerDashboardDTO();
             playerDashboardDTO.setId(player.getId().toString());
-            playerDashboardDTO.setPlayerName(player.getPlayerName());
+            playerDashboardDTO.setPlayerName(player.getName());
             playerDashboardDTO.setMyPlayer(player.getUsers().stream()
                     .filter(appUserPlayer -> appUserPlayer.getAppUser().getUsername().equals(username))
                     .map(AppUserPlayer::isMyPlayer)
@@ -177,7 +177,7 @@ public class PlayerConverter {
         PlayerCompleteDTO playerCompleteDTO = new PlayerCompleteDTO();
 
         playerCompleteDTO.setId(player.getId().toString());
-        playerCompleteDTO.setPlayerName(player.getPlayerName());
+        playerCompleteDTO.setPlayerName(player.getName());
         playerCompleteDTO.setAge(String.valueOf(player.getAge()));
         playerCompleteDTO.setPosition(player.getPrimaryPosition());
         playerCompleteDTO.setOverallRating(player.getOverallRating());
@@ -266,7 +266,7 @@ public class PlayerConverter {
                 .map(player -> {
                     PlayerSearchDTO playerSearchDTO = new PlayerSearchDTO();
                     playerSearchDTO.setId(player.getId().toString());
-                    playerSearchDTO.setPlayerName(player.getPlayerName());
+                    playerSearchDTO.setPlayerName(player.getName());
                     playerSearchDTO.setPosition(player.getPrimaryPosition());
                     playerSearchDTO.setOverallRating(player.getOverallRating());
                     playerSearchDTO.setTmCurrentValue(player.getMarketValues().stream().findFirst().get().getWorth().toString());
@@ -281,7 +281,7 @@ public class PlayerConverter {
                     .map(player -> {
                         PlayerSearchDTO playerSearchDTO = new PlayerSearchDTO();
                         playerSearchDTO.setId(player.getId().toString());
-                        playerSearchDTO.setPlayerName(player.getPlayerName());
+                        playerSearchDTO.setPlayerName(player.getName());
                         playerSearchDTO.setPosition(player.getPrimaryPosition());
                         playerSearchDTO.setOverallRating(player.getOverallRating());
                         return playerSearchDTO;

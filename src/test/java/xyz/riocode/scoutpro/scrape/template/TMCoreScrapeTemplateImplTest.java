@@ -50,7 +50,7 @@ class TMCoreScrapeTemplateImplTest {
     @Test
     void scrapeCoreData() {
         tmCoreScrapeTemplate.scrapeCoreData(document, player);
-        assertEquals("Federico Chiesa", player.getPlayerName());
+        assertEquals("Federico Chiesa", player.getName());
         assertEquals("Juventus FC", player.getClubTeam());
         assertEquals("Jun 30, 2022", player.getContractUntil());
         assertEquals("Italy", player.getNationality());

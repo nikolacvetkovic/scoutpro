@@ -34,8 +34,8 @@ public class Player implements Serializable {
     @Column(name = "id")
     private Long id;
     @NotNull
-    @Column(name = "player_name")
-    private String playerName;
+    @Column(name = "name")
+    private String name;
 
     @NotNull
     @Size(min = 1, max = 15)
@@ -345,14 +345,14 @@ public class Player implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
         return Objects.equals(id, player.id) &&
-                playerName.equals(player.playerName) &&
+                name.equals(player.name) &&
                 pesDbPlayerName.equals(player.pesDbPlayerName);
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (playerName != null ? playerName.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (pesDbPlayerName != null ? pesDbPlayerName.hashCode() : 0);
         result = 31 * result + (pesDbTeamName != null ? pesDbTeamName.hashCode() : 0);
         return result;

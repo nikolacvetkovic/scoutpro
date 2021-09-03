@@ -37,7 +37,7 @@ public class PesDbChangeSeasonYear extends QuartzJobBean {
                     pesDbUrl = pesDbUrl.replaceAll(oldSeason, newSeason);
                     player.setPesDbUrl(pesDbUrl);
                     playerRepository.save(player);
-                    log.info("PesDbUrl update finished for player: {} - {}", player.getId(), player.getPlayerName());
+                    log.info("PesDbUrl update finished for player: {} - {}", player.getId(), player.getName());
                 }
             }
         }

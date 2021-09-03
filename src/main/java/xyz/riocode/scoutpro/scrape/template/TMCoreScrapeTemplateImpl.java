@@ -26,7 +26,7 @@ public class TMCoreScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
 
     protected void scrapeCoreData(Document doc, Player player){
         String playerName = ScrapeHelper.getElementData(doc, scrapeFields.get("playerName"));
-        player.setPlayerName(playerName);
+        player.setName(playerName);
         String clubTeam = ScrapeHelper.getElementData(doc, scrapeFields.get("clubTeam"));
         player.setClubTeam(clubTeam);
         String contractUntil = ScrapeHelper.getElementData(doc, scrapeFields.get("contractUntil"));
