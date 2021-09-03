@@ -1,17 +1,30 @@
 insert into app_user (username, pass, enabled) values ('cvele', '1111', 1);
 
-insert into player values
+insert into player
+(id, pesdb_acceleration, age, pesdb_aggression, pesdb_balance, pesdb_ball_control, pesdb_ball_winning, club_team, pesdb_com_playing_styles,
+contract_until, pesdb_curl, date_of_birth, pesdb_defensive_awareness, pesdb_dribbling, pesdb_finishing, pesdb_foot, pesdb_form, pesdb_gk_awareness,
+pesdb_gk_catching, pesdb_gk_clearing, pesdb_gk_reach, pesdb_gk_reflexes, pesdb_heading, pesdb_injury_resistance, inserted, pesdb_jump, pesdb_kicking_power,
+pesdb_lofted_pass, pesdb_low_pass, market_value_last_check, national_team, nationality, pesdb_offensive_awareness, pesdb_other_strong_positions,
+pesdb_other_weak_positions, pesdb_overall_rating, pesdb_last_check, pesdb_player_name, pesdb_team_name, pesdb_url, pesdb_physical_contact,
+pesdb_place_kicking, name, pesdb_player_skills, pesdb_playing_style, pesdb_primary_position, psml_last_check, psml_team, psml_url, psml_value,
+pesdb_speed, pesdb_stamina, statistic_last_check, whoscored_strengths, whoscored_style_of_play, pesdb_tight_possession, transfer_last_check,
+transfermarkt_position, transfermarkt_url, pesdb_weak_foot_accuracy, pesdb_weak_foot_usage, whoscored_weaknesses, pesdb_week_condition, whoscored_url)
+values
 (1, 90, 34, 50, 96, 96, 50, 'Without Club', 'Early Cross,Trickster,Speeding Bullet,Mazing Run,Incisive Run', '-', 90, 'Jun 24, 1987 ', 45, 97, 95, 'LEFT', 8, 40, 40, 40, 40, 40, 70, 2, TIMESTAMP '2021-07-29 18:06:27.396607', 63, 82, 91, 90, TIMESTAMP '2021-07-29 18:06:27.396607', 'Argentina', 'Argentina', 95, 'SS,CF', 'LWF,AMF,RMF', 94, TIMESTAMP '2021-07-29 18:06:27.395608', 'L. MESSI', 'FC BARCELONA', 'https://pesdb.net/pes2021/?id=7511', 70, 94, 'Lionel Messi', 'Long Range Drive,Captaincy,Through Passing,One-touch Pass,Penalty Specialist,Dipping Shot,Chip Shot Control,Long Range Shooting,Double Touch,First-time Shot', 'Creative Playmaker', 'RWF', TIMESTAMP '2021-07-29 18:06:55.026275', 'AC Milan', 'https://psml.rs/index.php?action=shwply&playerID=7511', 80000000.00, 81, 78, NULL, NULL, NULL, 96, TIMESTAMP '2021-07-29 18:06:27.420604', 'attack - Right Winger', 'https://www.transfermarkt.com/lionel-messi/profil/spieler/28003', 3, 1, NULL, 'C', 'https://www.whoscored.com/Players/11119/Show/Lionel-Messi'),
 (2, 83, 24, 78, 80, 86, 75, 'FC Barcelona', 'Long Ball Expert,Mazing Run', 'Jun 30, 2026', 71, 'May 12, 1997 ', 71, 85, 67, 'RIGHT', 5, 40, 40, 40, 40, 40, 74, 2, TIMESTAMP '2021-07-29 18:10:32.771326', 78, 74, 87, 89, TIMESTAMP '2021-07-29 18:10:32.771326', 'Netherlands', 'Netherlands', 77, 'DMF', 'AMF,CB', 87, TIMESTAMP '2021-07-29 18:10:32.688323', 'F. DE JONG', 'FC BARCELONA', 'https://pesdb.net/pes2021/?id=108662', 72, 70, 'Frenkie de Jong', 'Step On Skill Control,Weighted Pass,Through Passing,Outside Curler,One-touch Pass,Heel Trick,Gamesmanship,Cut Behind & Turn,Scotch Move,Double Touch', 'Orchestrator', 'CMF', TIMESTAMP '2021-07-29 18:11:06.930629', 'Atomic Ants FC', 'https://psml.rs/index.php?action=shwply&playerID=108662', 40000000.00, 81, 84, NULL, NULL, NULL, 88, TIMESTAMP '2021-07-29 18:10:32.773324', 'midfield - Central Midfield', 'https://www.transfermarkt.com/frenkie-de-jong/profil/spieler/326330', 3, 3, NULL, 'C', 'https://www.whoscored.com/Players/279423/Show/Frenkie-de-Jong'),
 (3, 81, 28, 82, 72, 76, 50, 'Inter Milan', 'Mazing Run', 'Jun 30, 2024', 80, 'May 13, 1993 ', 50, 80, 87, 'LEFT', 6, 40, 40, 40, 40, 40, 86, 2, TIMESTAMP '2021-08-03 10:58:47.809075', 84, 87, 77, 72, TIMESTAMP '2021-08-03 10:58:47.809075', 'Belgium', 'Belgium', 86, 'SS', NULL, 86, TIMESTAMP '2021-08-03 10:58:48.220076', 'R. LUKAKU', 'LOMBARDIA NA', 'https://pesdb.net/pes2021/?id=40122', 95, 70, 'Romelu Lukaku', 'Long Range Drive,Heading,Captaincy,Outside Curler,Penalty Specialist,Gamesmanship,First-time Shot,Fighting Spirit', 'Fox in the Box', 'CF', TIMESTAMP '2021-08-03 10:59:08.209608', 'Hull City', 'https://psml.rs/index.php?action=shwply&playerID=40122', 30000000.00, 88, 82, NULL, NULL, NULL, 73, TIMESTAMP '2021-08-03 10:58:47.89531', 'attack - Centre-Forward', 'https://www.transfermarkt.com/romelu-lukaku/profil/spieler/96341', 3, 2, NULL, 'C', 'https://www.whoscored.com/Players/78498/Show/Romelu-Lukaku'),
 (4, 67, 27, 59, 70, 72, 62, CAST('Manchester City' AS VARCHAR_IGNORECASE), NULL, CAST('Jun 30, 2025' AS VARCHAR_IGNORECASE), 53, CAST('Aug 17, 1993 ' AS VARCHAR_IGNORECASE), 61, 60, 40, CAST('LEFT' AS VARCHAR_IGNORECASE), 5, 93, 95, 93, 94, 96, 60, 2, TIMESTAMP '2021-08-05 00:10:21.241159', 80, 92, 80, 76, TIMESTAMP '2021-08-05 00:10:21.241159', CAST('Brazil' AS VARCHAR_IGNORECASE), CAST('Brazil' AS VARCHAR_IGNORECASE), 41, NULL, NULL, 88, TIMESTAMP '2021-08-05 00:10:20.862933', CAST('EDERSON' AS VARCHAR_IGNORECASE), CAST('MANCHESTER B' AS VARCHAR_IGNORECASE), CAST('https://pesdb.net/pes2021/?id=46815' AS VARCHAR_IGNORECASE), 83, 60, CAST('Ederson' AS VARCHAR_IGNORECASE), CAST('GK Low Punt,GK Penalty Saver,GK Long Throw' AS VARCHAR_IGNORECASE), CAST('Offensive Goalkeeper' AS VARCHAR_IGNORECASE), CAST('GK' AS VARCHAR_IGNORECASE), TIMESTAMP '2021-08-05 00:10:40.756291', CAST('Free' AS VARCHAR_IGNORECASE), CAST('https://psml.rs/index.php?action=shwply&playerID=46815' AS VARCHAR_IGNORECASE), 0.00, 66, 60, NULL, NULL, NULL, 67, TIMESTAMP '2021-08-05 00:10:21.25316', CAST('Goalkeeper' AS VARCHAR_IGNORECASE), CAST('https://www.transfermarkt.com/ederson/profil/spieler/238223' AS VARCHAR_IGNORECASE), 2, 2, NULL, 'C', CAST('https://www.whoscored.com/Players/121774/Show/Ederson' AS VARCHAR_IGNORECASE));
 
-insert into app_user_player values
+insert into app_user_player
+(app_user_id, my_player, player_id)
+values
 (1, 0, 1),
 (1, 0, 2),
 (1, 0, 4);
 
-insert into transfer (date_of_transfer, from_team, market_value, to_team, transfer_fee, player_id) values
+insert into transfer
+(date_of_transfer, from_team, market_value, to_team, transfer_fee, player_id)
+values
 (DATE '2021-07-01', 'Barcelona', STRINGDECODE('\u20ac80.00m'), 'Without Club', '-', 1),
 (DATE '2005-07-01', 'Barcelona B', STRINGDECODE('\u20ac3.00m'), 'Barcelona', '-', 1),
 (DATE '2000-07-01', 'Newell''s U19', '-', STRINGDECODE('Bar\u00e7a Youth'), 'free transfer', 1),
@@ -47,7 +60,9 @@ insert into transfer (date_of_transfer, from_team, market_value, to_team, transf
 (DATE '2010-07-01', CAST('Benfica U17' AS VARCHAR_IGNORECASE), CAST('-' AS VARCHAR_IGNORECASE), CAST('Benfica U19' AS VARCHAR_IGNORECASE), CAST('-' AS VARCHAR_IGNORECASE), 4),
 (DATE '2017-07-01', CAST('Benfica' AS VARCHAR_IGNORECASE), CAST(STRINGDECODE('\u20ac22.00m') AS VARCHAR_IGNORECASE), CAST('Man City' AS VARCHAR_IGNORECASE), CAST(STRINGDECODE('\u20ac40.00m') AS VARCHAR_IGNORECASE), 4);
 
-insert into market_value (club_team, date_point, worth, player_id) values
+insert into market_value
+(club_team, date_point, worth, player_id)
+values
 ('FC Barcelona B', DATE '2004-12-20', 3000000.00, 1),
 ('FC Barcelona', DATE '2011-07-29', 100000000.00, 1),
 ('FC Barcelona', DATE '2012-08-07', 120000000.00, 1),
