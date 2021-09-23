@@ -24,7 +24,7 @@ public class TMCoreScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
         return player;
     }
 
-    protected void scrapeCoreData(Document doc, Player player){
+    protected void scrapeCoreData(Document doc, Player player) {
         String playerName = ScrapeHelper.getElementData(doc, scrapeFields.get("playerName"));
         player.setName(playerName);
         String clubTeam = ScrapeHelper.getElementData(doc, scrapeFields.get("clubTeam"));
@@ -40,7 +40,7 @@ public class TMCoreScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
         player.setDateOfBirth(birthDate);
         int age = Integer.parseInt(ScrapeHelper.getElementData(doc, scrapeFields.get("age")));
         player.setAge(age);
-        String nationalTeam = ScrapeHelper.getElementData(doc, scrapeFields.get("nationalTeam"));
+        String nationalTeam = ScrapeHelper.getAttributeValue(doc, scrapeFields.get("nationalTeam"), "title");
         player.setNationalTeam(nationalTeam);
     }
 }
