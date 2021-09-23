@@ -75,8 +75,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     Player findByTransfermarktUrl(String transfermarktUrl);
 
     @Query("SELECT p FROM Player p " +
-            "JOIN FETCH p.users up " +
-            "JOIN FETCH up.appUser u " +
             "WHERE p.pesDbPlayerName = :pesDbName")
     Player findByPesDbName(String pesDbName);
 }
