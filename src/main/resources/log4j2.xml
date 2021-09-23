@@ -59,10 +59,10 @@
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFileError" level="error"/>
         </Root>
-        <AsyncLogger name="org.hibernate.SQL" level="debug" additivity="false">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFileRegular" />
-        </AsyncLogger>
+<!--        <AsyncLogger name="org.hibernate.SQL" level="debug" additivity="false">-->
+<!--            <AppenderRef ref="Console" />-->
+<!--            <AppenderRef ref="RollingFileRegular" />-->
+<!--        </AsyncLogger>-->
         <!--        <Logger name="org.hibernate.type.descriptor.sql" level="trace" additivity="false">-->
         <!--            <AppenderRef ref="Console" />-->
         <!--        </Logger>-->
