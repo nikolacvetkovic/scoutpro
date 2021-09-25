@@ -1,7 +1,6 @@
 package xyz.riocode.scoutpro.scrape.template;
 
 import com.google.gson.*;
-import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -39,12 +38,12 @@ public class TMMarketValueScrapeTemplateImpl extends SimpleAbstractScrapeTemplat
             script = s.toString();
             if (script.contains("Highcharts.setOptions([])")) {
                 script = script.substring(script.indexOf("new Highcharts.Chart(") + 21);
-                script = script.substring(0, script.indexOf(",'tooltip':{"));
-                script = script + "}";
-                script = StringEscapeUtils.unescapeJava(script.replaceAll("(?i)\\\\x([0-9a-f]{2})", "\\\\u00$1"));
-                script = script.replaceAll("\\\\x", "");
+                script = script.substring(0, script.indexOf(",'tooltip':{")) + "}";
+                script = script.substring(script.indexOf("'series':")+9, script.indexOf(",'legend':"));
+                script = script.replaceAll("(?i)\\\\x([0-9a-f]{2})", "\\\\u00$1");
                 script = script.replaceAll("\\\\x20", " ");
                 script = script.replaceAll("\\\\x23", "#");
+                script = script.replaceAll("\\\\x27", "'");
                 script = script.replaceAll("\\\\x28", "(");
                 script = script.replaceAll("\\\\x3A", ":");
                 script = script.replaceAll("\\\\x2F", "/");
@@ -56,10 +55,10 @@ public class TMMarketValueScrapeTemplateImpl extends SimpleAbstractScrapeTemplat
             }
         }
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        JsonObject jsonObject = gson.fromJson(script, JsonObject.class);
-        JsonArray jsonArray = jsonObject.getAsJsonArray("series").get(0).getAsJsonObject().getAsJsonArray("data");
+        JsonArray series = gson.fromJson(script, JsonArray.class);
+        JsonArray data = series.get(0).getAsJsonObject().getAsJsonArray("data");
 
-        for(JsonElement e : jsonArray){
+        for(JsonElement e : data){
             MarketValue mv = new MarketValue();
             JsonObject o = e.getAsJsonObject();
             String worth = o.get("y").getAsString().trim();
