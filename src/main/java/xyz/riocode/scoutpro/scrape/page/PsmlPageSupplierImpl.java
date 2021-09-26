@@ -38,7 +38,10 @@ public class PsmlPageSupplierImpl implements PageSupplier{
         WebDriver driver = null;
         String html = null;
         ChromeOptions chromeOptions = new ChromeOptions();
-//        chromeOptions.addArguments("--headless");
+        chromeOptions.addArguments("disable-infobars");
+        chromeOptions.addArguments("--disable-extensions");
+        chromeOptions.addArguments("--disable-gpu");
+        chromeOptions.addArguments("--headless");
         try {
             driver = new ChromeDriver(chromeOptions);
             driver.get(url);
