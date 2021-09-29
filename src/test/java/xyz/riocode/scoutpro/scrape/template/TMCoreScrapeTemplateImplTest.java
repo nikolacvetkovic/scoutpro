@@ -22,13 +22,13 @@ class TMCoreScrapeTemplateImplTest {
     private Map<String, String> getScrapeFields() {
         Map<String, String> scrapeFields = new HashMap<>();
         scrapeFields.put("playerName", "h1[itemprop=name]");
-        scrapeFields.put("clubTeam", "table.auflistung tr:has(th:contains(Current club)) td a:nth-of-type(2)");
-        scrapeFields.put("contractUntil", "table.auflistung tr:has(th:contains(Contract expires)) td");
+        scrapeFields.put("clubTeam", "div.info-table span:contains(Current club)+span a:nth-of-type(2)");
+        scrapeFields.put("contractUntil", "div.info-table span:contains(Contract expires)+span");
         scrapeFields.put("nationality", "span[itemprop=nationality]");
-        scrapeFields.put("position", "table.auflistung tr:has(th:contains(Position)) td");
+        scrapeFields.put("position", "div.info-table span:contains(Position)+span");
         scrapeFields.put("birthDate", "span[itemprop=birthDate]");
-        scrapeFields.put("age", "table.auflistung tr:has(th:contains(Age)) td");
-        scrapeFields.put("nationalTeam", "div.dataContent div.dataDaten:nth-of-type(3) p:nth-of-type(1) span.dataValue");
+        scrapeFields.put("age", "div.info-table span:matches(Age:)+span");
+        scrapeFields.put("nationalTeam", "div.info-table span:contains(Citizenship)+span img");
         scrapeFields.put("transferTable", "div.responsive-table tr.zeile-transfer");
         scrapeFields.put("dateOfTransfer", "td:nth-of-type(2)");
         scrapeFields.put("fromTeam", "td:nth-of-type(5) a");
