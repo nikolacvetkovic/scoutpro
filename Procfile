@@ -1,1 +1,1 @@
-web: java -jar target/scoutpro.jar
+web: java -jar target/scoutpro.jar --server.port=$PORT
