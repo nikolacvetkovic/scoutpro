@@ -1,9 +1,11 @@
 package xyz.riocode.scoutpro.bootstrap;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+import xyz.riocode.scoutpro.scheduler.model.JobInfo;
 import xyz.riocode.scoutpro.scheduler.service.JobService;
 
-//@Component
+@Component
 public class JobsLoader implements CommandLineRunner {
 
     private final JobService jobService;
@@ -51,5 +53,14 @@ public class JobsLoader implements CommandLineRunner {
 //                .build();
 //
 //        jobService.createJob(importPlayersFromPsml);
+//
+//        JobInfo psmlUpdatePlayers = JobInfo.builder()
+//                .jobClass("xyz.riocode.scoutpro.scheduler.job.PsmlUpdatePlayers")
+//                .jobName("PsmlUpdatePlayers")
+//                .jobGroup("Psml")
+//                .customConfigData("{\"pageSize\":20}")
+//                .build();
+//
+//        jobService.createJob(psmlUpdatePlayers);
     }
 }
