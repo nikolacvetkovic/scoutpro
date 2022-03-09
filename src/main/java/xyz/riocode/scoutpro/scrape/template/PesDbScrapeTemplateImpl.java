@@ -3,45 +3,51 @@ package xyz.riocode.scoutpro.scrape.template;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.enums.Foot;
 import xyz.riocode.scoutpro.model.Player;
 import xyz.riocode.scoutpro.scrape.helper.ScrapeHelper;
+import xyz.riocode.scoutpro.scrape.model.ScrapeField;
+import xyz.riocode.scoutpro.scrape.repository.ScrapeFieldRepository;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class PesDbScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
+@Component("PesDbTemplate")
+public class PesDbScrapeTemplateImpl implements ScrapeTemplate {
 
-    public PesDbScrapeTemplateImpl(Map<String, String> scrapeFields) {
-        super(scrapeFields);
+    private final ScrapeFieldRepository scrapeFieldRepository;
+
+    public PesDbScrapeTemplateImpl(ScrapeFieldRepository scrapeFieldRepository) {
+        this.scrapeFieldRepository = scrapeFieldRepository;
     }
 
     @Override
-    public Player scrape(Player player){
-        Document page = getPage(player.getPesDbUrl());
-        return scrape(player, page);
-    }
-
-    @Override
-    public Player scrape(Player player, Document page) {
+    public void scrape(String pageContent, Player player) {
+//        Player player = new Player();
+        Document page = ScrapeHelper.createDocument(pageContent);
+        //todo - implement caching
+        Map<String, String> scrapeFields = scrapeFieldRepository.findByScrapeSite_Name("pesdb").stream()
+                .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
         // todo implement async
-        scrapeCoreData(page, player);
-        scrapeRatings(page, player);
-        scrapeAdditionalData(page, player);
-        return player;
+        scrapeCoreData(page, player, scrapeFields);
+        scrapeRatings(page, player, scrapeFields);
+        scrapeAdditionalData(page, player, scrapeFields);
+//        return player;
     }
 
-    protected void scrapeCoreData(Document doc, Player player){
+    protected void scrapeCoreData(Document doc, Player player, Map<String, String> scrapeFields){
         if(ScrapeHelper.getElementData(doc, scrapeFields.get("teamName")).equals("Free Agent")){
-            extractCoreDataFreePlayer(doc, player);
+            extractCoreDataFreePlayer(doc, player, scrapeFields);
         } else {
-            extractCoreDataStandard(doc, player);
+            extractCoreDataStandard(doc, player, scrapeFields);
         }
     }
 
-    protected void scrapeRatings(Document doc, Player player){
+    protected void scrapeRatings(Document doc, Player player, Map<String, String> scrapeFields){
         player.setOffensiveAwareness(
                 Integer.parseInt(ScrapeHelper.getElementData(doc, scrapeFields.get("offensiveAwareness"))));
         player.setBallControl(
@@ -104,7 +110,7 @@ public class PesDbScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
                 Integer.parseInt(ScrapeHelper.getElementDataOwn(doc, scrapeFields.get("overallRating"))));
     }
 
-    protected void scrapeAdditionalData(Document doc, Player player){
+    protected void scrapeAdditionalData(Document doc, Player player, Map<String, String> scrapeFields){
         String playingStyles = null;
         Set<String> playerSkills = new HashSet<>();
         Set<String> comPlayingStyles = new HashSet<>();
@@ -134,7 +140,7 @@ public class PesDbScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
         player.setComPlayingStyles(comPlayingStyles);
     }
 
-    private void extractCoreDataStandard(Document doc, Player player){
+    private void extractCoreDataStandard(Document doc, Player player, Map<String, String> scrapeFields){
         String pesDbName = ScrapeHelper.getElementData(doc, scrapeFields.get("playerName"));
         player.setPesDbPlayerName(pesDbName);
         String teamName = ScrapeHelper.getElementData(doc, scrapeFields.get("teamName"));
@@ -153,12 +159,12 @@ public class PesDbScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
 //            }
 //        }
         player.setPrimaryPosition(primaryPosition);
-        player.setOtherStrongPositions(extractOtherStrongPositions(doc, player));
-        player.setOtherWeakPositions(extractOtherWeakPositions(doc));
+        player.setOtherStrongPositions(extractOtherStrongPositions(doc, player, scrapeFields));
+        player.setOtherWeakPositions(extractOtherWeakPositions(doc, scrapeFields));
         player.setPesDbLastCheck(LocalDateTime.now());
     }
 
-    private void extractCoreDataFreePlayer(Document doc, Player player){
+    private void extractCoreDataFreePlayer(Document doc, Player player, Map<String, String> scrapeFields){
         String pesDbName = ScrapeHelper.getElementData(doc, scrapeFields.get("playerName"));
         player.setPesDbPlayerName(pesDbName);
         String teamName = ScrapeHelper.getElementData(doc, scrapeFields.get("teamNameFreePlayer"));
@@ -177,12 +183,12 @@ public class PesDbScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
 //            }
 //        }
         player.setPrimaryPosition(primaryPosition);
-        player.setOtherStrongPositions(extractOtherStrongPositions(doc, player));
-        player.setOtherWeakPositions(extractOtherWeakPositions(doc));
+        player.setOtherStrongPositions(extractOtherStrongPositions(doc, player, scrapeFields));
+        player.setOtherWeakPositions(extractOtherWeakPositions(doc, scrapeFields));
         player.setPesDbLastCheck(LocalDateTime.now());
     }
 
-    private Set<String> extractOtherWeakPositions(Element e){
+    private Set<String> extractOtherWeakPositions(Element e, Map<String, String> scrapeFields){
         Set<String> positions = new HashSet<>();
         Elements weakerPositions = ScrapeHelper.getElements(e, scrapeFields.get("weakPositions"));
         String s;
@@ -195,7 +201,7 @@ public class PesDbScrapeTemplateImpl extends SimpleAbstractScrapeTemplate {
 
         return positions;
     }
-    private Set<String> extractOtherStrongPositions(Element e, Player player){
+    private Set<String> extractOtherStrongPositions(Element e, Player player, Map<String, String> scrapeFields){
         Set<String> positions = new HashSet<>();
         Elements strongerPositions = ScrapeHelper.getElements(e, scrapeFields.get("strongPositions"));
         String s;

@@ -50,6 +50,10 @@ public class ScrapeHelper {
         }
     }
 
+    public static Document createDocument(String pageContent) {
+        return Jsoup.parse(pageContent);
+    }
+
     public static Document getPageWithWebDriver(String url){
         WebDriver driver = null;
         String html = null;

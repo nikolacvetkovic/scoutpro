@@ -9,15 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import xyz.riocode.scoutpro.model.Player;
 import xyz.riocode.scoutpro.repository.PlayerRepository;
+import xyz.riocode.scoutpro.scrape.engine.ScrapeLoader;
 import xyz.riocode.scoutpro.scrape.helper.ScrapeHelper;
-import xyz.riocode.scoutpro.scrape.page.PsmlPageSupplierImpl;
+import xyz.riocode.scoutpro.scrape.loader.PsmlPageLoaderImpl;
 import xyz.riocode.scoutpro.service.PlayerService;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,7 +32,9 @@ public class ImportPlayersFromPsml extends QuartzJobBean {
     @Autowired
     private PlayerRepository playerRepository;
     @Autowired
-    private PsmlPageSupplierImpl psmlPageSupplier;
+    private PsmlPageLoaderImpl psmlPageLoader;
+    @Autowired
+    private ScrapeLoader scrapeLoader;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -50,16 +53,17 @@ public class ImportPlayersFromPsml extends QuartzJobBean {
         for (int i = 1; i < 3; i++) {
             try {
                 Thread.sleep(7000);
-                divisionPage = psmlPageSupplier.getPage(PSML_DIVISION_URL + i);
+                divisionPage = ScrapeHelper.createDocument(
+                        scrapeLoader.loadAndGetPageContent(new URL(PSML_DIVISION_URL + i), psmlPageLoader));
                 teamsData = scrapeTeams(divisionPage);
-                for (Entry<String, String> team : teamsData.entrySet()) {
+                for (Map.Entry<String, String> team : teamsData.entrySet()) {
                     try {
                         teamCount++;
                         Thread.sleep(10000);
-                        Document teamPage = psmlPageSupplier.getPage(PSML_BASE_URL + team.getValue());
+                        Document teamPage = ScrapeHelper.createDocument(scrapeLoader.loadAndGetPageContent(new URL(PSML_BASE_URL + team.getValue()), psmlPageLoader));
                         playersData = scrapePlayers(teamPage);
                         playersFound += playersData.size();
-                        for (Entry<String, String> playerData : playersData.entrySet()) {
+                        for (Map.Entry<String, String> playerData : playersData.entrySet()) {
                             if (playerRepository.findByPesDbName(playerData.getKey()) != null) {
                                 log.info("Player {} exists", playerData.getKey());
                                 playersExist++;
@@ -69,7 +73,7 @@ public class ImportPlayersFromPsml extends QuartzJobBean {
                                 log.info("division: {}, team: {}, teamCount: {}, player: {}", i, team.getKey(), teamCount, playerData.getKey());
                                 log.info("found: {}, imported: {}, exist: {}, errors: {}", playersFound, playersImported, playersExist, playersWithError);
                                 String psmlUrl = PSML_BASE_URL + playerData.getValue();
-                                Document playerPage = psmlPageSupplier.getPage(psmlUrl);
+                                Document playerPage = ScrapeHelper.createDocument(scrapeLoader.loadAndGetPageContent(new URL(psmlUrl), psmlPageLoader));
                                 String pesDbUrl = ScrapeHelper.getAttributeValue(playerPage, "table.innerTable tr:nth-of-type(2) td:nth-of-type(1) p a", "href");
                                 String tmUrl = ScrapeHelper.getAttributeValue(playerPage, "table.innerTable tr:nth-of-type(2) td:nth-of-type(3) p a", "href");
                                 if (playerRepository.findByTransfermarktUrl(tmUrl) != null) {

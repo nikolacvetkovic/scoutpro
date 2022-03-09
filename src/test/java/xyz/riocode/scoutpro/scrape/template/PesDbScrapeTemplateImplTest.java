@@ -4,26 +4,37 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import xyz.riocode.scoutpro.enums.Foot;
 import xyz.riocode.scoutpro.model.Player;
+import xyz.riocode.scoutpro.scrape.model.ScrapeField;
+import xyz.riocode.scoutpro.scrape.repository.ScrapeFieldRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 class PesDbScrapeTemplateImplTest {
-
 
     Player player;
     Document document;
     PesDbScrapeTemplateImpl pesDbScrapeTemplate;
+    List<ScrapeField> scrapeFields;
 
-    private Map<String, String> getScrapeFields() {
+    @Mock
+    ScrapeFieldRepository scrapeFieldRepository;
+
+    private Map<String, String> getScrapeFieldsMap() {
         Map<String, String> scrapeFields = new HashMap<>();
         scrapeFields.put("playerName", "table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(1) td");
         scrapeFields.put("teamName", "table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(3) td a");
@@ -71,25 +82,82 @@ class PesDbScrapeTemplateImplTest {
         return scrapeFields;
     }
 
+    private List<ScrapeField> getScrapeFieldsList() {
+        List<ScrapeField> scrapeFields = new ArrayList<>();
+
+        scrapeFields.add(ScrapeField.builder().name("playerName").selector("table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(1) td").build());
+        scrapeFields.add(ScrapeField.builder().name("teamName").selector("table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(3) td a").build());
+        scrapeFields.add(ScrapeField.builder().name("teamNameFreePlayer").selector("table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(2) td a").build());
+        scrapeFields.add(ScrapeField.builder().name("foot").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(10) td").build());
+        scrapeFields.add(ScrapeField.builder().name("footFreePlayer").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(9) td").build());
+        scrapeFields.add(ScrapeField.builder().name("weekCondition").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(11) td").build());
+        scrapeFields.add(ScrapeField.builder().name("weekConditionFreePlayer").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(10) td").build());
+        scrapeFields.add(ScrapeField.builder().name("primaryPosition").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(12) td div").build());
+        scrapeFields.add(ScrapeField.builder().name("primaryPositionFreePlayer").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(1) table tr:nth-of-type(11) td div").build());
+        scrapeFields.add(ScrapeField.builder().name("weakPositions").selector( "table.player tbody table tr td.positions div span.pos1").build());
+        scrapeFields.add(ScrapeField.builder().name("strongPositions").selector( "table.player tbody table tr td.positions div span.pos2").build());
+        scrapeFields.add(ScrapeField.builder().name("additionalData").selector( "table.playing_styles tr").build());
+        scrapeFields.add(ScrapeField.builder().name("offensiveAwareness").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(1) td").build());
+        scrapeFields.add(ScrapeField.builder().name("ballControl").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(2) td").build());
+        scrapeFields.add(ScrapeField.builder().name("dribbling").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(3) td").build());
+        scrapeFields.add(ScrapeField.builder().name("tightPossession").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(4) td").build());
+        scrapeFields.add(ScrapeField.builder().name("lowPass").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(5) td").build());
+        scrapeFields.add(ScrapeField.builder().name("loftedPass").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(6) td").build());
+        scrapeFields.add(ScrapeField.builder().name("finishing").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(7) td").build());
+        scrapeFields.add(ScrapeField.builder().name("heading").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(8) td").build());
+        scrapeFields.add(ScrapeField.builder().name("placeKicking").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(9) td").build());
+        scrapeFields.add(ScrapeField.builder().name("curl").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(10) td").build());
+        scrapeFields.add(ScrapeField.builder().name("speed").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(11) td").build());
+        scrapeFields.add(ScrapeField.builder().name("acceleration").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(12) td").build());
+        scrapeFields.add(ScrapeField.builder().name("kickingPower").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(13) td").build());
+        scrapeFields.add(ScrapeField.builder().name("jump").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(14) td").build());
+        scrapeFields.add(ScrapeField.builder().name("physicalContact").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(15) td").build());
+        scrapeFields.add(ScrapeField.builder().name("balance").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(2) table tr:nth-of-type(16) td").build());
+        scrapeFields.add(ScrapeField.builder().name("stamina").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(1) td").build());
+        scrapeFields.add(ScrapeField.builder().name("defensiveAwareness").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(2) td").build());
+        scrapeFields.add(ScrapeField.builder().name("ballWinning").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(3) td").build());
+        scrapeFields.add(ScrapeField.builder().name("aggression").selector("table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(4) td").build());
+        scrapeFields.add(ScrapeField.builder().name("gkAwareness").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(5) td").build());
+        scrapeFields.add(ScrapeField.builder().name("gkCatching").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(6) td").build());
+        scrapeFields.add(ScrapeField.builder().name("gkClearing").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(7) td").build());
+        scrapeFields.add(ScrapeField.builder().name("gkReflexes").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(8) td").build());
+        scrapeFields.add(ScrapeField.builder().name("gkReach").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(9) td").build());
+        scrapeFields.add(ScrapeField.builder().name("weakFootUsage").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(10) td").build());
+        scrapeFields.add(ScrapeField.builder().name("weakFootAccuracy").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(11) td").build());
+        scrapeFields.add(ScrapeField.builder().name("form").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(12) td").build());
+        scrapeFields.add(ScrapeField.builder().name("injuryResistance").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(13) td").build());
+        scrapeFields.add(ScrapeField.builder().name("overallRating").selector( "table.player tbody tr:nth-of-type(1) td:nth-of-type(3) table tr:nth-of-type(15) td").build());
+
+        return scrapeFields;
+    }
+
     @BeforeEach
     void setUp() throws IOException {
+        MockitoAnnotations.initMocks(this);
         File file = new File("src/test/resources/pesdb.html");
+        scrapeFields = getScrapeFieldsList();
         player = new Player();
-        pesDbScrapeTemplate = new PesDbScrapeTemplateImpl(getScrapeFields());
         document = Jsoup.parse(file, "UTF-8", "https://pesdb.net");
+        pesDbScrapeTemplate = new PesDbScrapeTemplateImpl(scrapeFieldRepository);
     }
 
     @Test
     void scrape() {
-    }
+        when(scrapeFieldRepository.findByScrapeSite_Name(anyString())).thenReturn(scrapeFields);
 
-    @Test
-    void testScrape() {
+        pesDbScrapeTemplate.scrape(document.toString(), player);
+
+        assertEquals("F. CHIESA", player.getPesDbPlayerName());
+        assertEquals("JUVENTUS", player.getPesDbTeamName());
+        assertEquals(4, player.getWeakFootUsage());
+        assertEquals(83, player.getOverallRating());
+        assertEquals(3, player.getComPlayingStyles().size());
+        assertThat(player.getComPlayingStyles(), hasItem("Incisive Run"));
     }
 
     @Test
     void scrapeCoreData() {
-        pesDbScrapeTemplate.scrapeCoreData(document, player);
+        pesDbScrapeTemplate.scrapeCoreData(document, player, getScrapeFieldsMap());
         assertEquals("F. CHIESA", player.getPesDbPlayerName());
         assertEquals("JUVENTUS", player.getPesDbTeamName());
         assertEquals(Foot.RIGHT, player.getFoot());
@@ -100,7 +168,7 @@ class PesDbScrapeTemplateImplTest {
 
     @Test
     void scrapeRatings() {
-        pesDbScrapeTemplate.scrapeRatings(document, player);
+        pesDbScrapeTemplate.scrapeRatings(document, player, getScrapeFieldsMap());
         assertEquals(78, player.getOffensiveAwareness());
         assertEquals(83, player.getBallControl());
         assertEquals(62, player.getHeading());
@@ -112,7 +180,7 @@ class PesDbScrapeTemplateImplTest {
 
     @Test
     void scrapeAdditionalData() {
-        pesDbScrapeTemplate.scrapeAdditionalData(document, player);
+        pesDbScrapeTemplate.scrapeAdditionalData(document, player, getScrapeFieldsMap());
         assertEquals("Prolific Winger", player.getPlayingStyle());
 
         assertEquals(5, player.getPlayerSkills().size());

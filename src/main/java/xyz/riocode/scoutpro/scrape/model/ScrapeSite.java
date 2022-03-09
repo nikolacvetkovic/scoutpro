@@ -24,6 +24,15 @@ public class ScrapeSite implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "hostname")
+    private String hostname;
+
+    @Column(name = "loader_name")
+    private String loaderName;
+
+    @Column(name = "template_name")
+    private String templateName;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "scrapeSite", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<ScrapeField> scrapeFields = new HashSet<>();
 

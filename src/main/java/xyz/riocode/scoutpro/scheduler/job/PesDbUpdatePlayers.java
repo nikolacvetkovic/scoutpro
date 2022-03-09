@@ -9,13 +9,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import xyz.riocode.scoutpro.model.Player;
 import xyz.riocode.scoutpro.repository.PlayerRepository;
-import xyz.riocode.scoutpro.scrape.model.ScrapeField;
-import xyz.riocode.scoutpro.scrape.repository.ScrapeFieldRepository;
-import xyz.riocode.scoutpro.scrape.template.PesDbScrapeTemplateImpl;
+import xyz.riocode.scoutpro.scrape.engine.ScrapeEngine;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @Slf4j
 public class PesDbUpdatePlayers extends QuartzJobBean {
@@ -23,7 +20,7 @@ public class PesDbUpdatePlayers extends QuartzJobBean {
     @Autowired
     private PlayerRepository playerRepository;
     @Autowired
-    private ScrapeFieldRepository scrapeFieldRepository;
+    private ScrapeEngine scrapeEngine;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -32,14 +29,9 @@ public class PesDbUpdatePlayers extends QuartzJobBean {
 
         long count = playerRepository.count();
         if (count > 0) {
-            List<ScrapeField> scrapeFields = scrapeFieldRepository.findAll();
-            Map<String, String> pesdbScrapeFields = scrapeFields.stream()
-                    .filter(scrapeField -> scrapeField.getScrapeSite().getName().equals("pesdb"))
-                    .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
             long totalPages = count / pageSize;
             if (count % pageSize > 0) totalPages++;
             Page<Player> page;
-            PesDbScrapeTemplateImpl pesDbScrapeTemplate = new PesDbScrapeTemplateImpl(pesdbScrapeFields);
             for (int i = 0; i < totalPages; i++) {
                 page = playerRepository.findAll(PageRequest.of(i, pageSize));
                 for (Player player : page.getContent()) {
@@ -49,7 +41,11 @@ public class PesDbUpdatePlayers extends QuartzJobBean {
                         log.error(e.getMessage(), e);
                         throw new RuntimeException(e);
                     }
-                    pesDbScrapeTemplate.scrape(player);
+                    try {
+                        scrapeEngine.work(new URL(player.getPesDbUrl()), player);
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e.getMessage());
+                    }
                     playerRepository.save(player);
                     log.info("PesDb fields are updated for player: {} - {}", player.getId(), player.getName());
                 }

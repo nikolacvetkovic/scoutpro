@@ -14,18 +14,13 @@ import xyz.riocode.scoutpro.model.Player;
 import xyz.riocode.scoutpro.repository.AppUserPlayerRepository;
 import xyz.riocode.scoutpro.repository.AppUserRepository;
 import xyz.riocode.scoutpro.repository.PlayerRepository;
-import xyz.riocode.scoutpro.scrape.model.ScrapeField;
-import xyz.riocode.scoutpro.scrape.page.PsmlPageSupplierImpl;
-import xyz.riocode.scoutpro.scrape.repository.ScrapeFieldRepository;
-import xyz.riocode.scoutpro.scrape.template.async.ScrapeAsyncWrapper;
+import xyz.riocode.scoutpro.scrape.engine.ScrapeEngine;
 
 import javax.transaction.Transactional;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,36 +29,33 @@ public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final AppUserRepository appUserRepository;
     private final AppUserPlayerRepository appUserPlayerRepository;
-    private final ScrapeAsyncWrapper scrapeAsyncWrapper;
-    private final PsmlPageSupplierImpl psmlPageSupplier;
-    private final ScrapeFieldRepository scrapeFieldRepository;
+    private final ScrapeEngine scrapeEngine;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, AppUserRepository appUserRepository, AppUserPlayerRepository appUserPlayerRepository, ScrapeAsyncWrapper scrapeAsyncWrapper, PsmlPageSupplierImpl psmlPageSupplier, ScrapeFieldRepository scrapeFieldRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, AppUserRepository appUserRepository,
+                             AppUserPlayerRepository appUserPlayerRepository, ScrapeEngine scrapeEngine) {
         this.playerRepository = playerRepository;
         this.appUserRepository = appUserRepository;
         this.appUserPlayerRepository = appUserPlayerRepository;
-        this.scrapeAsyncWrapper = scrapeAsyncWrapper;
-        this.psmlPageSupplier = psmlPageSupplier;
-        this.scrapeFieldRepository = scrapeFieldRepository;
+        this.scrapeEngine = scrapeEngine;
     }
 
     @Override
     public Player create(Player player) {
-        return playerRepository.save(scrapeAll(player));
+        scrapeAll(player);
+        return playerRepository.save(player);
     }
 
     @Override
-    public Player createOrUpdate(Player player, String username){
-        Player p = null;
+    public Player createOrUpdate(Player player, String username) {
         if (player.getId() == null) {
-            p = scrapeAll(player);
+            scrapeAll(player);
             AppUser appUser = appUserRepository.findByUsername(username).get();
-            p.getUsers().stream().findFirst().get().setAppUser(appUser);
-            p.setInserted(LocalDateTime.now());
+            player.getUsers().stream().findFirst().get().setAppUser(appUser);
+            player.setInserted(LocalDateTime.now());
         } else {
-            p = update(player, username);
+            player = update(player, username);
         }
-        return playerRepository.save(p);
+        return playerRepository.save(player);
     }
 
     @Override
@@ -117,12 +109,14 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Page<Player> getByUserPaging(String username, int page) {
-        return playerRepository.findByUsername(username, PageRequest.of(page, 25, Sort.by(Sort.Direction.DESC, "inserted")));
+        return playerRepository.findByUsername(username, PageRequest.of(page, 25,
+                                                            Sort.by(Sort.Direction.DESC, "inserted")));
     }
 
     @Override
     public Page<Player> getByUserAndPositionPaging(String username, String position, int page) {
-        return playerRepository.findByUsernameAndPosition(username, position, PageRequest.of(page, 25, Sort.by(Sort.Direction.DESC, "inserted")));
+        return playerRepository.findByUsernameAndPosition(username, position, PageRequest.of(page, 25,
+                                                            Sort.by(Sort.Direction.DESC, "inserted")));
     }
 
     @Override
@@ -135,39 +129,31 @@ public class PlayerServiceImpl implements PlayerService {
         foundPlayer.removeUser(appUser);
     }
 
-    private Player scrapeAll(Player player){
+    private void scrapeAll(Player player) {
         Player foundPlayer = playerRepository.findByTransfermarktUrl(player.getTransfermarktUrl());
         if(foundPlayer != null) throw new DuplicatePlayerException();
 
-        List<ScrapeField> scrapeFields = scrapeFieldRepository.findAll();
-        Map<String, String> tmScrapeFields = scrapeFields.stream()
-                .filter(scrapeField -> scrapeField.getScrapeSite().getName().equals("transfermarkt"))
-                .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
-
-        Map<String, String> pesdbScrapeFields = scrapeFields.stream()
-                .filter(scrapeField -> scrapeField.getScrapeSite().getName().equals("pesdb"))
-                .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
-
-        Map<String, String> psmlScrapeFields = scrapeFields.stream()
-                .filter(scrapeField -> scrapeField.getScrapeSite().getName().equals("psml"))
-                .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
-
-        CompletableFuture<Player> tmAll = scrapeAsyncWrapper.tmAllScrape(player, tmScrapeFields);
-        CompletableFuture<Player> pesDb = scrapeAsyncWrapper.pesDbScrape(player, pesdbScrapeFields);
-        CompletableFuture<Player> psml = scrapeAsyncWrapper.psmlScrape(player, psmlScrapeFields, psmlPageSupplier);
-
-        CompletableFuture.allOf(tmAll, pesDb, psml).join();
-        Player p = null;
-
         try {
-            p = tmAll.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+            scrapeEngine.work(new URL(player.getTransfermarktUrl()), player);
+            scrapeEngine.work(new URL(player.getPesDbUrl()), player);
+            scrapeEngine.work(new URL(player.getPsmlUrl()), player);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e.getMessage());
         }
+//        CompletableFuture<Player> tmAll = scrapeAsyncWrapper.tmAllScrape(player, tmScrapeFields);
+//        CompletableFuture<Player> pesDb = scrapeAsyncWrapper.pesDbScrape(player, pesdbScrapeFields);
+//        CompletableFuture<Player> psml = scrapeAsyncWrapper.psmlScrape(player, psmlScrapeFields, psmlPageSupplier);
+//
+//        CompletableFuture.allOf(tmAll, pesDb, psml).join();
+//        Player p = null;
 
-        return p;
+//        try {
+//            p = tmAll.get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private Player update(Player player, String username) {

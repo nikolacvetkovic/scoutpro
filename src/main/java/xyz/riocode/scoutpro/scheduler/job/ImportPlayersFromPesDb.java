@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import xyz.riocode.scoutpro.model.Player;
 import xyz.riocode.scoutpro.repository.PlayerRepository;
+import xyz.riocode.scoutpro.scrape.engine.ScrapeLoader;
 import xyz.riocode.scoutpro.scrape.helper.ScrapeHelper;
-import xyz.riocode.scoutpro.scrape.page.PsmlPageSupplierImpl;
+import xyz.riocode.scoutpro.scrape.loader.PsmlPageLoaderImpl;
 import xyz.riocode.scoutpro.service.PlayerService;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +35,9 @@ public class ImportPlayersFromPesDb extends QuartzJobBean {
     @Autowired
     private PlayerRepository playerRepository;
     @Autowired
-    private PsmlPageSupplierImpl psmlPageSupplier;
+    private PsmlPageLoaderImpl psmlPageLoader;
+    @Autowired
+    private ScrapeLoader scrapeLoader;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -68,7 +72,10 @@ public class ImportPlayersFromPesDb extends QuartzJobBean {
                         }
                         try {
                             Thread.sleep(sleepTimeBetweenPlayers);
-                            Document psmlSearchResult = psmlPageSupplier.getPage(PSML_SEARCH_BASE_URL + pesDbBaseUrl + e.getValue());
+                            Document psmlSearchResult = ScrapeHelper.createDocument(
+                                    scrapeLoader.loadAndGetPageContent(
+                                            new URL(PSML_SEARCH_BASE_URL + pesDbBaseUrl + e.getValue()),
+                                            psmlPageLoader));
                             Element psmlPlayer = ScrapeHelper.getElement(psmlSearchResult, "table.style2 tr:nth-of-type(2)");
                             if (ScrapeHelper.getElement(psmlPlayer, "td:nth-of-type(1) a") == null) {
                                 log.warn("Search result is empty for player: {}", e.getKey());

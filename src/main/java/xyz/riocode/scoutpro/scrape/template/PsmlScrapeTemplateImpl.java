@@ -2,36 +2,37 @@ package xyz.riocode.scoutpro.scrape.template;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jsoup.nodes.Document;
+import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.model.Player;
 import xyz.riocode.scoutpro.scrape.helper.ScrapeHelper;
-import xyz.riocode.scoutpro.scrape.page.PageSupplier;
+import xyz.riocode.scoutpro.scrape.model.ScrapeField;
+import xyz.riocode.scoutpro.scrape.repository.ScrapeFieldRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class PsmlScrapeTemplateImpl extends WebDriverAbstractScrapeTemplate {
+@Component("PsmlTemplate")
+public class PsmlScrapeTemplateImpl implements ScrapeTemplate {
 
-    private final PageSupplier pageSupplier;
+    private final ScrapeFieldRepository scrapeFieldRepository;
 
-    public PsmlScrapeTemplateImpl(Map<String, String> scrapeFields, PageSupplier pageSupplier){
-        super(scrapeFields);
-        this.pageSupplier = pageSupplier;
+    public PsmlScrapeTemplateImpl(ScrapeFieldRepository scrapeFieldRepository){
+        this.scrapeFieldRepository = scrapeFieldRepository;
     }
 
     @Override
-    public Player scrape(Player player){
-        Document page = getPage(player.getPsmlUrl());
-        return scrape(player, page);
+    public void scrape(String pageContent, Player player) {
+//        Player player = new Player();
+        //todo - implement caching
+        Map<String, String> scrapeFields = scrapeFieldRepository.findByScrapeSite_Name("psml").stream()
+                .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
+        scrapeCoreData(ScrapeHelper.createDocument(pageContent), player, scrapeFields);
+//        return player;
     }
 
-    @Override
-    public Player scrape(Player player, Document page) {
-        scrapeCoreData(page, player);
-        return player;
-    }
-
-    protected void scrapeCoreData(Document doc, Player player){
+    protected void scrapeCoreData(Document doc, Player player, Map<String, String> scrapeFields){
         String teamName = ScrapeHelper.getElementData(doc, scrapeFields.get("teamName"));
         player.setPsmlTeam(teamName != null?teamName:"Free");
         String teamValue = ScrapeHelper.getElementDataOwn(doc, scrapeFields.get("teamValue"));
@@ -40,10 +41,5 @@ public class PsmlScrapeTemplateImpl extends WebDriverAbstractScrapeTemplate {
         }
         player.setPsmlValue(NumberUtils.isCreatable(teamValue)?new BigDecimal(teamValue):BigDecimal.ZERO);
         player.setPsmlLastCheck(LocalDateTime.now());
-    }
-
-    @Override
-    public Document getPage(String url) {
-        return pageSupplier.getPage(url);
     }
 }
