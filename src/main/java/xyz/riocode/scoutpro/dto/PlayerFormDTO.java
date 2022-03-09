@@ -28,7 +28,7 @@ public class PlayerFormDTO {
     @Size(max = 256)
     @Column(name = "pes_db_url")
     private String pesDbUrl;
-    @Pattern(regexp = "^(http(s)?://psml\\.rs/(index\\.php)?\\?action=shwply&playerID=)\\d+$", message = "Not valid Psml url")
+    @Pattern(regexp = "^(http(s)?://pc\\.psml\\.rs/(index\\.php)?\\?action=shwply&playerID=)\\d+$", message = "Not valid Psml url")
     @Size(max = 256)
     @Column(name = "psml_url")
     private String psmlUrl;
