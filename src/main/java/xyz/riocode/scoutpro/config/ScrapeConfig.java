@@ -27,7 +27,6 @@ public class ScrapeConfig {
     @PostConstruct
     public void setProperty(){
         System.setProperty("webdriver.chrome.driver", webDriverPath);
-        System.out.println(webDriverPath);
     }
 
 }
