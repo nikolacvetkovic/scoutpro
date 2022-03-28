@@ -71,6 +71,12 @@ public class PlayerController {
         return "player/showPlayer";
     }
 
+    @GetMapping("/compare")
+    public String compare(ModelMap modelMap){
+        modelMap.addAttribute("player1", new PlayerCompleteDTO());
+        return "player/compare";
+    }
+
     @GetMapping("/{playerId}/compare")
     public String compare(@PathVariable Long playerId, ModelMap modelMap){
         PlayerCompleteDTO playerCompleteDTO = playerConverter.playerToPlayerCompleteDTO(playerService.getByIdAndUserComplete(playerId, "cvele"), "cvele");

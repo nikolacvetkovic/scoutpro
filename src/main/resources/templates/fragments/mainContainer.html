@@ -6,7 +6,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(61, 201, 179, 1); height: 78px; font-size: 16px;">
 
         <a class="navbar-brand" href="/">
-            <img th:src="@{/logo.png}" src="../../static/logo.png" width="50px" height="50px" class="d-inline-block">
+            <img th:src="@{/img/logo.png}" src="../../static/img/logo.png" width="50px" height="50px" class="d-inline-block">
             <span class="align-middle ml-1" style="font-size: 35px">ScoutPro</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar" aria-controls="myNavbar" aria-expanded="false" aria-label="Toggle">
@@ -22,7 +22,7 @@
                     <a class="nav-link" th:href="@{/player/new}" href="#">Add Player</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/compare}" href="#">Compare players</a>
+                    <a class="nav-link" th:href="@{/player/compare}" href="#">Compare players</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/transfersandnews}" href="#">Transfers and News</a>
@@ -37,7 +37,7 @@
                 </li>
             </ul>
             <form class="form-inline my-2">
-                <button class="btn btn-outline-light my-sm-0" type="button" name="logout" >Logout</button>
+                <a class="btn btn-outline-light my-sm-0" href="/logout" type="button" name="logout" >Logout</a>
             </form>
         </div>
     </nav>
