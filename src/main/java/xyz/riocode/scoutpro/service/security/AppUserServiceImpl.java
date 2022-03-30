@@ -1,11 +1,15 @@
-package xyz.riocode.scoutpro.service;
+package xyz.riocode.scoutpro.service.security;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.exception.AppUserNotFoundException;
 import xyz.riocode.scoutpro.exception.DuplicateAppUserUsernameException;
-import xyz.riocode.scoutpro.model.AppUser;
+import xyz.riocode.scoutpro.model.security.AppUser;
 import xyz.riocode.scoutpro.repository.AppUserRepository;
 
 import javax.transaction.Transactional;
@@ -14,12 +18,14 @@ import java.util.Set;
 
 @Component
 @Transactional
-public class AppUserServiceImpl implements AppUserService {
+public class AppUserServiceImpl implements AppUserService, UserDetailsService {
 
     private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AppUserServiceImpl(AppUserRepository appUserRepository) {
+    public AppUserServiceImpl(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
         this.appUserRepository = appUserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -38,11 +44,6 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public Set<AppUser> getAppUsersByUsername(String username) {
-        return appUserRepository.findAppUsersByUsername(username);
-    }
-
-    @Override
     public AppUser getByUsername(String username) {
         return appUserRepository.findByUsername(username).orElseThrow(AppUserNotFoundException::new);
     }
@@ -52,8 +53,7 @@ public class AppUserServiceImpl implements AppUserService {
         AppUser user = appUserRepository.findByUsername(appUser.getUsername())
             .orElseThrow(AppUserNotFoundException::new);
 
-        //todo implement password encoding
-        user.setPassword(appUser.getPassword());
+        user.setPassword(passwordEncoder.encode(appUser.getPassword()));
 
         return appUserRepository.save(user);
     }
@@ -63,5 +63,12 @@ public class AppUserServiceImpl implements AppUserService {
         AppUser foundAppUser = appUserRepository.findById(appUserId).orElseThrow(AppUserNotFoundException::new);
         foundAppUser.setEnabled(false);
         appUserRepository.save(foundAppUser);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return appUserRepository.findByUsername(username).orElseThrow(() -> {
+                return new UsernameNotFoundException("Username " + username + " not found.");
+        });
     }
 }

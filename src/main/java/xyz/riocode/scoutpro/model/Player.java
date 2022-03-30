@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import xyz.riocode.scoutpro.enums.Foot;
 import xyz.riocode.scoutpro.jpa.converter.SetStringStringConverter;
+import xyz.riocode.scoutpro.model.security.AppUser;
+import xyz.riocode.scoutpro.model.security.AppUserPlayer;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;

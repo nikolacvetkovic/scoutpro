@@ -88,6 +88,37 @@ CREATE TABLE `app_user_role` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `app_privilege`
+--
+
+DROP TABLE IF EXISTS `app_privilege`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `app_privilege` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `privilege_name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `app_role_privilege`
+--
+
+DROP TABLE IF EXISTS `app_role_privilege`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `app_role_privilege` (
+  `app_role_id` bigint NOT NULL,
+  `app_privilege_id` bigint NOT NULL,
+  PRIMARY KEY (`app_role_id`,`app_privilege_id`),
+  KEY `app_privilege_id` (`app_privilege_id`),
+  CONSTRAINT `app_role_privilege_ibfk_1` FOREIGN KEY (`app_role_id`) REFERENCES `app_role` (`id`),
+  CONSTRAINT `app_role_privilege_ibfk_2` FOREIGN KEY (`app_privilege_id`) REFERENCES `app_privilege` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `competition_statistic`
 --
 

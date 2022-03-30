@@ -1,4 +1,4 @@
-package xyz.riocode.scoutpro.model;
+package xyz.riocode.scoutpro.model.security;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,9 +20,17 @@ public class AppRole implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Size(max = 10)
     @Column(name = "role_name")
     private String name;
+
     @ManyToMany(mappedBy = "roles")
     private Set<AppUser> users;
+
+    @ManyToMany
+    @JoinTable( name = "app_role_privilege",
+                joinColumns = @JoinColumn(name = "app_role_id", referencedColumnName = "id"),
+                inverseJoinColumns = @JoinColumn(name = "app_privilege_id", referencedColumnName = "id"))
+    private Set<AppPrivilege> privileges;
 }

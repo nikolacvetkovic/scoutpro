@@ -3,6 +3,8 @@ package xyz.riocode.scoutpro.bootstrap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import xyz.riocode.scoutpro.model.*;
+import xyz.riocode.scoutpro.model.security.AppUserPlayer;
+import xyz.riocode.scoutpro.model.security.AppUserPlayerId;
 import xyz.riocode.scoutpro.repository.AppUserRepository;
 import xyz.riocode.scoutpro.repository.PlayerRepository;
 import xyz.riocode.scoutpro.service.PlayerService;

@@ -10,10 +10,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import xyz.riocode.scoutpro.exception.AppUserNotFoundException;
 import xyz.riocode.scoutpro.exception.DuplicateAppUserUsernameException;
-import xyz.riocode.scoutpro.model.AppUser;
+import xyz.riocode.scoutpro.model.security.AppUser;
 import xyz.riocode.scoutpro.repository.AppUserRepository;
+import xyz.riocode.scoutpro.service.security.AppUserServiceImpl;
 
-import java.util.*;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -76,33 +77,6 @@ class AppUserServiceImplTest {
     @Disabled
     void testGetAllPagingEmpty(){
 
-    }
-
-    @Test
-    void testGetAppUsersByUsernameOk(){
-        AppUser user1 = new AppUser();
-        user1.setId(2L);
-        user1.setUsername("ana");
-        AppUser user2 = new AppUser();
-        user2.setId(3L);
-        user2.setUsername("mara");
-
-        when(appUserRepository.findAppUsersByUsername(anyString())).thenReturn(new HashSet<>(Arrays.asList(user, user1, user2)));
-
-        Set<AppUser> returnedAppUsers = appUserService.getAppUsersByUsername(APP_USER_USERNAME);
-
-        assertNotNull(returnedAppUsers);
-        assertEquals(3, returnedAppUsers.size());
-    }
-
-    @Test
-    void testGetAppUsersByUsernameEmpty(){
-        when(appUserRepository.findAppUsersByUsername(anyString())).thenReturn(Collections.EMPTY_SET);
-
-        Set<AppUser> returnedAppUsers = appUserService.getAppUsersByUsername(APP_USER_USERNAME);
-
-        assertNotNull(returnedAppUsers);
-        assertEquals(0, returnedAppUsers.size());
     }
 
     @Test

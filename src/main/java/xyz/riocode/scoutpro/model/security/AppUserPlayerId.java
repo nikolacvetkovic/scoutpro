@@ -1,4 +1,4 @@
-package xyz.riocode.scoutpro.model;
+package xyz.riocode.scoutpro.model.security;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

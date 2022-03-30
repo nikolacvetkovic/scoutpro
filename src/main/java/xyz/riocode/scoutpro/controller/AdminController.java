@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import xyz.riocode.scoutpro.scrape.service.ScrapeFieldService;
-import xyz.riocode.scoutpro.service.AppUserService;
+import xyz.riocode.scoutpro.service.security.AppUserService;
 
 @Controller
 @RequestMapping("/admin")
