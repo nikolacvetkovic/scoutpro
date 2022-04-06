@@ -264,7 +264,6 @@ function setSortByPositionOnBadge(){
     $('#position-badge-asc').on('click', function(){
         sortPlayerTableByPosition('asc');
     });
-
     $('#position-badge-desc').on('click', function(){
         sortPlayerTableByPosition('desc');
     });
@@ -313,14 +312,14 @@ function setFilterByAffiliation(){
 }
 
 function setFilterByPosition(){
-    $('#dashboard span[id*=position]').on('click', function (){
+    $('#dashboard span[id*=filter-position]').on('click', function (){
         if ($(this).attr('active') == 'true') {
-            $('#dashboard span[id*=position]').attr('active', false);
+            $('#dashboard span[id*=filter-position]').attr('active', false);
             getPlayersAndFillTable('/player/0/page');
         } else {
-            $('#dashboard span[id*=position]').attr('active', false);
+            $('#dashboard span[id*=filter-position]').attr('active', false);
             $(this).attr('active', true);
-            var position = $(this).attr('id').split('-')[1];
+            var position = $(this).attr('id').split('-')[2];
             getPlayersAndFillTable('/player/0/page?position=' + position);
         }
     });
@@ -328,7 +327,7 @@ function setFilterByPosition(){
 
 function setListenersOnPages(){
     $('#pages').on('click', "span[enabled=true], i.fas[data-page][enabled=true]", function(){
-        var activePositionFilterButton = $('#dashboard span[id*=position][active=true]');
+        var activePositionFilterButton = $('#dashboard span[id*=filter-position][active=true]');
         var selectedPageNumber = $(this).attr('data-page');
         if (activePositionFilterButton.length == 0) {
             getPlayersAndFillTable('/player/' + selectedPageNumber + '/page');

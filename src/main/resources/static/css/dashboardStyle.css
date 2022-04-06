@@ -125,7 +125,7 @@ span.lastMeasured {
 #pages i.fa-angle-double-right{
     margin-left: 10px;
 }
-#dashboard div.text-center span[id*=position], #allPlayersButton, #myPlayersButton, #freePlayersButton{
+#dashboard div.text-center span[id*=filter-position], #allPlayersButton, #myPlayersButton, #freePlayersButton{
     color: rgba(255, 255, 255, 1);
 }
 #allPlayersButton, #myPlayersButton, #freePlayersButton{
@@ -133,23 +133,23 @@ span.lastMeasured {
     border-color: rgba(61, 201, 179, 1);
     font-size: 90%
 }
-#position-gk {
+#filter-position-gk {
     background-color: rgba(219, 161, 17, 1);
     border-color: rgba(219, 161, 17, 1);
 }
-#position-cb, #position-lb, #position-rb{
+#filter-position-cb, #filter-position-lb, #filter-position-rb{
     background-color: rgba(35, 105, 217, 1);
     border-color: rgba(35, 105, 217, 1);
 }
-#position-dmf, #position-cmf, #position-lmf, #position-rmf, #position-amf{
+#filter-position-dmf, #filter-position-cmf, #filter-position-lmf, #filter-position-rmf, #filter-position-amf{
     background-color: rgba(75, 159, 35, 1);
     border-color: rgba(75, 159, 35, 1);
 }
-#position-lwf, #position-rwf, #position-ss, #position-cf{
+#filter-position-lwf, #filter-position-rwf, #filter-position-ss, #filter-position-cf{
     background-color: rgba(190, 38, 46, 1);
     border-color: rgba(190, 38, 46, 1);
 }
-#dashboard div.text-center span[id*=position][active=true]{
+#dashboard div.text-center span[id*=filter-position][active=true]{
     width: 3rem;
     border-style: solid;
     border-width: 0.12rem;
