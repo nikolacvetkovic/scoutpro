@@ -42,7 +42,7 @@ public class TMScrapeTemplateImpl implements ScrapeTemplate {
     }
 
     protected void scrapeCoreData(Document doc, Player player, Map<String, String> scrapeFields) {
-        String playerName = ScrapeHelper.getElementData(doc, scrapeFields.get("playerName"));
+        String playerName = ScrapeHelper.getAttributeValue(doc, scrapeFields.get("playerName"), "alt").trim();
         player.setName(playerName);
         String clubTeam = ScrapeHelper.getElementData(doc, scrapeFields.get("clubTeam"));
         player.setClubTeam(clubTeam);
