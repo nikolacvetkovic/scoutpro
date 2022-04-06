@@ -69,6 +69,11 @@ public class PlayerController {
         return "redirect:/player/"+ createdPlayer.getId() +"/show";
     }
 
+    @GetMapping("/existing")
+    public String showPlayerAddExisting(ModelMap modelMap){
+        return "player/playerAddExisting";
+    }
+
     @GetMapping("/{playerId}/{isUserPlayer}/follow")
     public String follow(@PathVariable Long playerId,
                          @PathVariable Boolean isUserPlayer,

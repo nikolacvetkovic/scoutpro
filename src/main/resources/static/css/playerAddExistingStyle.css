@@ -1,0 +1,52 @@
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+h4{
+    color: white;
+    padding: 10px 10px;
+    text-decoration: underline;
+}
+.container-fluid {
+    max-height: 100%;
+}
+#addPlayer{
+    background-color: rgba(61, 201, 179, 1);
+    margin-top: 30px;
+    border-radius: 20px;
+    color: rgb(255, 255, 255);
+}
+#addPlayer {
+    padding: 20px 20px;
+}
+#addPlayerSearchResult{
+    margin-bottom: 0;
+}
+#addPlayerSearchResult tbody{
+    width: 95%;
+}
+#addPlayer table tr td, #addPlayer table tr th{
+    color: white;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+    border-top: none;
+}
+.table-scroll tr{
+    width: 100%;
+    table-layout: fixed;
+    display: inline-table;
+}
+#addPlayer>div.form-group{
+    padding: 0px 25%;
+}
+button.btn-sm {
+    font-size: .7rem;
+}
+#addPlayerSearchResult tr input[type=checkbox]{
+    vertical-align: middle;
+}

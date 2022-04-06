@@ -19,7 +19,10 @@
                     <a class="nav-link" th:href="@{/dashboard}" href="#">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/player/new}" href="#">Add Player</a>
+                    <a class="nav-link" th:href="@{/player/existing}" href="#">Add Existing Player</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/player/new}" href="#">Add New Player</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/player/compare}" href="#">Compare players</a>
@@ -42,11 +45,6 @@
         </div>
     </nav>
     <div class="container-fluid">
-        <div class="alert alert-success mt-2 my-2 py-2" style="display: none;">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
 
         <div th:replace="${content}"></div>
 
