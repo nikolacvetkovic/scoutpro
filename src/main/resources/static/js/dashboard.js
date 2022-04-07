@@ -332,7 +332,7 @@ function setListenersOnPages(){
         if (activePositionFilterButton.length == 0) {
             getPlayersAndFillTable('/player/' + selectedPageNumber + '/page');
         } else {
-            var activePositionFilterButtonValue = $(activePositionFilterButton).attr('id').split('-')[1];
+            var activePositionFilterButtonValue = $(activePositionFilterButton).attr('id').split('-')[2];
             getPlayersAndFillTable('/player/' + selectedPageNumber + '/page?position=' + activePositionFilterButtonValue);
         }
     });
