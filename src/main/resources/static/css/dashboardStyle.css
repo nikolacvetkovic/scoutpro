@@ -133,6 +133,12 @@ span.lastMeasured {
     border-color: rgba(61, 201, 179, 1);
     font-size: 90%
 }
+#allPlayersButton[active=true], #myPlayersButton[active=true], #freePlayersButton[active=true]{
+    width: 6rem;
+    border-style: solid;
+    border-width: 0.24rem;
+    border-color: transparent;
+}
 #filter-position-gk {
     background-color: rgba(219, 161, 17, 1);
     border-color: rgba(219, 161, 17, 1);

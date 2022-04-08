@@ -306,9 +306,35 @@ function setSortByTMValueOnBadge(){
 }
 
 function setFilterByAffiliation(){
-    $('#allPlayersButton').on('click', showAllPlayers);
-    $('#myPlayersButton').on('click', showMyPlayers);
-    $('#freePlayersButton').on('click', showFreePlayers);
+    $('#allPlayersButton').on('click', function(){
+        $('#myPlayersButton, #freePlayersButton').attr('active', false);
+        $(this).attr('active', true);
+        $('#tab-body tr').css('display', '');
+    });
+    $('#myPlayersButton').on('click', function(){
+        $('#allPlayersButton, #freePlayersButton').attr('active', false);
+        $(this).attr('active', true);
+        var playerList = $('#tab-body tr').get();
+        playerList.forEach(function(player){
+            if($(player).find('td[id*=myPlayer]').text()){
+                $(player).css('display', '');
+            } else {
+                $(player).css('display', 'none');
+            }
+        });
+    });
+    $('#freePlayersButton').on('click', function(){
+        $('#allPlayersButton, #myPlayersButton').attr('active', false);
+        $(this).attr('active', true);
+        var playerList = $('#tab-body tr').get();
+        playerList.forEach(function(player){
+            if($(player).find('td[id*=psmlTeam]').text() === 'Free'){
+                $(player).css('display', '');
+            } else {
+                $(player).css('display', 'none');
+            }
+        });
+    });
 }
 
 function setFilterByPosition(){
@@ -456,32 +482,6 @@ function removeLoadingSpinner(){
     $('#psml .row .spinner').remove();
     $('#pesDb .row .spinner').remove();
     $('#ws .row .spinner').remove();
-}
-
-function showAllPlayers(){
-    $('#tab-body tr').css('display', '');
-}
-
-function showMyPlayers(){
-    var playerList = $('#tab-body tr').get();
-    playerList.forEach(function(player){
-        if($(player).find('td[id*=myPlayer]').text()){
-            $(player).css('display', '');
-        } else {
-            $(player).css('display', 'none');
-        }
-    });
-}
-
-function showFreePlayers(){
-    var playerList = $('#tab-body tr').get();
-    playerList.forEach(function(player){
-        if($(player).find('td[id*=psmlTeam]').text() === 'Free'){
-            $(player).css('display', '');
-        } else {
-            $(player).css('display', 'none');
-        }
-    });
 }
 
 function sortPlayerTableByNumber(orderBy, order){
