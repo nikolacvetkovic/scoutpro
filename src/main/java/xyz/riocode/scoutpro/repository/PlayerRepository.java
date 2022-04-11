@@ -20,6 +20,15 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             countQuery = "SELECT count(p) FROM Player p JOIN p.users up JOIN up.appUser u WHERE u.username = :username")
     Page<Player> findByUsername(String username, Pageable pageable);
 
+    @Override
+    @Query(value = "SELECT p FROM Player p " +
+            " LEFT JOIN FETCH p.psmlTransfers " +
+            " LEFT JOIN FETCH p.marketValues " +
+            " LEFT JOIN FETCH p.competitionStatistics " +
+            " LEFT JOIN FETCH p.transfers ",
+            countQuery = "SELECT count(p) FROM Player p")
+    Page<Player> findAll(Pageable pageable);
+
     @Query(value = "SELECT p FROM Player p " +
             " LEFT JOIN FETCH p.psmlTransfers " +
             " LEFT JOIN FETCH p.marketValues " +
@@ -77,4 +86,9 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Query("SELECT p FROM Player p " +
             "WHERE p.pesDbPlayerName = :pesDbName")
     Player findByPesDbName(String pesDbName);
+
+    @Query("SELECT p FROM Player p " +
+            "LEFT JOIN FETCH p.psmlTransfers " +
+            "WHERE p.psmlUrl = :psmlUrl")
+    Player findByPsmlUrl(String psmlUrl);
 }
