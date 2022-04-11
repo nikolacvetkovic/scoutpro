@@ -100,7 +100,7 @@ function fillPsmlInfo(selectedPlayerTr){
     $('#psmlValue').append($(selectedPlayerTr).find('td[id*=psmlValue]').text());
     $('#psmlLastTransferFromTeam').append($(selectedPlayerTr).find('td[id*=psmlLastTransferFromTeam]').text());
     $('#psmlLastTransferToTeam').append($(selectedPlayerTr).find('td[id*=psmlLastTransferToTeam]').text());
-    $('#psmlLastTransferFee').append($(selectedPlayerTr).find('td[id*=psmlLastTransferFee]').text());
+    $('#psmlLastTransferFee').append('€ ' + $(selectedPlayerTr).find('td[id*=psmlLastTransferFee]').text());
     $('#psmlLastTransferDate').append($(selectedPlayerTr).find('td[id*=psmlLastTransferDate]').text());
     var psmlLastCheck = $('#psmlLastCheck').get(0);
     $(psmlLastCheck).empty();
