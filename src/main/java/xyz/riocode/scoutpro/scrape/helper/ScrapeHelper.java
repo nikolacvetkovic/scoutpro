@@ -25,6 +25,12 @@ public class ScrapeHelper {
         return e.text().trim();
     }
 
+    public static String getElementHtml(Element doc, String selector) {
+        Element e = getElement(doc, selector);
+        if (e == null) return null;
+        return e.html().trim();
+    }
+
     public static Element getElement(Element doc, String selector) {
         return getElements(doc, selector).first();
     }
