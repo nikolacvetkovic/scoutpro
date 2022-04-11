@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ImportPlayersFromPesDb extends QuartzJobBean {
 
-    private static final String PSML_BASE_URL = "https://psml.rs/index.php";
+    private static final String PSML_BASE_URL = "https://pc.psml.rs/index.php";
     private static final String PSML_SEARCH_BASE_URL = PSML_BASE_URL + "?action=aps&q=&pesdblink=";
 
     private static final int overallLimit = 80;
