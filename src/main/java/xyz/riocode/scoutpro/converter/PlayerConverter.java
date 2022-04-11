@@ -145,7 +145,7 @@ public class PlayerConverter {
             Optional<PsmlTransfer> optionalPsmlTransfer = player.getPsmlTransfers().stream().findFirst();
             if (optionalPsmlTransfer.isPresent()) {
                 PsmlTransfer psmlTransfer = optionalPsmlTransfer.get();
-                playerDashboardDTO.setPsmlLastTransferDate(psmlTransfer.getDateOfTransfer() != null ? psmlTransfer.getDateOfTransfer().format(dateTimeFormatter) : " - ");
+                playerDashboardDTO.setPsmlLastTransferDate(psmlTransfer.getDateOfTransfer() != null ? psmlTransfer.getDateOfTransfer().format(dateFormatter) : " - ");
                 playerDashboardDTO.setPsmlLastTransferFromTeam(psmlTransfer.getFromTeam());
                 playerDashboardDTO.setPsmlLastTransferToTeam(psmlTransfer.getToTeam());
                 playerDashboardDTO.setPsmlLastTransferFee(psmlTransfer.getTransferFee() != null ? psmlTransfer.getTransferFee().toString() : " - ");

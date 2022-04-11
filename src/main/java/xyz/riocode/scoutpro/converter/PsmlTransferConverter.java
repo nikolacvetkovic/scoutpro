@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class PsmlTransferConverter {
 
     public List<PsmlTransferDTO> psmlTransfersToPsmlTransferDTOs(Set<PsmlTransfer> psmlTransfers){
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withLocale(Locale.US);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
         return psmlTransfers.stream().map(psmlTransfer -> {
             PsmlTransferDTO psmlTransferDTO = new PsmlTransferDTO();
             psmlTransferDTO.setDateOfTransfer(psmlTransfer.getDateOfTransfer() != null ? psmlTransfer.getDateOfTransfer().format(dateTimeFormatter) : " - ");
