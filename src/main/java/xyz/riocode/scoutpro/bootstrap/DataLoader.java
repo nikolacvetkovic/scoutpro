@@ -300,7 +300,7 @@ public class DataLoader implements CommandLineRunner {
         player.setPsmlTeam("Atomic Ants");
         player.setPsmlValue(BigDecimal.valueOf(15000000));
         PsmlTransfer psmlTransfer = new PsmlTransfer();
-        psmlTransfer.setDateOfTransfer(LocalDateTime.now());
+        psmlTransfer.setDateOfTransfer(LocalDate.now());
         psmlTransfer.setFromTeam("Free Agent");
         psmlTransfer.setToTeam("Atomic Ants");
         psmlTransfer.setPlayer(player);

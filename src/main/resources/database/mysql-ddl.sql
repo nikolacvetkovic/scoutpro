@@ -342,15 +342,15 @@ DROP TABLE IF EXISTS `psml_transfer`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `psml_transfer` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `date_of_transfer` datetime(6) DEFAULT NULL,
+  `date_of_transfer` date DEFAULT NULL,
   `from_team` varchar(255) DEFAULT NULL,
   `to_team` varchar(255) DEFAULT NULL,
-  `transfer_fee` decimal(19,2) DEFAULT NULL,
+  `transfer_fee` varchar(30) DEFAULT NULL,
   `player_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK5gs2nh408j6c9x189oxmxkrqp` (`player_id`),
   CONSTRAINT `FK5gs2nh408j6c9x189oxmxkrqp` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

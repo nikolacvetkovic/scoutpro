@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 import xyz.riocode.scoutpro.dto.PsmlTransferDTO;
 import xyz.riocode.scoutpro.model.PsmlTransfer;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,22 +24,22 @@ class PsmlTransferConverterTest {
         PsmlTransfer psmlTransfer1 = new PsmlTransfer();
         psmlTransfer1.setFromTeam("Atomic Ants FC");
         psmlTransfer1.setToTeam("Hull City");
-        psmlTransfer1.setTransferFee(new BigDecimal(75000000));
-        psmlTransfer1.setDateOfTransfer(LocalDateTime.of(2014, 7, 30, 12, 45, 0));
+        psmlTransfer1.setTransferFee("75000000");
+        psmlTransfer1.setDateOfTransfer(LocalDate.of(2014, 7, 30));
         psmlTransfers.add(psmlTransfer1);
 
         PsmlTransfer psmlTransfer2 = new PsmlTransfer();
         psmlTransfer2.setFromTeam("Hull City");
         psmlTransfer2.setToTeam("Vukovi");
-        psmlTransfer2.setTransferFee(new BigDecimal(80000000));
-        psmlTransfer2.setDateOfTransfer(LocalDateTime.of(2017, 7, 10, 12, 45, 0));
+        psmlTransfer2.setTransferFee("80000000");
+        psmlTransfer2.setDateOfTransfer(LocalDate.of(2017, 7, 10));
         psmlTransfers.add(psmlTransfer2);
 
         PsmlTransfer psmlTransfer3 = new PsmlTransfer();
         psmlTransfer3.setFromTeam("Vukovi");
         psmlTransfer3.setToTeam("Top Hit");
-        psmlTransfer3.setTransferFee(new BigDecimal(100000000));
-        psmlTransfer3.setDateOfTransfer(LocalDateTime.of(2019, 8, 8, 12, 45, 0));
+        psmlTransfer3.setTransferFee("100000000");
+        psmlTransfer3.setDateOfTransfer(LocalDate.of(2019, 8, 8));
         psmlTransfers.add(psmlTransfer3);
 
 
