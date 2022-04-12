@@ -22,7 +22,7 @@ function setWindowAndFont(){
         document.body.style.fontSize = '13px';
     }
     $('#left').css('height', window.innerHeight - 160);
-    $('#left table tbody').css('height', $('#left').height()-34);
+    $('#left table tbody').css('height', $('#left').height()-50);
     $('#right').css('height', window.innerHeight - 160);
 }
 
