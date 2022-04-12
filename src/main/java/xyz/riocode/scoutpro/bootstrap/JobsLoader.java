@@ -2,7 +2,6 @@ package xyz.riocode.scoutpro.bootstrap;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import xyz.riocode.scoutpro.scheduler.model.JobInfo;
 import xyz.riocode.scoutpro.scheduler.service.JobService;
 
 @Component
@@ -62,5 +61,23 @@ public class JobsLoader implements CommandLineRunner {
 //                .build();
 //
 //        jobService.createJob(psmlUpdatePlayers);
+//
+//        JobInfo transfermarktUpdatePlayers = JobInfo.builder()
+//                .jobClass("xyz.riocode.scoutpro.scheduler.job.TransfermarktUpdatePlayers")
+//                .jobName("TransfermarktUpdatePlayers")
+//                .jobGroup("Transfermarkt")
+//                .customConfigData("{\"pageSize\":20}")
+//                .build();
+//
+//        jobService.createJob(transfermarktUpdatePlayers);
+
+//        JobInfo psmlTransfersOutsideTransferPeriod = JobInfo.builder()
+//                .jobClass("xyz.riocode.scoutpro.scheduler.job.PsmlTransfersOutsideTransferPeriod")
+//                .jobName("PsmlTransfersOutsideTransferPeriod")
+//                .jobGroup("Psml")
+//                .customConfigData("")
+//                .build();
+//
+//        jobService.createJob(psmlTransfersOutsideTransferPeriod);
     }
 }
