@@ -52,8 +52,10 @@ class TMScrapeTemplateImplTest {
         scrapeFields.put("nationalTeam", "div.info-table span:contains(Citizenship)+span img");
         scrapeFields.put("transferTable", "div.responsive-table tr.zeile-transfer");
         scrapeFields.put("dateOfTransfer", "td:nth-of-type(2)");
-        scrapeFields.put("fromTeam", "td:nth-of-type(5) a");
-        scrapeFields.put("toTeam", "td:nth-of-type(8) a");
+        scrapeFields.put("fromTeam_1st", "td:nth-of-type(5) a");
+        scrapeFields.put("fromTeam_2nd", "td:nth-of-type(5)");
+        scrapeFields.put("toTeam_1st", "td:nth-of-type(8) a");
+        scrapeFields.put("toTeam_2nd", "td:nth-of-type(8)");
         scrapeFields.put("marketValue", "td.zelle-mw");
         scrapeFields.put("transferFee", "td.zelle-abloese");
         return scrapeFields;
@@ -71,8 +73,10 @@ class TMScrapeTemplateImplTest {
         scrapeFields.add(ScrapeField.builder().name("nationalTeam").selector("div.info-table span:contains(Citizenship)+span img").build());
         scrapeFields.add(ScrapeField.builder().name("transferTable").selector("div.responsive-table tr.zeile-transfer").build());
         scrapeFields.add(ScrapeField.builder().name("dateOfTransfer").selector("td:nth-of-type(2)").build());
-        scrapeFields.add(ScrapeField.builder().name("fromTeam").selector("td:nth-of-type(5) a").build());
-        scrapeFields.add(ScrapeField.builder().name("toTeam").selector("td:nth-of-type(8) a").build());
+        scrapeFields.add(ScrapeField.builder().name("fromTeam_1st").selector("td:nth-of-type(5) a").build());
+        scrapeFields.add(ScrapeField.builder().name("fromTeam_2nd").selector("td:nth-of-type(5)").build());
+        scrapeFields.add(ScrapeField.builder().name("toTeam_1st").selector("td:nth-of-type(8) a").build());
+        scrapeFields.add(ScrapeField.builder().name("toTeam_2nd").selector("td:nth-of-type(8)").build());
         scrapeFields.add(ScrapeField.builder().name("marketValue").selector("td.zelle-mw").build());
         scrapeFields.add(ScrapeField.builder().name("transferFee").selector("td.zelle-abloese").build());
         return scrapeFields;
@@ -148,6 +152,24 @@ class TMScrapeTemplateImplTest {
         tmScrapeTemplate.scrapeTransfers(document, player, getScrapeFieldsMap());
 
         assertThat(player.getTransfers(), hasSize(4));
+        assertThat(player.getTransfers(), hasItem(transfer));
+    }
+
+    @Test
+    void scrapeTransfers_2() throws IOException {
+        File file = new File("src/test/resources/tm_2.html");
+        document = Jsoup.parse(file, "UTF-8", "https://pesdb.net");
+
+        tmScrapeTemplate.scrapeTransfers(document, player, getScrapeFieldsMap());
+
+        Transfer transfer = new Transfer();
+        transfer.setFromTeam("Man City");
+        transfer.setToTeam("PSV Eindhoven");
+        transfer.setTransferFee("loan transfer");
+        transfer.setDateOfTransfer(LocalDate.of(2016, 8, 26));
+        transfer.setMarketValue("€4.00m");
+
+        assertThat(player.getTransfers(), hasSize(6));
         assertThat(player.getTransfers(), hasItem(transfer));
     }
 }

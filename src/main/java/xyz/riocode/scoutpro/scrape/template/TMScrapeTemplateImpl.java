@@ -31,14 +31,12 @@ public class TMScrapeTemplateImpl implements ScrapeTemplate {
 
     @Override
     public void scrape(String pageContent, Player player) {
-//        Player player = new Player();
         Map<String, String> scrapeFields = scrapeFieldRepository.findByScrapeSite_Name("transfermarkt").stream()
                 .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
         Document page = ScrapeHelper.createDocument(pageContent);
         scrapeCoreData(page, player, scrapeFields);
         scrapeMarketValues(page, player, scrapeFields);
         scrapeTransfers(page, player, scrapeFields);
-//        return player;
     }
 
     protected void scrapeCoreData(Document doc, Player player, Map<String, String> scrapeFields) {
@@ -112,9 +110,15 @@ public class TMScrapeTemplateImpl implements ScrapeTemplate {
             String dateString = ScrapeHelper.getElementData(e, scrapeFields.get("dateOfTransfer"));
             LocalDate dateOfTransfer = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("MMM d, yyyy").withLocale(Locale.US));
             transfer.setDateOfTransfer(dateOfTransfer);
-            String fromTeam = ScrapeHelper.getElementData(e, scrapeFields.get("fromTeam"));
+            String fromTeam = ScrapeHelper.getElementData(e, scrapeFields.get("fromTeam_1st"));
+            if (fromTeam == null) {
+                fromTeam = ScrapeHelper.getElementData(e, scrapeFields.get("fromTeam_2nd"));
+            }
             transfer.setFromTeam(fromTeam);
-            String toTeam = ScrapeHelper.getElementData(e, scrapeFields.get("toTeam"));
+            String toTeam = ScrapeHelper.getElementData(e, scrapeFields.get("toTeam_1st"));
+            if (toTeam == null) {
+                toTeam = ScrapeHelper.getElementData(e, scrapeFields.get("toTeam_2nd"));
+            }
             transfer.setToTeam(toTeam);
             String marketValue = ScrapeHelper.getElementData(e, scrapeFields.get("marketValue"));
             transfer.setMarketValue(marketValue);
