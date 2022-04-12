@@ -28,7 +28,7 @@ public class AppRole implements Serializable {
     @ManyToMany(mappedBy = "roles")
     private Set<AppUser> users;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable( name = "app_role_privilege",
                 joinColumns = @JoinColumn(name = "app_role_id", referencedColumnName = "id"),
                 inverseJoinColumns = @JoinColumn(name = "app_privilege_id", referencedColumnName = "id"))
