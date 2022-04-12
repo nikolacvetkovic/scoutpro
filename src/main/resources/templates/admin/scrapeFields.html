@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header(~{::title}, ~{::link#pageStyle})}">
+    <title>ScoutPro | Regex Edit</title>
+    <link id="pageStyle" rel="stylesheet" th:href="@{/css/scrapeFieldsStyle.css}" href="../static/css/scrapeFieldsStyle.css" type="text/css">
+</head>
+<body>
+
+    <div th:replace="~{fragments/mainContainer :: main(~{::div#scrapeFields})}">
+        <div id="scrapeFields" class="row">
+
+        </div>
+    </div>
+
+</body>
+</html>
