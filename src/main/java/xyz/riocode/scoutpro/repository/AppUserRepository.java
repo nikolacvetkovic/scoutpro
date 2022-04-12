@@ -7,6 +7,8 @@ import xyz.riocode.scoutpro.model.security.AppUser;
 import java.util.Optional;
 
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
-    @Query("SELECT u FROM AppUser u LEFT JOIN FETCH u.players WHERE u.username = :username")
+    @Query("SELECT u FROM AppUser u " +
+            "LEFT JOIN FETCH u.players " +
+            "WHERE u.username = :username")
     Optional<AppUser> findByUsername(String username);
 }
