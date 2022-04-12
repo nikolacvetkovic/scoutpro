@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import xyz.riocode.scoutpro.model.Player;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,4 +92,16 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             "LEFT JOIN FETCH p.psmlTransfers " +
             "WHERE p.psmlUrl = :psmlUrl")
     Player findByPsmlUrl(String psmlUrl);
+
+    @Query(value = "SELECT p FROM Player p " +
+            "LEFT JOIN FETCH p.transfers t " +
+            "LEFT JOIN FETCH p.marketValues mv " +
+            "WHERE p.transferLastCheck < :transferLastCheck",
+            countQuery = "SELECT count(p) FROM Player p " +
+                    "WHERE p.transferLastCheck < :transferLastCheck")
+    Page<Player> findByTransferLastCheckBefore(LocalDateTime transferLastCheck, Pageable pageable);
+
+    @Query(value = "SELECT count(p) FROM Player p " +
+            "WHERE p.transferLastCheck < :transferLastCheck")
+    long countByTransferLastCheckBefore(LocalDateTime transferLastCheck);
 }
