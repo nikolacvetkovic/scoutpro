@@ -1,14 +1,13 @@
 package xyz.riocode.scoutpro.scrape.service;
 
 import xyz.riocode.scoutpro.scrape.model.ScrapeField;
-import xyz.riocode.scoutpro.scrape.model.ScrapeSite;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 public interface ScrapeFieldService {
     ScrapeField getByName(String name);
-    Map<String, String> getByScrapeSite(ScrapeSite scrapeSite);
+    List<ScrapeField> getByScrapeSite(Long scrapeSiteId);
     Set<ScrapeField> getAll();
-    void update(ScrapeField scrapeField);
+    ScrapeField update(ScrapeField scrapeField);
 }

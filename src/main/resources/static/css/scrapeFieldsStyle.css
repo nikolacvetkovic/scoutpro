@@ -1,0 +1,45 @@
+.dropdown {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+#dropdownMenuButton, .dropdown-menu {
+    width: 100%;
+    text-align: center;
+}
+#dropdownMenuButton {
+    border-style: solid;
+    border-color: rgba(61, 201, 179, 1);
+    border-width: medium;
+}
+.input-group-prepend {
+    width: 15%;
+}
+div.input-group-append button {
+    background-color: rgb(233, 236, 239);
+    color: rgb(73, 80, 87);
+    border-top-right-radius: 5px!important;
+}
+div.input-group-append button:hover {
+    background-color: rgba(61, 201, 179, 1);
+    color: rgb(206, 241, 228);
+}
+span.input-group-text {
+    width: 100%;
+}
+.dropdown-item:active {
+    background-color: rgba(61, 201, 179, 1);
+}
+div.input-group input {
+    border-width: 2px;
+}
+i.fa-check-circle {
+    color: green;
+}
+i.fa-times-circle {
+    color: red;
+}
+i.fa-check-circle, i.fa-times-circle{
+    font-size: 1.5rem;
+    padding-top: 0.2rem;
+    padding-left: 0.3rem;
+}
