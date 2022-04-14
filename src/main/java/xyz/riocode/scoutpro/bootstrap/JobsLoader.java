@@ -79,5 +79,14 @@ public class JobsLoader implements CommandLineRunner {
 //                .build();
 //
 //        jobService.createJob(psmlTransfersOutsideTransferPeriod);
+
+//        JobInfo psmlTransferInsideTransferPeriod = JobInfo.builder()
+//                .jobClass("xyz.riocode.scoutpro.scheduler.job.PsmlTransferInsideTransferPeriod")
+//                .jobName("PsmlTransferInsideTransferPeriod")
+//                .jobGroup("Psml")
+//                .customConfigData("")
+//                .build();
+//
+//        jobService.createJob(psmlTransferInsideTransferPeriod);
     }
 }
