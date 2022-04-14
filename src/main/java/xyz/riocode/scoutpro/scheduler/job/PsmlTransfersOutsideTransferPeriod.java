@@ -57,6 +57,7 @@ public class PsmlTransfersOutsideTransferPeriod extends QuartzJobBean {
                         .player(player)
                         .build();
                 player.getPsmlTransfers().add(psmlTransfer);
+                player.setPsmlTeam(toTeam);
                 playerRepository.save(player);
                 log.info("Psml transfer for : {} - {} inserted", player.getId(), player.getName());
             }
