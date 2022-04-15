@@ -14,6 +14,7 @@ import xyz.riocode.scoutpro.scrape.engine.ScrapeLoader;
 import xyz.riocode.scoutpro.scrape.helper.ScrapeHelper;
 import xyz.riocode.scoutpro.scrape.loader.PsmlPageLoaderImpl;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 public class PsmlTransferInsideTransferPeriod extends QuartzJobBean {
 
     private static final String PSML_BASE_URL = "https://pc.psml.rs/index.php";
-    private static final String TRANSFERS_SELECTOR = "tr.reverseGradient table.innerTable:nth-of-type(2) tr:nth-of-type(2) td:has(h3:contains(Najnoviji Transferi))>div";
+    private static final String TRANSFERS_SELECTOR = "tr.reverseGradient table.innerTable:nth-of-type(2) tr:nth-of-type(2) td:not(h3:contains(Rezultati Baraž))>div";
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -43,28 +44,39 @@ public class PsmlTransferInsideTransferPeriod extends QuartzJobBean {
                 String playerPsmlUrlPart = ScrapeHelper.getAttributeValue(transfer, "a", "href");
                 player = playerRepository.findByPsmlUrl(PSML_BASE_URL + playerPsmlUrlPart);
                 if (player == null) continue;
-                String fromTeam = ScrapeHelper.getAttributeValue(transfer, "div div:nth-of-type(3) img", "title");
-                String toTeam = ScrapeHelper.getAttributeValue(transfer, "div div:nth-of-type(1) img", "title");
-                String divHtml = ScrapeHelper.getElementHtml(transfer, "div");
-                String[] transferDetails = divHtml.substring(divHtml.indexOf("<br>")).split("<br>");
-                String transferFee = transferDetails[1].trim();
-                LocalDate dateOfTransfer = LocalDate.parse(transferDetails[2].trim(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-                PsmlTransfer psmlTransfer = PsmlTransfer.builder()
-                        .fromTeam(fromTeam)
-                        .toTeam(toTeam)
-                        .transferFee(transferFee)
-                        .dateOfTransfer(dateOfTransfer)
-                        .player(player)
-                        .build();
-                player.getPsmlTransfers().add(psmlTransfer);
-                player.setPsmlTeam(toTeam);
-                playerRepository.save(player);
-                log.info("Psml transfer for : {} - {} inserted", player.getId(), player.getName());
+                try {
+                    String fromTeam = ScrapeHelper.getAttributeValue(transfer, "div div:nth-of-type(3) img", "title");
+                    String toTeam = ScrapeHelper.getAttributeValue(transfer, "div div:nth-of-type(1) img", "title");
+                    String divHtml = ScrapeHelper.getElementHtml(transfer, "div");
+                    String[] transferDetails = divHtml.substring(divHtml.indexOf("<br>")).split("<br>");
+                    String transferFee = transferDetails[1].trim();
+                    LocalDate dateOfTransfer = LocalDate.parse(transferDetails[2].trim(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                    PsmlTransfer psmlTransfer = PsmlTransfer.builder()
+                            .fromTeam(fromTeam)
+                            .toTeam(toTeam)
+                            .transferFee(transferFee)
+                            .dateOfTransfer(dateOfTransfer)
+                            .player(player)
+                            .build();
+                    player.getPsmlTransfers().add(psmlTransfer);
+                    player.setPsmlTeam(toTeam);
+                    player.setPsmlValue(formatTransferFee(transferFee));
+                    playerRepository.save(player);
+                    log.info("Psml transfer for : {} - {} inserted", player.getId(), player.getName());
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
+                }
             }
         } catch (MalformedURLException e) {
             log.error(e.getMessage(), e);
         }
 
         log.info("PsmlScrapeTransfersInsideTransferPeriod job end");
+    }
+
+    private BigDecimal formatTransferFee(String scrapedTransferFee) {
+        String transferFeeString = scrapedTransferFee.replaceAll("[^0-9,]", "");
+        BigDecimal transferFee = new BigDecimal(transferFeeString);
+        return transferFee.multiply(BigDecimal.valueOf(1000000));
     }
 }
