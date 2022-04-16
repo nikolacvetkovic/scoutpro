@@ -13,9 +13,9 @@ table{
 }
 .first-column{
     width: 10%;
-    padding-left: 15px;
+/*    padding-left: 15px;*/
     padding-right: 15px;
-    margin-left: 3rem;
+/*    margin-left: 3rem;*/
 }
 #compare td{
     height: 1.69rem;

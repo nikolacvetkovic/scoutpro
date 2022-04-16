@@ -48,7 +48,7 @@
     <div th:replace="~{fragments/mainContainer :: main(~{::div#compare})}">
         <div id="compare">
             <div id="playerNamesAndInputs" class="row">
-                    <div class="first-column"></div>
+                    <div class="col-lg-2 first-column"></div>
                     <div id="player-name-1" class="col-lg-2">
                         <input th:if="${player1.playerName == null}" class="form-control" type="text" name="player-name-input-1" placeholder="Search player to compare" autocomplete="off">
                         <table th:if="${player1.playerName == null}" id="searchResultPlayer-1">
@@ -87,7 +87,7 @@
                     </div>
             </div>
             <div class="row">
-                <div class="data first-column">
+                <div class="col-lg-2 data first-column">
                     <table class="table table-hover table-striped">
                         <tbody>
                             <tr>
