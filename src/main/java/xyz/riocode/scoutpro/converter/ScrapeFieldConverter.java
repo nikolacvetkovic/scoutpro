@@ -11,13 +11,9 @@ import java.util.stream.Collectors;
 public class ScrapeFieldConverter {
 
     public List<ScrapeFieldDTO> scrapeFieldsToScrapeFieldDTOs(List<ScrapeField> scrapeFields) {
-        return scrapeFields.stream().map(scrapeField -> {
-            return ScrapeFieldDTO.builder()
-                    .id(scrapeField.getId().toString())
-                    .name(scrapeField.getName())
-                    .selector(scrapeField.getSelector())
-                    .build();
-        }).collect(Collectors.toList());
+        return scrapeFields.stream()
+                .map(this::scrapeFieldToScrapeFieldDTO)
+                .collect(Collectors.toList());
     }
 
     public ScrapeField scrapeFieldDTOToScrapeField(ScrapeFieldDTO scrapeFieldDTO) {
