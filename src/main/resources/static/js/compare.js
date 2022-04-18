@@ -2,6 +2,7 @@ $(window).on('load', function() {
     setListenerOnInputs();
     setListenerOnSearchResultRowsCompare();
     setColorsOnFirstPlayer();
+    setListenerOnClearIcon();
 });
 
 function setListenerOnInputs() {
@@ -28,12 +29,12 @@ function setListenerOnInputs() {
 function setListenerOnSearchResultRowsCompare(){
     $('#playerNamesAndInputs tbody').on('click', 'tr', function (){
         var searchResult = $(this).parent().parent();
-        $(searchResult).empty();
+        $(searchResult).find('tbody').empty();
         var playerNumber = $(searchResult).attr('id').split('-')[1];
         var playerId = $(this).attr('id');
-        $('#player-name-'+playerNumber+' input').css('display', 'none');
+        $('#player-name-'+playerNumber+' input').css('display', 'none').val('');
         $.get('/player/'+playerId, function(player){
-            $('#player-name-'+playerNumber+ ' h6').text(player.playerName).show();
+            $('#player-name-'+playerNumber+ ' h6').append(player.playerName + '  ').append($('<i>').addClass('fas fa-times-circle')).show();
             var playerBody = $('#player'+playerNumber+' tbody').get(0);
             $(playerBody).find('tr:nth-of-type(1) td').text(player.age);
             $(playerBody).find('tr:nth-of-type(2) td').text(player.nationality);
@@ -98,6 +99,14 @@ function setColorsOnFirstPlayer(){
         td = $('#player1 tbody tr:nth-of-type(' + i + ') td').get(0);
         $(td).css('color', getColorByRatings(Number.parseInt($(td).text())));
     }
+}
+function setListenerOnClearIcon(){
+    $('h6').on('click', 'i.fas', function(){
+        var columnNumber = $(this).parent().parent().attr('id').split('-')[2];
+        $(this).parent().parent().find('input').show();
+        $(this).parent().css('display', 'none').empty();
+        $('#player'+columnNumber+' tbody tr td').empty();
+    });
 }
 function getColorByRatings(rating){
     if(rating >= 95){

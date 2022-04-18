@@ -40,3 +40,9 @@ table{
     color: rgba(255, 255, 255, 1);
     cursor: pointer;
 }
+i.fas {
+    color: red;
+}
+i.fas:hover {
+    cursor: pointer;
+}
