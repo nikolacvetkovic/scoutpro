@@ -13,6 +13,10 @@ import xyz.riocode.scoutpro.dto.DashboardDTO;
 import xyz.riocode.scoutpro.dto.PlayerCompleteDTO;
 import xyz.riocode.scoutpro.dto.PlayerFormDTO;
 import xyz.riocode.scoutpro.dto.PlayerSearchDTO;
+import xyz.riocode.scoutpro.security.privilege.PlayerCreatePrivilege;
+import xyz.riocode.scoutpro.security.privilege.PlayerDeletePrivilege;
+import xyz.riocode.scoutpro.security.privilege.PlayerReadPrivilege;
+import xyz.riocode.scoutpro.security.privilege.PlayerUpdatePrivilege;
 import xyz.riocode.scoutpro.service.PlayerService;
 
 import javax.validation.Valid;
@@ -31,13 +35,13 @@ public class PlayerController {
         this.playerService = playerService;
         this.playerConverter = playerConverter;
     }
-
+    @PlayerCreatePrivilege
     @GetMapping("/new")
     public String showPlayerForm(ModelMap modelMap){
         modelMap.addAttribute("player", new PlayerFormDTO());
         return "player/playerForm";
     }
-
+    @PlayerUpdatePrivilege
     @GetMapping("/{playerId}/edit")
     public String showPlayerFormForEdit(@PathVariable Long playerId,
                                         ModelMap modelMap,
@@ -48,7 +52,7 @@ public class PlayerController {
         modelMap.addAttribute("player", foundPlayer);
         return "player/playerForm";
     }
-
+    @PlayerCreatePrivilege
     @PostMapping
     public String saveNewPlayerAndAddToUser(@Valid PlayerFormDTO player,
                                             BindingResult bindingResult,
@@ -69,11 +73,12 @@ public class PlayerController {
         return "redirect:/player/"+ createdPlayer.getId() +"/show";
     }
 
+    @PlayerReadPrivilege
     @GetMapping("/existing")
     public String showPlayerAddExisting(ModelMap modelMap){
         return "player/playerAddExisting";
     }
-
+    @PlayerReadPrivilege
     @GetMapping("/{playerId}/{isUserPlayer}/follow")
     public String follow(@PathVariable Long playerId,
                          @PathVariable Boolean isUserPlayer,
@@ -81,7 +86,7 @@ public class PlayerController {
         playerService.addExistingPlayerToUser(playerId, isUserPlayer, principal.getName());
         return "redirect:/player/"+ playerId + "/show";
     }
-
+    @PlayerReadPrivilege
     @GetMapping("/{playerId}/show")
     public String show(@PathVariable Long playerId,
                        ModelMap modelMap){
@@ -90,12 +95,13 @@ public class PlayerController {
         return "player/showPlayer";
     }
 
+    @PlayerReadPrivilege
     @GetMapping("/compare")
     public String compare(ModelMap modelMap){
         modelMap.addAttribute("player1", new PlayerCompleteDTO());
         return "player/compare";
     }
-
+    @PlayerReadPrivilege
     @GetMapping("/{playerId}/compare")
     public String compare(@PathVariable Long playerId,
                           ModelMap modelMap,
@@ -106,14 +112,14 @@ public class PlayerController {
         modelMap.addAttribute("player1", playerCompleteDTO);
         return "player/compare";
     }
-
+    @PlayerDeletePrivilege
     @GetMapping("/{playerId}/unfollow")
     public String unfollow(@PathVariable Long playerId,
                            Principal principal){
         playerService.delete(playerId, principal.getName());
         return "redirect:/dashboard";
     }
-
+    @PlayerReadPrivilege
     @GetMapping(value = "/{pageNumber}/page", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DashboardDTO> getPlayers(@PathVariable int pageNumber,
                                                    @RequestParam(required = false) String position,
@@ -132,6 +138,7 @@ public class PlayerController {
         return new ResponseEntity<>(dashboardDTO, HttpStatus.OK);
     }
 
+    @PlayerReadPrivilege
     @GetMapping(value = "/{playerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PlayerCompleteDTO> getPlayerById(@PathVariable Long playerId,
                                                            Principal principal){
@@ -140,7 +147,7 @@ public class PlayerController {
                                         principal.getName());
         return new ResponseEntity<>(playerCompleteDTO, HttpStatus.OK);
     }
-
+    @PlayerReadPrivilege
     @GetMapping("/{playerName}/name")
     public ResponseEntity<List<PlayerSearchDTO>> getPlayerByName(@PathVariable String playerName,
                                                                  Principal principal){
@@ -148,7 +155,7 @@ public class PlayerController {
                                                         playerService.getByName(playerName), principal.getName());
         return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
     }
-
+    @PlayerReadPrivilege
     @GetMapping("/{playerName}/name/unfollowed")
     public ResponseEntity<List<PlayerSearchDTO>> getPlayerByNameUnfollowed(@PathVariable String playerName,
                                                                            Principal principal){
@@ -157,7 +164,7 @@ public class PlayerController {
                                                         principal.getName());
         return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
     }
-
+    @PlayerReadPrivilege
     @GetMapping("/{playerName}/name/followed")
     public ResponseEntity<List<PlayerSearchDTO>> getPlayerByNameFollowed(@PathVariable String playerName,
                                                                          Principal principal){

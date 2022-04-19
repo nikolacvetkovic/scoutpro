@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <body>
 
 <div th:fragment="main(content)">
-    <nav th:if="${#authentication.principal.roles[0].name == 'ADMIN'}" class="navbar navbar-expand-lg navbar-dark" style="background-color: crimson; height: 45px; font-size: 16px;">
+    <nav sec:authorize="hasAnyAuthority('job.read', 'scrapesite.read', 'user.read')" class="navbar navbar-expand-lg navbar-dark" style="background-color: crimson; height: 45px; font-size: 16px;">
         <a class="navbar-brand" th:href="@{/admin/dashboard}">
             <img th:src="@{/img/admin_logo.png}" src="../../static/img/admin_logo.png" width="33px" height="40px" class="d-inline-block" style="margin-left: 8px; margin-right: 8px;">
             <span class="align-middle ml-1" style="font-size: 35px">Admin</span>
@@ -41,17 +41,20 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/dashboard}" href="#">Dashboard</a>
                 </li>
-                <li class="nav-item">
+                <li sec:authorize="hasAuthority('player.read')" class="nav-item">
                     <a class="nav-link" th:href="@{/player/existing}" href="#">Add Existing Player</a>
                 </li>
-                <li class="nav-item">
+                <li sec:authorize="hasAuthority('player.create')" class="nav-item">
                     <a class="nav-link" th:href="@{/player/new}" href="#">Add New Player</a>
                 </li>
-                <li class="nav-item">
+                <li sec:authorize="hasAuthority('player.read')" class="nav-item">
                     <a class="nav-link" th:href="@{/player/compare}" href="#">Compare players</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/transfersandnews}" href="#">Transfers and News</a>
+                <li sec:authorize="hasAuthority('player.transfer.read')" class="nav-item">
+                    <a class="nav-link" th:href="@{/transfers}" href="#">Transfers</a>
+                </li>
+                <li sec:authorize="hasAuthority('player.news.read')" class="nav-item">
+                    <a class="nav-link" th:href="@{/news}" href="#">News</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto mr-auto ">

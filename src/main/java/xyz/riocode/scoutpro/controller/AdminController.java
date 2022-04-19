@@ -9,6 +9,9 @@ import xyz.riocode.scoutpro.converter.ScrapeSiteConverter;
 import xyz.riocode.scoutpro.dto.ScrapeSiteDTO;
 import xyz.riocode.scoutpro.scrape.service.ScrapeFieldService;
 import xyz.riocode.scoutpro.scrape.service.ScrapeSiteService;
+import xyz.riocode.scoutpro.security.privilege.AdminDashboardPrivilege;
+import xyz.riocode.scoutpro.security.privilege.JobReadPrivilege;
+import xyz.riocode.scoutpro.security.privilege.ScrapeSiteReadPrivilege;
 import xyz.riocode.scoutpro.service.security.AppUserService;
 
 import java.util.List;
@@ -30,18 +33,19 @@ public class AdminController {
         this.scrapeSiteConverter = scrapeSiteConverter;
     }
 
+    @AdminDashboardPrivilege
     @GetMapping("/dashboard")
     public String showAdminDashboard(){
         return "admin/dashboard";
     }
-
+    @ScrapeSiteReadPrivilege
     @GetMapping("/scrapefields")
     public String showScrapeFields(ModelMap modelMap){
         List<ScrapeSiteDTO> scrapeSiteDTOS = scrapeSiteConverter.scrapeSiteToScrapeSiteDTO(scrapeSiteService.getAll());
         modelMap.addAttribute("scrapeSites", scrapeSiteDTOS);
         return "admin/scrapeFields";
     }
-
+    @JobReadPrivilege
     @GetMapping("/jobs")
     public String showJobDashboard() {
         return "admin/jobDashboard";
