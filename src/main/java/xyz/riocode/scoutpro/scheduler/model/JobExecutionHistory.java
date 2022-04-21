@@ -1,7 +1,7 @@
 package xyz.riocode.scoutpro.scheduler.model;
 
 import lombok.*;
-import xyz.riocode.scoutpro.scheduler.enums.JobStatus;
+import xyz.riocode.scoutpro.scheduler.enums.JobExecutionStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ public class JobExecutionHistory {
     private LocalDateTime endTime;
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private JobStatus status;
+    private JobExecutionStatus status;
     @ManyToOne
     @JoinColumn(name = "job_id", referencedColumnName = "id")
     private JobInfo jobInfo;
