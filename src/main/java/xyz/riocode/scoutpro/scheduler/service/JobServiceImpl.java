@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Service;
 import xyz.riocode.scoutpro.exception.JobNotFoundException;
+import xyz.riocode.scoutpro.scheduler.enums.JobStatus;
 import xyz.riocode.scoutpro.scheduler.helper.JobHelper;
 import xyz.riocode.scoutpro.scheduler.model.JobInfo;
 import xyz.riocode.scoutpro.scheduler.repository.JobInfoRepository;
@@ -48,7 +49,7 @@ public class JobServiceImpl implements JobService{
                     job.getJobGroup(),
                     job.getCustomConfigData());
             scheduler.addJob(jobDetail, true);
-            job.setJobStatus("CREATED");
+            job.setJobStatus(JobStatus.CREATED);
         } catch (ClassNotFoundException | SchedulerException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
@@ -127,7 +128,7 @@ public class JobServiceImpl implements JobService{
             foundedJob.setCronExpression(job.getCronExpression());
             foundedJob.setRepeatIntervalInSeconds(job.getRepeatIntervalInSeconds());
             foundedJob.setRepeatCount(job.getRepeatCount());
-            foundedJob.setJobStatus("SCHEDULED");
+            foundedJob.setJobStatus(JobStatus.SCHEDULED);
         } catch (SchedulerException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
@@ -151,7 +152,7 @@ public class JobServiceImpl implements JobService{
             foundedJob.setCronExpression(null);
             foundedJob.setRepeatIntervalInSeconds(null);
             foundedJob.setRepeatCount(null);
-            foundedJob.setJobStatus("CREATED");
+            foundedJob.setJobStatus(JobStatus.CREATED);
         } catch (SchedulerException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
@@ -208,7 +209,7 @@ public class JobServiceImpl implements JobService{
                             foundedJob.getJobName(),
                             foundedJob.getJobGroup()))) throw new RuntimeException("The job is not scheduled.");
             scheduler.pauseJob(new JobKey(foundedJob.getJobName(), foundedJob.getJobGroup()));
-            foundedJob.setJobStatus("PAUSED");
+            foundedJob.setJobStatus(JobStatus.PAUSED);
         } catch (SchedulerException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
@@ -225,7 +226,7 @@ public class JobServiceImpl implements JobService{
                             foundedJob.getJobName(),
                             foundedJob.getJobGroup()))) throw new RuntimeException("The job is not scheduled.");
             scheduler.resumeJob(new JobKey(foundedJob.getJobName(), foundedJob.getJobGroup()));
-            foundedJob.setJobStatus("SCHEDULED");
+            foundedJob.setJobStatus(JobStatus.SCHEDULED);
         } catch (SchedulerException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);

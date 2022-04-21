@@ -1,6 +1,7 @@
 package xyz.riocode.scoutpro.scheduler.model;
 
 import lombok.*;
+import xyz.riocode.scoutpro.scheduler.enums.JobStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,7 +26,8 @@ public class JobInfo implements Serializable{
     @Column(name = "job_group")
     private String jobGroup;
     @Column(name = "job_status")
-    private String jobStatus;
+    @Enumerated(EnumType.STRING)
+    private JobStatus jobStatus;
     @Column(name = "job_class")
     private String jobClass;
     @Column(name = "start_time")
