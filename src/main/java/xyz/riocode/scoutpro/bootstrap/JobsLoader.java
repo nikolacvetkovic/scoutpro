@@ -1,5 +1,6 @@
 package xyz.riocode.scoutpro.bootstrap;
 
+import org.quartz.Scheduler;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.scheduler.service.JobService;
@@ -8,9 +9,11 @@ import xyz.riocode.scoutpro.scheduler.service.JobService;
 public class JobsLoader implements CommandLineRunner {
 
     private final JobService jobService;
+    private final Scheduler scheduler;
 
-    public JobsLoader(JobService jobService) {
+    public JobsLoader(JobService jobService, Scheduler scheduler) {
         this.jobService = jobService;
+        this.scheduler = scheduler;
     }
 
     @Override
@@ -71,22 +74,13 @@ public class JobsLoader implements CommandLineRunner {
 //
 //        jobService.createJob(transfermarktUpdatePlayers);
 
-//        JobInfo psmlTransfersOutsideTransferPeriod = JobInfo.builder()
-//                .jobClass("xyz.riocode.scoutpro.scheduler.job.PsmlTransfersOutsideTransferPeriod")
-//                .jobName("PsmlTransfersOutsideTransferPeriod")
+//        JobInfo psmlTransferImport = JobInfo.builder()
+//                .jobClass("xyz.riocode.scoutpro.scheduler.job.PsmlTransferImport")
+//                .jobName("PsmlTransferImport")
 //                .jobGroup("Psml")
 //                .customConfigData("")
 //                .build();
 //
-//        jobService.createJob(psmlTransfersOutsideTransferPeriod);
-
-//        JobInfo psmlTransferInsideTransferPeriod = JobInfo.builder()
-//                .jobClass("xyz.riocode.scoutpro.scheduler.job.PsmlTransferInsideTransferPeriod")
-//                .jobName("PsmlTransferInsideTransferPeriod")
-//                .jobGroup("Psml")
-//                .customConfigData("")
-//                .build();
-//
-//        jobService.createJob(psmlTransferInsideTransferPeriod);
+//        jobService.createJob(psmlTransferImport);
     }
 }
