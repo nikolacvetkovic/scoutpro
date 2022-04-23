@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface PlayerService {
     Player create(Player player);
-    Player createOrUpdate(Player player, String username);
+    Player createAndAddToUser(Player player, String username);
+    Player changePlayerOwnership(Long id, boolean isUserPlayer, String username);
     Player addExistingPlayerToUser(Long id, boolean isUserPlayer, String username);
     Player getByIdAndUser(Long id, String username);
     Player getByIdAndUserComplete(Long id, String username);
@@ -18,5 +19,5 @@ public interface PlayerService {
     Page<Player> getAllPaging(int page, int pageSize);
     Page<Player> getByUserPaging(String username, int page);
     Page<Player> getByUserAndPositionPaging(String username, String position, int page);
-    void delete(Long playerId, String username);
+    void deleteFromUser(Long playerId, String username);
 }

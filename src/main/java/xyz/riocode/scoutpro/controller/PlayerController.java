@@ -16,7 +16,6 @@ import xyz.riocode.scoutpro.dto.PlayerSearchDTO;
 import xyz.riocode.scoutpro.security.privilege.PlayerCreatePrivilege;
 import xyz.riocode.scoutpro.security.privilege.PlayerDeletePrivilege;
 import xyz.riocode.scoutpro.security.privilege.PlayerReadPrivilege;
-import xyz.riocode.scoutpro.security.privilege.PlayerUpdatePrivilege;
 import xyz.riocode.scoutpro.service.PlayerService;
 
 import javax.validation.Valid;
@@ -35,26 +34,17 @@ public class PlayerController {
         this.playerService = playerService;
         this.playerConverter = playerConverter;
     }
+
     @PlayerCreatePrivilege
     @GetMapping("/new")
     public String showPlayerForm(ModelMap modelMap){
         modelMap.addAttribute("player", new PlayerFormDTO());
         return "player/playerForm";
     }
-    @PlayerUpdatePrivilege
-    @GetMapping("/{playerId}/edit")
-    public String showPlayerFormForEdit(@PathVariable Long playerId,
-                                        ModelMap modelMap,
-                                        Principal principal){
-        PlayerFormDTO foundPlayer = playerConverter.playerToPlayerFormDTO(
-                                                        playerService.getByIdAndUser(playerId, principal.getName()),
-                                                        principal.getName());
-        modelMap.addAttribute("player", foundPlayer);
-        return "player/playerForm";
-    }
+
     @PlayerCreatePrivilege
     @PostMapping
-    public String saveNewPlayerAndAddToUser(@Valid PlayerFormDTO player,
+    public String createPlayerForm(@Valid PlayerFormDTO player,
                                             BindingResult bindingResult,
                                             ModelMap modelMap,
                                             Principal principal){
@@ -66,7 +56,7 @@ public class PlayerController {
             return "player/playerForm";
         }
         PlayerCompleteDTO createdPlayer = playerConverter.playerToPlayerCompleteDTO(
-                                            playerService.createOrUpdate(
+                                            playerService.createAndAddToUser(
                                                 playerConverter.playerFormDTOToPlayer(player), principal.getName()),
                                                 principal.getName());
 
@@ -78,6 +68,7 @@ public class PlayerController {
     public String showPlayerAddExisting(ModelMap modelMap){
         return "player/playerAddExisting";
     }
+
     @PlayerReadPrivilege
     @GetMapping("/{playerId}/{isUserPlayer}/follow")
     public String follow(@PathVariable Long playerId,
@@ -86,11 +77,15 @@ public class PlayerController {
         playerService.addExistingPlayerToUser(playerId, isUserPlayer, principal.getName());
         return "redirect:/player/"+ playerId + "/show";
     }
+
     @PlayerReadPrivilege
     @GetMapping("/{playerId}/show")
     public String show(@PathVariable Long playerId,
-                       ModelMap modelMap){
-        PlayerCompleteDTO foundPlayer = playerConverter.playerToPlayerCompleteDTO(playerService.getByIdAndUserComplete(playerId, "cvele"), "cvele");
+                       ModelMap modelMap,
+                       Principal principal){
+        PlayerCompleteDTO foundPlayer = playerConverter.playerToPlayerCompleteDTO(
+                                                playerService.getByIdAndUserComplete(playerId, principal.getName()),
+                                                principal.getName());
         modelMap.addAttribute("player", foundPlayer);
         return "player/showPlayer";
     }
@@ -101,6 +96,7 @@ public class PlayerController {
         modelMap.addAttribute("player1", new PlayerCompleteDTO());
         return "player/compare";
     }
+
     @PlayerReadPrivilege
     @GetMapping("/{playerId}/compare")
     public String compare(@PathVariable Long playerId,
@@ -112,13 +108,15 @@ public class PlayerController {
         modelMap.addAttribute("player1", playerCompleteDTO);
         return "player/compare";
     }
+
     @PlayerDeletePrivilege
     @GetMapping("/{playerId}/unfollow")
     public String unfollow(@PathVariable Long playerId,
                            Principal principal){
-        playerService.delete(playerId, principal.getName());
+        playerService.deleteFromUser(playerId, principal.getName());
         return "redirect:/dashboard";
     }
+
     @PlayerReadPrivilege
     @GetMapping(value = "/{pageNumber}/page", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DashboardDTO> getPlayers(@PathVariable int pageNumber,
@@ -147,6 +145,7 @@ public class PlayerController {
                                         principal.getName());
         return new ResponseEntity<>(playerCompleteDTO, HttpStatus.OK);
     }
+
     @PlayerReadPrivilege
     @GetMapping("/{playerName}/name")
     public ResponseEntity<List<PlayerSearchDTO>> getPlayerByName(@PathVariable String playerName,
@@ -155,6 +154,7 @@ public class PlayerController {
                                                         playerService.getByName(playerName), principal.getName());
         return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
     }
+
     @PlayerReadPrivilege
     @GetMapping("/{playerName}/name/unfollowed")
     public ResponseEntity<List<PlayerSearchDTO>> getPlayerByNameUnfollowed(@PathVariable String playerName,
@@ -164,6 +164,7 @@ public class PlayerController {
                                                         principal.getName());
         return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
     }
+
     @PlayerReadPrivilege
     @GetMapping("/{playerName}/name/followed")
     public ResponseEntity<List<PlayerSearchDTO>> getPlayerByNameFollowed(@PathVariable String playerName,

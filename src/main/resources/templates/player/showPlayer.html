@@ -16,15 +16,15 @@
                 <div id="mainPosition" th:text="${player.position}" class="col-lg-1"></div>
                 <div id="mainOverall" th:text="${player.overallRating}" class="col-lg-1"></div>
                 <div th:class="${player.clubTeam == null}?'col-lg-4':'col-lg-5'"></div>
-                <div class="col-lg-2" style="text-align: right;">
-                    <a class="btn btn-info" th:href="'/player/' + ${player.id} + '/edit'">Edit</a>
+                <div class="col-lg-3" style="text-align: right;">
+<!--                    <a class="btn btn-info" th:href="'/player/' + ${player.id} + '/edit'">Edit</a>-->
                     <a id="unfollowPlayer" th:if="${player.clubTeam != null}" class="btn btn-danger" th:href="'/player/' + ${player.id} + '/unfollow'">Unfollow</a>
                     <a id="followPlayer" th:if="${player.clubTeam == null}" class="btn btn-danger" th:href="'/player/' + ${player.id} + '/false/follow'">Follow</a>
                 </div>
-                <div class="col-lg-1" th:if="${player.clubTeam == null}">
-                    <label for="myPlayer">My Player</label>
-                    <input id="myPlayer" type="checkbox" name="myPlayer">
-                </div>
+<!--                <div class="col-lg-1" th:if="${player.clubTeam == null}">-->
+<!--                    <label for="myPlayer">My Player</label>-->
+<!--                    <input id="myPlayer" type="checkbox" name="myPlayer">-->
+<!--                </div>-->
             </div>
             <hr>
             <div id="overlay" th:if="${player.clubTeam == null}"></div>

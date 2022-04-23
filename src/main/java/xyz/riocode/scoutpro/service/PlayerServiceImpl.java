@@ -46,16 +46,22 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player createOrUpdate(Player player, String username) {
-        if (player.getId() == null) {
-            scrapeAll(player);
-            AppUser appUser = appUserRepository.findByUsername(username).get();
-            player.getUsers().stream().findFirst().get().setAppUser(appUser);
-            player.setInserted(LocalDateTime.now());
-        } else {
-            player = update(player, username);
-        }
+    public Player createAndAddToUser(Player player, String username) {
+        scrapeAll(player);
+        AppUser appUser = appUserRepository.findByUsername(username).get();
+        player.getUsers().stream().findFirst().get().setAppUser(appUser);
+        player.setInserted(LocalDateTime.now());
         return playerRepository.save(player);
+    }
+
+    @Override
+    public Player changePlayerOwnership(Long id, boolean isUserPlayer, String username) {
+        Player foundPlayer = playerRepository.findByIdAndUsername(id, username).orElseThrow(PlayerNotFoundException::new);
+
+        AppUserPlayer foundAppUserPlayer = foundPlayer.getUsers().stream().findFirst().get();
+        foundAppUserPlayer.setMyPlayer(isUserPlayer);
+
+        return playerRepository.save(foundPlayer);
     }
 
     @Override
@@ -120,7 +126,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void delete(Long playerId, String username) {
+    public void deleteFromUser(Long playerId, String username) {
         Player foundPlayer = playerRepository.findByIdAndUsername(playerId, username).orElseThrow(PlayerNotFoundException::new);
 
         AppUserPlayer appUserPlayer = foundPlayer.getUsers().stream().findFirst().get();
@@ -154,14 +160,5 @@ public class PlayerServiceImpl implements PlayerService {
 //        } catch (ExecutionException e) {
 //            e.printStackTrace();
 //        }
-    }
-
-    private Player update(Player player, String username) {
-        Player foundPlayer = playerRepository.findByIdAndUsername(player.getId(), username).orElseThrow(PlayerNotFoundException::new);
-
-        AppUserPlayer foundAppUserPlayer = foundPlayer.getUsers().stream().findFirst().get();
-        foundAppUserPlayer.setMyPlayer(player.getUsers().stream().findFirst().get().isMyPlayer());
-
-        return playerRepository.save(foundPlayer);
     }
 }
