@@ -20,7 +20,7 @@ import xyz.riocode.scoutpro.scrape.engine.ScrapeLoader;
 import xyz.riocode.scoutpro.scrape.helper.ScrapeHelper;
 import xyz.riocode.scoutpro.scrape.loader.PsmlPageLoaderImpl;
 import xyz.riocode.scoutpro.scrape.model.ScrapeError;
-import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorHistoryRepository;
+import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorRepository;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -45,7 +45,7 @@ public class PsmlTransferImport extends QuartzJobBean {
     @Autowired
     private JobExecutionHistoryRepository jobExecutionHistoryRepository;
     @Autowired
-    private ScrapeErrorHistoryRepository scrapeErrorHistoryRepository;
+    private ScrapeErrorRepository scrapeErrorRepository;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -90,7 +90,7 @@ public class PsmlTransferImport extends QuartzJobBean {
                     log.debug("Psml transfer for : {} - {} inserted", player.getId(), player.getName());
                 } catch (Exception ex) {
                     playersWithError++;
-                    scrapeErrorHistoryRepository.save(ScrapeError.builder()
+                    scrapeErrorRepository.save(ScrapeError.builder()
                             .scrapeTime(LocalDateTime.now())
                             .player(player)
                             .jobInfo(jobInfo)

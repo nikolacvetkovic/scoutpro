@@ -19,7 +19,7 @@ import xyz.riocode.scoutpro.scrape.engine.ScrapeLoader;
 import xyz.riocode.scoutpro.scrape.helper.ScrapeHelper;
 import xyz.riocode.scoutpro.scrape.loader.PsmlPageLoaderImpl;
 import xyz.riocode.scoutpro.scrape.model.ScrapeError;
-import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorHistoryRepository;
+import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorRepository;
 import xyz.riocode.scoutpro.service.PlayerService;
 
 import java.net.URL;
@@ -49,7 +49,7 @@ public class ImportPlayersFromPsmlTeams extends QuartzJobBean {
     @Autowired
     private JobExecutionHistoryRepository jobExecutionHistoryRepository;
     @Autowired
-    private ScrapeErrorHistoryRepository scrapeErrorHistoryRepository;
+    private ScrapeErrorRepository scrapeErrorRepository;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -115,7 +115,7 @@ public class ImportPlayersFromPsmlTeams extends QuartzJobBean {
                             playersImported++;
                             log.debug("{} ({}) - {} is imported", player.getName(), player.getPrimaryPosition(), player.getOverallRating());
                         } catch (Exception ex) {
-                            scrapeErrorHistoryRepository.save(ScrapeError.builder()
+                            scrapeErrorRepository.save(ScrapeError.builder()
                                     .scrapeTime(LocalDateTime.now())
                                     .jobInfo(jobInfo)
                                     .stackTrace(ExceptionUtils.getStackTrace(ex))

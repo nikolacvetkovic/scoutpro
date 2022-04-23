@@ -17,7 +17,7 @@ import xyz.riocode.scoutpro.scheduler.repository.JobExecutionHistoryRepository;
 import xyz.riocode.scoutpro.scheduler.repository.JobInfoRepository;
 import xyz.riocode.scoutpro.scrape.engine.ScrapeEngine;
 import xyz.riocode.scoutpro.scrape.model.ScrapeError;
-import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorHistoryRepository;
+import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorRepository;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -34,7 +34,7 @@ public class PsmlUpdatePlayers extends QuartzJobBean {
     @Autowired
     private JobExecutionHistoryRepository jobExecutionHistoryRepository;
     @Autowired
-    private ScrapeErrorHistoryRepository scrapeErrorHistoryRepository;
+    private ScrapeErrorRepository scrapeErrorRepository;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -67,7 +67,7 @@ public class PsmlUpdatePlayers extends QuartzJobBean {
                         log.debug("Psml fields are updated for player: {} - {}", player.getId(), player.getName());
                     } catch (Exception ex) {
                         playersWithError++;
-                        scrapeErrorHistoryRepository.save(ScrapeError.builder()
+                        scrapeErrorRepository.save(ScrapeError.builder()
                                 .scrapeTime(LocalDateTime.now())
                                 .jobInfo(jobInfo)
                                 .stackTrace(ExceptionUtils.getStackTrace(ex))
