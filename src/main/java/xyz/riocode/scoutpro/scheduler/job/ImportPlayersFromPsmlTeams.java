@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class ImportPlayersFromPsml extends QuartzJobBean {
+public class ImportPlayersFromPsmlTeams extends QuartzJobBean {
 
     private static final String PSML_BASE_URL = "https://psml.rs/index.php";
     private static final String PSML_DIVISION_URL = "https://psml.rs/?action=atls&division=";
