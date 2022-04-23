@@ -1,6 +1,7 @@
 package xyz.riocode.scoutpro.scheduler.job;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import xyz.riocode.scoutpro.model.Player;
 import xyz.riocode.scoutpro.repository.PlayerRepository;
+import xyz.riocode.scoutpro.scheduler.enums.JobExecutionStatus;
+import xyz.riocode.scoutpro.scheduler.model.JobExecutionHistory;
+import xyz.riocode.scoutpro.scheduler.model.JobInfo;
+import xyz.riocode.scoutpro.scheduler.repository.JobExecutionHistoryRepository;
+import xyz.riocode.scoutpro.scheduler.repository.JobInfoRepository;
 import xyz.riocode.scoutpro.scrape.engine.ScrapeEngine;
+import xyz.riocode.scoutpro.scrape.model.ScrapeErrorHistory;
+import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorHistoryRepository;
 
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDateTime;
 
 @Slf4j
 public class PsmlUpdatePlayers extends QuartzJobBean {
@@ -21,11 +29,27 @@ public class PsmlUpdatePlayers extends QuartzJobBean {
     private PlayerRepository playerRepository;
     @Autowired
     private ScrapeEngine scrapeEngine;
+    @Autowired
+    private JobInfoRepository jobInfoRepository;
+    @Autowired
+    private JobExecutionHistoryRepository jobExecutionHistoryRepository;
+    @Autowired
+    private ScrapeErrorHistoryRepository scrapeErrorHistoryRepository;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        log.info("PsmlUpdatePlayers job start");
+        JobInfo jobInfo = jobInfoRepository.findByJobNameAndJobGroup(jobExecutionContext.getJobDetail().getKey().getName(),
+                jobExecutionContext.getJobDetail().getKey().getGroup());
+        JobExecutionHistory jobExecutionHistory = JobExecutionHistory.builder()
+                .startTime(LocalDateTime.now())
+                .status(JobExecutionStatus.SUCCESS)
+                .jobInfo(jobInfo)
+                .build();
+        long playersProcessed = 0;
+        long playersWithError = 0;
+
         int pageSize = jobExecutionContext.getMergedJobDataMap().getIntValue("pageSize");
-        log.info("PsmlUpdatePlayers job start -> pageSize: {}", pageSize);
 
         long count = playerRepository.count();
         if (count > 0) {
@@ -37,20 +61,26 @@ public class PsmlUpdatePlayers extends QuartzJobBean {
                 for (Player player : page.getContent()) {
                     try {
                         Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        log.error(e.getMessage(), e);
-                        throw new RuntimeException(e);
-                    }
-                    try {
                         scrapeEngine.work(new URL(player.getPsmlUrl()), player);
-                    } catch (MalformedURLException e) {
-                        throw new RuntimeException(e.getMessage());
+                        playerRepository.save(player);
+                        playersProcessed++;
+                        log.debug("Psml fields are updated for player: {} - {}", player.getId(), player.getName());
+                    } catch (Exception ex) {
+                        playersWithError++;
+                        scrapeErrorHistoryRepository.save(ScrapeErrorHistory.builder()
+                                .scrapeTime(LocalDateTime.now())
+                                .jobInfo(jobInfo)
+                                .stackTrace(ExceptionUtils.getStackTrace(ex))
+                                .build());
                     }
-                    playerRepository.save(player);
-                    log.info("Psml fields are updated for player: {} - {}", player.getId(), player.getName());
+                    log.debug("Psml fields are updated for player: {} - {}", player.getId(), player.getName());
                 }
             }
         }
         log.info("PsmlUpdatePlayers job finish.");
+        jobExecutionHistory.setEndTime(LocalDateTime.now());
+        jobExecutionHistory.setPlayersProcessed(playersProcessed);
+        jobExecutionHistory.setPlayersWithError(playersWithError);
+        jobExecutionHistoryRepository.save(jobExecutionHistory);
     }
 }
