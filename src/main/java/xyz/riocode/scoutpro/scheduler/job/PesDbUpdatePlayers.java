@@ -16,7 +16,7 @@ import xyz.riocode.scoutpro.scheduler.model.JobInfo;
 import xyz.riocode.scoutpro.scheduler.repository.JobExecutionHistoryRepository;
 import xyz.riocode.scoutpro.scheduler.repository.JobInfoRepository;
 import xyz.riocode.scoutpro.scrape.engine.ScrapeEngine;
-import xyz.riocode.scoutpro.scrape.model.ScrapeErrorHistory;
+import xyz.riocode.scoutpro.scrape.model.ScrapeError;
 import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorHistoryRepository;
 
 import java.net.URL;
@@ -67,7 +67,7 @@ public class PesDbUpdatePlayers extends QuartzJobBean {
                         log.debug("PesDb fields are updated for player: {} - {}", player.getId(), player.getName());
                     } catch (Exception ex) {
                         playersWithError++;
-                        scrapeErrorHistoryRepository.save(ScrapeErrorHistory.builder()
+                        scrapeErrorHistoryRepository.save(ScrapeError.builder()
                                 .scrapeTime(LocalDateTime.now())
                                 .jobInfo(jobInfo)
                                 .stackTrace(ExceptionUtils.getStackTrace(ex))

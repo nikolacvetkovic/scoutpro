@@ -19,7 +19,7 @@ import xyz.riocode.scoutpro.scheduler.repository.JobInfoRepository;
 import xyz.riocode.scoutpro.scrape.engine.ScrapeLoader;
 import xyz.riocode.scoutpro.scrape.helper.ScrapeHelper;
 import xyz.riocode.scoutpro.scrape.loader.PsmlPageLoaderImpl;
-import xyz.riocode.scoutpro.scrape.model.ScrapeErrorHistory;
+import xyz.riocode.scoutpro.scrape.model.ScrapeError;
 import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorHistoryRepository;
 import xyz.riocode.scoutpro.service.PlayerService;
 
@@ -116,7 +116,7 @@ public class ImportPlayersFromPesDb extends QuartzJobBean {
                             log.debug("{} ({}) - {} is imported", player.getName(), player.getPrimaryPosition(), player.getOverallRating());
                             playersImported++;
                         } catch (Exception ex) {
-                            scrapeErrorHistoryRepository.save(ScrapeErrorHistory.builder()
+                            scrapeErrorHistoryRepository.save(ScrapeError.builder()
                                     .scrapeTime(LocalDateTime.now())
                                     .jobInfo(jobInfo)
                                     .stackTrace(ExceptionUtils.getStackTrace(ex))

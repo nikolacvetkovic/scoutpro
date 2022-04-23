@@ -14,8 +14,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "scrape_error_history")
-public class ScrapeErrorHistory {
+@Table(name = "scrape_error")
+public class ScrapeError {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class ScrapeErrorHistory {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ScrapeErrorHistory that = (ScrapeErrorHistory) o;
+        ScrapeError that = (ScrapeError) o;
 
         if (!Objects.equals(scrapeTime, that.scrapeTime)) return false;
         if (!Objects.equals(jobInfo, that.jobInfo)) return false;
