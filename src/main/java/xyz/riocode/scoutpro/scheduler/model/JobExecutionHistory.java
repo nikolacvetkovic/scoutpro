@@ -33,8 +33,8 @@ public class JobExecutionHistory {
     private Long playersProcessed;
     @Column(name = "players_with_error")
     private Long playersWithError;
-    @Column(name = "stack_trace", columnDefinition = "text")
-    private String stackTrace;
+    @Column(name = "error_stack_trace", columnDefinition = "text")
+    private String errorStackTrace;
 
     @Override
     public boolean equals(Object o) {
