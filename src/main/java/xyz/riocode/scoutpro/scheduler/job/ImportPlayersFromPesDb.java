@@ -1,6 +1,7 @@
 package xyz.riocode.scoutpro.scheduler.job;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -10,12 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import xyz.riocode.scoutpro.model.Player;
 import xyz.riocode.scoutpro.repository.PlayerRepository;
+import xyz.riocode.scoutpro.scheduler.enums.JobExecutionStatus;
+import xyz.riocode.scoutpro.scheduler.model.JobExecutionHistory;
+import xyz.riocode.scoutpro.scheduler.model.JobInfo;
+import xyz.riocode.scoutpro.scheduler.repository.JobExecutionHistoryRepository;
+import xyz.riocode.scoutpro.scheduler.repository.JobInfoRepository;
 import xyz.riocode.scoutpro.scrape.engine.ScrapeLoader;
 import xyz.riocode.scoutpro.scrape.helper.ScrapeHelper;
 import xyz.riocode.scoutpro.scrape.loader.PsmlPageLoaderImpl;
+import xyz.riocode.scoutpro.scrape.model.ScrapeErrorHistory;
+import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorHistoryRepository;
 import xyz.riocode.scoutpro.service.PlayerService;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,19 +47,33 @@ public class ImportPlayersFromPesDb extends QuartzJobBean {
     private PsmlPageLoaderImpl psmlPageLoader;
     @Autowired
     private ScrapeLoader scrapeLoader;
+    @Autowired
+    private JobInfoRepository jobInfoRepository;
+    @Autowired
+    private JobExecutionHistoryRepository jobExecutionHistoryRepository;
+    @Autowired
+    private ScrapeErrorHistoryRepository scrapeErrorHistoryRepository;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        log.info("ImportPlayersFromPesDb job start");
+        JobInfo jobInfo = jobInfoRepository.findByJobNameAndJobGroup(jobExecutionContext.getJobDetail().getKey().getName(),
+                jobExecutionContext.getJobDetail().getKey().getGroup());
+        JobExecutionHistory jobExecutionHistory = JobExecutionHistory.builder()
+                .startTime(LocalDateTime.now())
+                .status(JobExecutionStatus.SUCCESS)
+                .jobInfo(jobInfo)
+                .build();
+
         String pesDbBaseUrl = jobExecutionContext.getMergedJobDataMap().getString("pesDbBaseUrl");
         int sleepTimeBetweenPlayers = jobExecutionContext.getMergedJobDataMap().getInt("sleepTimeBetweenPlayers");
-        log.info("ImportPlayers job start -> [PesDbBaseUrl:{}, sleepTimeBetweenPlayers:{}]", pesDbBaseUrl, sleepTimeBetweenPlayers);
         String pesDbSearchPageUrl = pesDbBaseUrl + "/?page=";
 
         Document document;
         Map<String, String> playersData;
         List<String[]> playersWithError = new ArrayList<>();
-        int playersFound = 0;
-        int playersImported = 0;
+        long playersFound = 0;
+        long playersImported = 0;
         int playersExist = 0;
         int page = 0;
         while(true) {
@@ -60,13 +83,13 @@ public class ImportPlayersFromPesDb extends QuartzJobBean {
                 document = ScrapeHelper.getPage(pesDbSearchPageUrl + page);
                 playersData = scrapeTableByOverall(document, overallLimit);
                 playersFound += playersData.size();
-                log.info("Players to scrape: {}", playersData);
+                log.debug("Players to scrape: {}", playersData);
                 if (!playersData.isEmpty()) {
                     for (Map.Entry<String, String> e : playersData.entrySet()) {
-                        log.info("page: {}, next: {}, found: {}, imported: {}, exist: {}, errors: {}",
+                        log.debug("page: {}, next: {}, found: {}, imported: {}, exist: {}, errors: {}",
                                 page, e.getKey(), playersFound, playersImported, playersExist, playersWithError);
                         if (playerRepository.findByPesDbName(e.getKey()) != null) {
-                            log.info("Player {} exists", e.getKey());
+                            log.debug("Player {} exists", e.getKey());
                             playersExist++;
                             continue;
                         }
@@ -78,7 +101,7 @@ public class ImportPlayersFromPesDb extends QuartzJobBean {
                                             psmlPageLoader));
                             Element psmlPlayer = ScrapeHelper.getElement(psmlSearchResult, "table.style2 tr:nth-of-type(2)");
                             if (ScrapeHelper.getElement(psmlPlayer, "td:nth-of-type(1) a") == null) {
-                                log.warn("Search result is empty for player: {}", e.getKey());
+                                log.debug("Search result is empty for player: {}", e.getKey());
                                 playersWithError.add(new String[]{e.getKey(), "Search result empty"});
                                 continue;
                             }
@@ -90,26 +113,36 @@ public class ImportPlayersFromPesDb extends QuartzJobBean {
                             player.setPesDbUrl(pesDbBaseUrl + e.getValue());
                             player.setPsmlUrl(PSML_BASE_URL + psmlQueryUrl);
                             playerService.create(player);
-                            log.info("{} ({}) - {} is imported", player.getName(), player.getPrimaryPosition(), player.getOverallRating());
+                            log.debug("{} ({}) - {} is imported", player.getName(), player.getPrimaryPosition(), player.getOverallRating());
                             playersImported++;
                         } catch (Exception ex) {
-                            log.error(ex.getMessage(), ex);
+                            scrapeErrorHistoryRepository.save(ScrapeErrorHistory.builder()
+                                    .scrapeTime(LocalDateTime.now())
+                                    .jobInfo(jobInfo)
+                                    .stackTrace(ExceptionUtils.getStackTrace(ex))
+                                    .build());
                             playersWithError.add(new String[]{e.getKey(), ex.getClass().getName()});
+                            log.error(ex.getMessage(), ex);
                         }
                     }
                 } else {
-                    log.info("ImportPlayers job end -> found: {}, imported: {}, exist: {}", playersFound, playersImported, playersExist);
-                    log.info("Unsuccessful scrape for players:");
-                    for(String[] s : playersWithError){
-                        log.info(Arrays.toString(s));
-                    }
-                    // insert job result into database
                     break;
                 }
             } catch(Exception ex){
+                jobExecutionHistory.setStatus(JobExecutionStatus.FAILED);
+                jobExecutionHistory.setErrorStackTrace(ExceptionUtils.getStackTrace(ex));
                 log.error(ex.getMessage(), ex);
             }
         }
+        log.info("ImportPlayersFromPesDb job end");
+        log.debug("Unsuccessful scrape for players:");
+        for(String[] s : playersWithError){
+            log.debug(Arrays.toString(s));
+        }
+        jobExecutionHistory.setEndTime(LocalDateTime.now());
+        jobExecutionHistory.setPlayersProcessed(playersImported);
+        jobExecutionHistory.setPlayersWithError((long) playersWithError.size());
+        jobExecutionHistoryRepository.save(jobExecutionHistory);
     }
 
     private static Map<String, String> scrapeTableByOverall(Document doc, int overallLimit){
