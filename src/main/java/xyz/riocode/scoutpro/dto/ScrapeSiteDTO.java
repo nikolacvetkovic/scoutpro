@@ -11,5 +11,8 @@ public class ScrapeSiteDTO {
 
     private String id;
     private String name;
+    private String status;
+    private String lastChecked;
+    private String jobId;
 
 }

@@ -3,9 +3,12 @@ package xyz.riocode.scoutpro.scrape.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import xyz.riocode.scoutpro.scheduler.model.JobInfo;
+import xyz.riocode.scoutpro.scrape.enums.ScrapeSiteStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -33,6 +36,17 @@ public class ScrapeSite implements Serializable {
 
     @Column(name = "template_name")
     private String templateName;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ScrapeSiteStatus status;
+
+    @Column(name = "last_checked")
+    private LocalDateTime lastChecked;
+
+    @OneToOne
+    @JoinColumn(name = "scrape_check_job_id", referencedColumnName = "id")
+    private JobInfo scrapeCheckJob;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "scrapeSite", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<ScrapeField> scrapeFields = new HashSet<>();
