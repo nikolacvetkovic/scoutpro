@@ -31,7 +31,7 @@ public class TMScrapeTemplateImpl implements ScrapeTemplate {
 
     @Override
     public void scrape(String pageContent, Player player) {
-        Map<String, String> scrapeFields = scrapeFieldRepository.findByScrapeSite_Name("transfermarkt").stream()
+        Map<String, String> scrapeFields = scrapeFieldRepository.findByScrapeSite_Name("TM Core").stream()
                 .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
         Document page = ScrapeHelper.createDocument(pageContent);
         scrapeCoreData(page, player, scrapeFields);

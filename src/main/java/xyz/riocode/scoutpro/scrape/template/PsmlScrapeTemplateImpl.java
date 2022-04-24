@@ -26,7 +26,7 @@ public class PsmlScrapeTemplateImpl implements ScrapeTemplate {
     public void scrape(String pageContent, Player player) {
 //        Player player = new Player();
         //todo - implement caching
-        Map<String, String> scrapeFields = scrapeFieldRepository.findByScrapeSite_Name("psml").stream()
+        Map<String, String> scrapeFields = scrapeFieldRepository.findByScrapeSite_Name("Psml").stream()
                 .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
         scrapeCoreData(ScrapeHelper.createDocument(pageContent), player, scrapeFields);
 //        return player;

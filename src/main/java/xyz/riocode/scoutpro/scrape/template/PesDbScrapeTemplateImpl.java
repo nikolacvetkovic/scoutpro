@@ -30,7 +30,7 @@ public class PesDbScrapeTemplateImpl implements ScrapeTemplate {
 //        Player player = new Player();
         Document page = ScrapeHelper.createDocument(pageContent);
         //todo - implement caching
-        Map<String, String> scrapeFields = scrapeFieldRepository.findByScrapeSite_Name("pesdb").stream()
+        Map<String, String> scrapeFields = scrapeFieldRepository.findByScrapeSite_Name("PesDb").stream()
                 .collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
         // todo implement async
         scrapeCoreData(page, player, scrapeFields);
