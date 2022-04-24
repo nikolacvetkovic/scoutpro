@@ -7,8 +7,87 @@
 <body>
 
     <div th:replace="~{fragments/mainContainer :: main(~{::div#dashboard})}">
-        <div id="dashboard" class="row">
-
+        <div id="dashboard">
+            <hr>
+            <div class="row text-center">
+                <div class="col-lg-12">
+                    <span class="title">Scrape Status</span>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div th:each="scrapeSite : ${scrapeSites}" class="col-lg-3">
+                    <span class="site-name badge badge-primary" th:text="${scrapeSite.name}">TM Core</span>
+                    <span class="last-checked badge badge-pill badge-primary" th:text="${scrapeSite.lastChecked}">Last Checked: 24.04.2022. 01:00:00</span>
+                    <button class="btn btn-outline-warning btn-block" th:data="'/job/'+ ${scrapeSite.jobId} + '/run'">Check Now!</button>
+                </div>
+            </div>
+            <hr>
+            <div class="row text-center">
+                <div class="col-lg-12">
+                    <span class="title">Job Executions</span>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-lg-12">
+                    <table class="table table-hover table-scroll">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Execution Status</th>
+                                <th>Players processed</th>
+                                <th>Players with error</th>
+                                <th>Error stack trace</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="jobExecution : ${jobExecutions}">
+                                <td th:text="${jobExecution.jobName}">PsmlTransferImport</td>
+                                <td th:text="${jobExecution.jobStatus}">CREATED</td>
+                                <td th:text="${jobExecution.startTime}">2022-04-21 23:37:52</td>
+                                <td th:text="${jobExecution.endTime}">2022-04-21 23:38:31</td>
+                                <td th:text="${jobExecution.status}">SUCCESS</td>
+                                <td th:text="${jobExecution.playersProcessed}">11</td>
+                                <td th:text="${jobExecution.playersWithError}">0</td>
+                                <td th:text="${jobExecution.errorStackTrace}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <hr>
+            <div class="row text-center">
+                <div class="col-lg-12">
+                    <span class="title">Scrape Errors</span>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-lg-12">
+                    <table class="table table-hover table-scroll">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Job</th>
+                                <th>Player</th>
+                                <th>Stack Trace</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="scrapeError : ${scrapeErrors}">
+                                <td th:text="${scrapeError.time}">2022-04-21 23:37:52</td>
+                                <td th:text="${scrapeError.jobName}"></td>
+                                <td th:text="${scrapeError.playerName}">Yan Sommer</td>
+                                <td th:text="${scrapeError.stackTrace}">NullPointerException</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
