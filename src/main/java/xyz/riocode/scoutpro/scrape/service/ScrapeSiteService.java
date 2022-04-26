@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ScrapeSiteService {
     List<ScrapeSite> getAll();
+    ScrapeSite getById(Long id);
+    ScrapeSite checkScrape(Long id);
 }
