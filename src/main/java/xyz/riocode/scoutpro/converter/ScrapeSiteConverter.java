@@ -14,8 +14,13 @@ public class ScrapeSiteConverter {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withLocale(Locale.US);
 
-    public List<ScrapeSiteDTO> scrapeSiteToScrapeSiteDTO(List<ScrapeSite> scrapeSites) {
-        return scrapeSites.stream().map(scrapeSite -> {
+    public List<ScrapeSiteDTO> scrapeSitesToScrapeSiteDTOs(List<ScrapeSite> scrapeSites) {
+        return scrapeSites.stream()
+                .map(this::scrapeSiteToScrapeSiteDTO)
+                .collect(Collectors.toList());
+    }
+
+    public ScrapeSiteDTO scrapeSiteToScrapeSiteDTO(ScrapeSite scrapeSite) {
             return ScrapeSiteDTO.builder()
                     .id(scrapeSite.getId().toString())
                     .name(scrapeSite.getName())
@@ -23,7 +28,6 @@ public class ScrapeSiteConverter {
                     .lastChecked(scrapeSite.getLastChecked().format(dateTimeFormatter))
                     .jobId(scrapeSite.getScrapeCheckJob().getId().toString())
                     .build();
-        }).collect(Collectors.toList());
     }
 
 }

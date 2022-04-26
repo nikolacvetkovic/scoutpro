@@ -13,7 +13,7 @@ import xyz.riocode.scoutpro.security.privilege.ScrapeFieldUpdatePrivilege;
 
 import java.util.List;
 
-@RequestMapping("/scrapefield")
+@RequestMapping("/scrape/field")
 @Controller
 public class ScrapeFieldController {
 
@@ -24,13 +24,15 @@ public class ScrapeFieldController {
         this.scrapeFieldService = scrapeFieldService;
         this.scrapeFieldConverter = scrapeFieldConverter;
     }
+
     @ScrapeFieldReadPrivilege
     @GetMapping(value = "/{scrapeSiteId}/site",
-                produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ScrapeFieldDTO>> getScrapeFieldsByScrapeSite(@PathVariable Long scrapeSiteId) {
         return new ResponseEntity<>(scrapeFieldConverter.scrapeFieldsToScrapeFieldDTOs(
-                                        scrapeFieldService.getByScrapeSite(scrapeSiteId)), HttpStatus.OK);
+                scrapeFieldService.getByScrapeSite(scrapeSiteId)), HttpStatus.OK);
     }
+
     @ScrapeFieldUpdatePrivilege
     @PutMapping(value = "/{scrapeFieldId}",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -42,5 +44,4 @@ public class ScrapeFieldController {
                                     scrapeFieldService.update(
                                         scrapeFieldConverter.scrapeFieldDTOToScrapeField(scrapeFieldDTO))), HttpStatus.OK);
     }
-
 }

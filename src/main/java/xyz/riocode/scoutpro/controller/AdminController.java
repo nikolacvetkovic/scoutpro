@@ -43,7 +43,7 @@ public class AdminController {
     @AdminDashboardPrivilege
     @GetMapping("/dashboard")
     public String showAdminDashboard(ModelMap modelMap){
-        List<ScrapeSiteDTO> scrapeSiteDTOs = scrapeSiteConverter.scrapeSiteToScrapeSiteDTO(
+        List<ScrapeSiteDTO> scrapeSiteDTOs = scrapeSiteConverter.scrapeSitesToScrapeSiteDTOs(
                                                                                     scrapeSiteService.getAll());
         List<ScrapeErrorDTO> scrapeErrorsDTOs = scrapeErrorConverter.scrapeErrorToScrapeErrorDTO(
                                                                                     scrapeErrorService.getAll());
@@ -59,8 +59,8 @@ public class AdminController {
     @ScrapeSiteReadPrivilege
     @GetMapping("/scrapefields")
     public String showScrapeFields(ModelMap modelMap){
-        List<ScrapeSiteDTO> scrapeSiteDTOS = scrapeSiteConverter.scrapeSiteToScrapeSiteDTO(scrapeSiteService.getAll());
-        modelMap.addAttribute("scrapeSites", scrapeSiteDTOS);
+        List<ScrapeSiteDTO> scrapeSiteDTOs = scrapeSiteConverter.scrapeSitesToScrapeSiteDTOs(scrapeSiteService.getAll());
+        modelMap.addAttribute("scrapeSites", scrapeSiteDTOs);
         return "admin/scrapeFields";
     }
 

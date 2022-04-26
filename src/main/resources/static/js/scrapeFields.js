@@ -9,7 +9,7 @@ function setListenersOnDropdown(){
         $('#icons').empty();
         var buttonValue = $(this).text();
         var scrapeSiteId = $(this).attr('data');
-        $.get('/scrapefield/' + scrapeSiteId + '/site', function(data){
+        $.get('/scrape/field/' + scrapeSiteId + '/site', function(data){
             $('#dropdownMenuButton').text(buttonValue);
             data.forEach(function(scrapeField, index){
 
@@ -45,7 +45,7 @@ function setListenerOnButtons(){
         var fieldSelector = $(this).parent().parent().find('input').val();
         var csrfToken = $("#csrf").val();
         $.ajax({
-            url: '/scrapefield/' + fieldId,
+            url: '/scrape/field/' + fieldId,
             type: 'PUT',
             contentType: 'application/json',
             headers: {"X-CSRF-TOKEN": csrfToken},
