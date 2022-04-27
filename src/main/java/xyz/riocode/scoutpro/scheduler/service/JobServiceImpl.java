@@ -105,7 +105,7 @@ public class JobServiceImpl implements JobService{
                             foundedJob.getJobGroup()))) throw new RuntimeException("The job is already scheduled.");
             if (job.getStartTime() == null) throw new RuntimeException("The job must have start date.");
             Trigger trigger = null;
-            if (job.getCronJob() && job.getCronExpression() != null) {
+            if (job.isCronJob() && job.getCronExpression() != null) {
                 trigger = jobHelper.createCronTrigger(
                         new JobKey(foundedJob.getJobName(), foundedJob.getJobGroup()),
                         Date.from(job.getStartTime().atZone(ZoneId.systemDefault()).toInstant()),
@@ -124,7 +124,7 @@ public class JobServiceImpl implements JobService{
             scheduler.scheduleJob(trigger);
             foundedJob.setStartTime(job.getStartTime());
             foundedJob.setEndTime(job.getEndTime());
-            foundedJob.setCronJob(job.getCronJob());
+            foundedJob.setCronJob(job.isCronJob());
             foundedJob.setCronExpression(job.getCronExpression());
             foundedJob.setRepeatIntervalInSeconds(job.getRepeatIntervalInSeconds());
             foundedJob.setRepeatCount(job.getRepeatCount());
@@ -148,7 +148,7 @@ public class JobServiceImpl implements JobService{
             scheduler.unscheduleJob(new TriggerKey(foundedJob.getJobName(), foundedJob.getJobGroup()));
             foundedJob.setStartTime(null);
             foundedJob.setEndTime(null);
-            foundedJob.setCronJob(null);
+            foundedJob.setCronJob(false);
             foundedJob.setCronExpression(null);
             foundedJob.setRepeatIntervalInSeconds(null);
             foundedJob.setRepeatCount(null);
@@ -170,7 +170,7 @@ public class JobServiceImpl implements JobService{
                             foundedJob.getJobGroup()))) throw new RuntimeException("The job is not scheduled.");
             if (job.getStartTime() == null) throw new RuntimeException("The job must have start date.");
             Trigger trigger = null;
-            if (job.getCronJob() && job.getCronExpression() != null) {
+            if (job.isCronJob() && job.getCronExpression() != null) {
                 trigger = jobHelper.createCronTrigger(
                         new JobKey(foundedJob.getJobName(), foundedJob.getJobGroup()),
                         Date.from(job.getStartTime().atZone(ZoneId.systemDefault()).toInstant()),
@@ -189,7 +189,7 @@ public class JobServiceImpl implements JobService{
             scheduler.rescheduleJob(new TriggerKey(foundedJob.getJobName(), foundedJob.getJobGroup()), trigger);
             foundedJob.setStartTime(job.getStartTime());
             foundedJob.setEndTime(job.getEndTime());
-            foundedJob.setCronJob(job.getCronJob());
+            foundedJob.setCronJob(job.isCronJob());
             foundedJob.setCronExpression(job.getCronExpression());
             foundedJob.setRepeatIntervalInSeconds(job.getRepeatIntervalInSeconds());
             foundedJob.setRepeatCount(job.getRepeatCount());

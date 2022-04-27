@@ -36,7 +36,7 @@ public class JobInfo implements Serializable{
     private LocalDateTime endTime;
 
     @Column(name = "cron_job")
-    private Boolean cronJob;
+    private boolean cronJob;
     @Column(name = "cron_expression")
     private String cronExpression;
     @Column(name = "repeat_interval_in_seconds")
@@ -78,7 +78,7 @@ public class JobInfo implements Serializable{
         result = 31 * result + (jobClass != null ? jobClass.hashCode() : 0);
         result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
         result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
-        result = 31 * result + (cronJob != null ? cronJob.hashCode() : 0);
+        result = 31 * result + (cronJob ? 1 : 0);
         result = 31 * result + (cronExpression != null ? cronExpression.hashCode() : 0);
         result = 31 * result + (repeatIntervalInSeconds != null ? repeatIntervalInSeconds.hashCode() : 0);
         result = 31 * result + (repeatCount != null ? repeatCount.hashCode() : 0);
