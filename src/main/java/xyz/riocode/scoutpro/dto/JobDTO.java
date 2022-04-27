@@ -15,6 +15,7 @@ public class JobDTO {
     private String status;
     private String startTime;
     private String endTime;
+    private boolean cronJob;
     private String cronExp;
     private Integer repeatCount;
     private Integer repeatInterval;

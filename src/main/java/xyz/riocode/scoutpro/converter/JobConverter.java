@@ -22,6 +22,7 @@ public class JobConverter {
                 .status(job.getJobStatus().name())
                 .startTime(job.getStartTime()!=null? job.getStartTime().format(dateTimeFormatter):"")
                 .endTime(job.getEndTime()!=null? job.getEndTime().format(dateTimeFormatter):"")
+                .cronJob(job.isCronJob())
                 .cronExp(job.getCronExpression())
                 .repeatCount(job.getRepeatCount())
                 .repeatInterval(job.getRepeatIntervalInSeconds())
