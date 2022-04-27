@@ -5,13 +5,16 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import xyz.riocode.scoutpro.converter.JobConverter;
 import xyz.riocode.scoutpro.converter.JobExecutionHistoryConverter;
 import xyz.riocode.scoutpro.converter.ScrapeErrorConverter;
 import xyz.riocode.scoutpro.converter.ScrapeSiteConverter;
+import xyz.riocode.scoutpro.dto.JobDTO;
 import xyz.riocode.scoutpro.dto.JobExecutionHistoryDTO;
 import xyz.riocode.scoutpro.dto.ScrapeErrorDTO;
 import xyz.riocode.scoutpro.dto.ScrapeSiteDTO;
 import xyz.riocode.scoutpro.scheduler.service.JobExecutionHistoryService;
+import xyz.riocode.scoutpro.scheduler.service.JobService;
 import xyz.riocode.scoutpro.scrape.service.ScrapeErrorService;
 import xyz.riocode.scoutpro.scrape.service.ScrapeSiteService;
 import xyz.riocode.scoutpro.security.privilege.AdminDashboardPrivilege;
@@ -27,17 +30,24 @@ public class AdminController {
     private final ScrapeSiteService scrapeSiteService;
     private final ScrapeErrorService scrapeErrorService;
     private final JobExecutionHistoryService jobExecutionHistoryService;
+    private final JobService jobService;
     private final ScrapeSiteConverter scrapeSiteConverter;
     private final ScrapeErrorConverter scrapeErrorConverter;
     private final JobExecutionHistoryConverter jobExecutionHistoryConverter;
+    private final JobConverter jobConverter;
 
-    public AdminController(ScrapeSiteService scrapeSiteService, ScrapeSiteConverter scrapeSiteConverter, ScrapeErrorService scrapeErrorService, JobExecutionHistoryService jobExecutionHistoryService, ScrapeErrorConverter scrapeErrorConverter, JobExecutionHistoryConverter jobExecutionHistoryConverter) {
+    public AdminController(ScrapeSiteService scrapeSiteService, ScrapeSiteConverter scrapeSiteConverter,
+                           ScrapeErrorService scrapeErrorService, JobExecutionHistoryService jobExecutionHistoryService,
+                           JobService jobService, ScrapeErrorConverter scrapeErrorConverter,
+                           JobExecutionHistoryConverter jobExecutionHistoryConverter, JobConverter jobConverter) {
         this.scrapeSiteService = scrapeSiteService;
         this.scrapeSiteConverter = scrapeSiteConverter;
         this.scrapeErrorService = scrapeErrorService;
         this.jobExecutionHistoryService = jobExecutionHistoryService;
+        this.jobService = jobService;
         this.scrapeErrorConverter = scrapeErrorConverter;
         this.jobExecutionHistoryConverter = jobExecutionHistoryConverter;
+        this.jobConverter = jobConverter;
     }
 
     @AdminDashboardPrivilege
@@ -66,7 +76,9 @@ public class AdminController {
 
     @JobReadPrivilege
     @GetMapping("/jobs")
-    public String showJobDashboard() {
+    public String showJobDashboard(ModelMap modelMap) {
+        List<JobDTO> jobDTOs = jobConverter.jobToJobDTOs(jobService.getAll());
+        modelMap.addAttribute("jobs", jobDTOs);
         return "admin/jobDashboard";
     }
 
