@@ -1,0 +1,43 @@
+.job-name {
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+    font-size: 1.5rem;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+table.table td, table.table th {
+    padding: 0.1rem;
+}
+table td input.form-control {
+    padding: unset;
+    height: unset;
+}
+.btn-run-once {
+    color: #fff;
+    background-color: #7a46c8;
+    border-color: #7a46c8;
+}
+.btn-run-once:hover {
+    color: #fff;
+    background-color: #5b3397;
+    border-color: #5b3397;
+}
+.btn-update {
+    color: #fff;
+    background-color: #fa7418;
+    border-color: #fa7418;
+}
+.btn-update:hover {
+    color: #fff;
+    background-color: #d96413;
+    border-color: #d96413;
+}
+.btn-reschedule {
+    color: #fff;
+    background-color: #c00dcd;
+    border-color: #c00dcd;
+}
+.btn-reschedule:hover {
+    color: #fff;
+    background-color: #8a0793;
+    border-color: #8a0793;
+}
