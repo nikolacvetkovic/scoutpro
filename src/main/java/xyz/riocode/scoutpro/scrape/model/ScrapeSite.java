@@ -3,7 +3,6 @@ package xyz.riocode.scoutpro.scrape.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import xyz.riocode.scoutpro.scheduler.model.JobInfo;
 import xyz.riocode.scoutpro.scrape.enums.ScrapeSiteStatus;
 
 import javax.persistence.*;
@@ -43,10 +42,6 @@ public class ScrapeSite implements Serializable {
 
     @Column(name = "last_checked")
     private LocalDateTime lastChecked;
-
-    @OneToOne
-    @JoinColumn(name = "scrape_check_job_id", referencedColumnName = "id")
-    private JobInfo scrapeCheckJob;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "scrapeSite", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<ScrapeField> scrapeFields = new HashSet<>();

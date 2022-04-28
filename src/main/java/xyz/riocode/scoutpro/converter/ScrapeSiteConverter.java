@@ -26,7 +26,6 @@ public class ScrapeSiteConverter {
                     .name(scrapeSite.getName())
                     .status(scrapeSite.getStatus().name())
                     .lastChecked(scrapeSite.getLastChecked().format(dateTimeFormatter))
-                    .jobId(scrapeSite.getScrapeCheckJob().getId().toString())
                     .build();
     }
 
