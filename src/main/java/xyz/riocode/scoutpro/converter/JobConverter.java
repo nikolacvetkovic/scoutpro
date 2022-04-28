@@ -6,15 +6,11 @@ import xyz.riocode.scoutpro.scheduler.enums.JobStatus;
 import xyz.riocode.scoutpro.scheduler.model.JobInfo;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
 public class JobConverter {
-
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withLocale(Locale.US);
 
     public JobDTO jobToJobDTO(JobInfo job) {
         return JobDTO.builder()
@@ -22,8 +18,8 @@ public class JobConverter {
                 .name(job.getJobName())
                 .group(job.getJobGroup())
                 .status(job.getJobStatus().name())
-                .startTime(job.getStartTime()!=null? job.getStartTime().format(dateTimeFormatter):"")
-                .endTime(job.getEndTime()!=null? job.getEndTime().format(dateTimeFormatter):"")
+                .startTime(job.getStartTime()!=null?job.getStartTime().toString():"")
+                .endTime(job.getEndTime()!=null? job.getEndTime().toString():"")
                 .cronJob(job.isCronJob())
                 .cronExp(job.getCronExpression())
                 .repeatCount(job.getRepeatCount())
@@ -38,8 +34,8 @@ public class JobConverter {
                 .jobName(job.getName())
                 .jobGroup(job.getGroup())
                 .jobStatus(JobStatus.valueOf(job.getStatus()))
-                .startTime((job.getStartTime()!=null && !job.getStartTime().isEmpty()) ? LocalDateTime.parse(job.getStartTime(), dateTimeFormatter):null)
-                .endTime((job.getEndTime()!=null && !job.getEndTime().isEmpty()) ? LocalDateTime.parse(job.getEndTime(), dateTimeFormatter):null)
+                .startTime((job.getStartTime()!=null && !job.getStartTime().isEmpty()) ? LocalDateTime.parse(job.getStartTime()):null)
+                .endTime((job.getEndTime()!=null && !job.getEndTime().isEmpty()) ? LocalDateTime.parse(job.getEndTime()):null)
                 .cronJob(job.isCronJob())
                 .cronExpression(job.getCronExp())
                 .repeatCount(job.getRepeatCount())
