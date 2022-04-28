@@ -23,9 +23,9 @@
                     </div>
                 </div>
                 <div class="col-lg-3" style="text-align: right;">
-                    <button id="myPlayer" class="btn btn-info" th:if="${player.clubTeam} != null" th:disabled="${player.myPlayer}?'disabled'"
+                    <button id="myPlayer" class="btn btn-success" th:if="${player.clubTeam} != null" th:disabled="${player.myPlayer}?'disabled'"
                             th:data="'/player/ownership/true/'+${player.id}">My Player</button>
-                    <button id="notMyPlayer" class="btn btn-info" th:if="${player.clubTeam} != null" th:disabled="${player.myPlayer}==false?'disabled'"
+                    <button id="notMyPlayer" class="btn btn-warning" th:if="${player.clubTeam} != null" th:disabled="${player.myPlayer}==false?'disabled'"
                             th:data="'/player/ownership/false/'+${player.id}">Not My Player</button>
                     <button id="unfollowPlayer" class="btn btn-danger" th:if="${player.clubTeam != null}" th:data="'/player/'+${player.id}+'/unfollow'">Unfollow</button>
                     <a id="followPlayer" class="btn btn-danger" th:if="${player.clubTeam == null}" th:href="'/player/'+${player.id}+'/false/follow'">Follow</a>
