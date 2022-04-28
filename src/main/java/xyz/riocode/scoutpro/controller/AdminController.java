@@ -77,7 +77,7 @@ public class AdminController {
     @JobReadPrivilege
     @GetMapping("/jobs")
     public String showJobDashboard(ModelMap modelMap) {
-        List<JobDTO> jobDTOs = jobConverter.jobToJobDTOs(jobService.getAll());
+        List<JobDTO> jobDTOs = jobConverter.jobsToJobDTOs(jobService.getAll());
         modelMap.addAttribute("jobs", jobDTOs);
         return "admin/jobDashboard";
     }

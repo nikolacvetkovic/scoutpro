@@ -30,7 +30,7 @@ public class JobConverter {
                 .build();
     }
 
-    public List<JobDTO> jobToJobDTOs(List<JobInfo> jobs) {
+    public List<JobDTO> jobsToJobDTOs(List<JobInfo> jobs) {
         return jobs.stream()
                 .map(this::jobToJobDTO)
                 .collect(Collectors.toList());
