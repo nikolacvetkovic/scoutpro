@@ -117,6 +117,14 @@ public class PlayerController {
         return "redirect:/dashboard";
     }
 
+    @GetMapping("/ownership/{isMyPlayer}/{playerId}")
+    public ResponseEntity<?> changeOwnership(@PathVariable boolean isMyPlayer,
+                                             @PathVariable Long playerId,
+                                             Principal principal) {
+        playerService.changePlayerOwnership(playerId, isMyPlayer, principal.getName());
+        return ResponseEntity.ok().build();
+    }
+
     @PlayerReadPrivilege
     @GetMapping(value = "/{pageNumber}/page", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DashboardDTO> getPlayers(@PathVariable int pageNumber,

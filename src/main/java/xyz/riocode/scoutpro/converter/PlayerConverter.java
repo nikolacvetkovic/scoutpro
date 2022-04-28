@@ -187,7 +187,7 @@ public class PlayerConverter {
         playerCompleteDTO.setOverallRating(player.getOverallRating());
 
         try {
-            player.getUsers().size();
+            player.getTransfers().size();
             playerCompleteDTO.setMyPlayer(player.getUsers().stream()
                     .filter(appUserPlayer -> appUserPlayer.getAppUser().getUsername().equals(username))
                     .map(AppUserPlayer::isMyPlayer)

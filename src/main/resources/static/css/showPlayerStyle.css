@@ -80,9 +80,6 @@ h6.separator{
     font-weight: bold;
     color: rgb(168, 119, 50);
 }
-#playerCoreData button{
-    width: 40%;
-}
 #competitionStats tr:last-child{
     font-weight: bold;
 }
@@ -99,4 +96,7 @@ h6.separator{
     font-size: 20px;
     vertical-align: middle;
     margin-bottom: 0px;
+}
+div.alert {
+    font-size: 1rem;
 }

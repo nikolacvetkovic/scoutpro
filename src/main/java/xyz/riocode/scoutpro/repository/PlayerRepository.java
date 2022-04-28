@@ -53,6 +53,12 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     Optional<Player> findByIdAndUsername(Long id, String username);
 
     @Query("SELECT p FROM Player p " +
+            "JOIN FETCH p.users up " +
+            "JOIN FETCH up.appUser u " +
+            "WHERE p.id = :id")
+    Optional<Player> findById(Long id);
+
+    @Query("SELECT p FROM Player p " +
             " LEFT JOIN FETCH p.psmlTransfers " +
             " LEFT JOIN FETCH p.transfers " +
             " LEFT JOIN FETCH p.marketValues " +

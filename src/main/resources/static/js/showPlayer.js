@@ -4,9 +4,8 @@ $(window).on('load', function() {
     setCharacteristics();
     setCharts();
     setGameStats();
-    setListenerOnMyPlayerCheckBox();
+    setListenerOnButtons();
 });
-
 function setColorOnRatings(){
     $('#pesDb table tr td:nth-of-type(2)').get().forEach(function(rating){
         $(rating).css('color', getColorBasedOnRating($(rating).text()));
@@ -14,7 +13,6 @@ function setColorOnRatings(){
     var mainOverall = $('#mainOverall').get();
     $(mainOverall).css('color', getColorBasedOnRating($(mainOverall).text()));
 }
-
 function setColorOnPositions(){
     $('#primaryPosition').css('color', getColorBasedOnPosition($('#primaryPosition').html()));
     $('#otherStrongPositions').get().forEach(function(span){
@@ -26,7 +24,6 @@ function setColorOnPositions(){
     var mainPosition = $('#mainPosition').get();
     $(mainPosition).css('color', getColorBasedOnPosition($(mainPosition).text()));
 }
-
 function setCharacteristics(){
     var strengths = $('#characteristics #strengths div:not(:first-child)').get();
 
@@ -54,7 +51,6 @@ function setCharacteristics(){
         $(style).html('<i class="fas fa-angle-right"></i> ' + $(style).text()).css('color', 'deeppink');
     });
 }
-
 function setCharts(){
     var ctx = $('#marketValuesChart')[0].getContext('2d');
     var marketValues = $('#marketValuesData div').get();
@@ -118,7 +114,6 @@ function setCharts(){
         }
     });
 }
-
 function setGameStats(){
     var motms = $('#gameStats td[data-attribute=motm]').get();
     motms.forEach(function(td){
@@ -173,24 +168,53 @@ function setGameStats(){
     });
 
 }
-
-function setListenerOnMyPlayerCheckBox(){
+function setListenerOnButtons(){
+    // todo reimplement
     $('#myPlayer').click(function (){
-        var followButton = $('#followPlayer').get(0);
-        var followButtonHrefValue = $(followButton).attr('href');
-        if(followButtonHrefValue.includes('false')) {
-            followButtonHrefValue = followButtonHrefValue.replace('false', 'true');
-        } else if($(followButton).attr('href').includes('true')) {
-            followButtonHrefValue = followButtonHrefValue.replace('true', 'false');
-        }
-        $(followButton).attr('href', followButtonHrefValue);
+        var clickedButton = $(this);
+        $.get($(this).attr('data'))
+            .done(function(){
+                $(clickedButton).attr('disabled', true);
+                $(clickedButton).parent().find('#notMyPlayer').attr('disabled', false);
+                $('div.alert').html('Ownership changed successfully. <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+                $('div.alert').addClass('alert-success');
+                $('div.alert').fadeIn(2000);
+                setTimeout(hideAlert, 4000);
+            }).fail(function(){
+                $('div.alert').html('Ownership has not been successfully changed. <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+                $('div.alert').addClass('alert-danger');
+                $('div.alert').fadeIn(2000);
+                setTimeout(hideAlert, 4000);
+            });
+    });
+    $('#notMyPlayer').click(function (){
+        var clickedButton = $(this);
+        $.get($(this).attr('data'))
+            .done(function(){
+                $(clickedButton).attr('disabled', true);
+                $(clickedButton).parent().find('#myPlayer').attr('disabled', false);
+                $('div.alert').html('Ownership changed successfully. <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+                $('div.alert').addClass('alert-success');
+                $('div.alert').fadeIn(2000);
+                setTimeout(hideAlert, 4000);
+            }).fail(function(){
+                $('div.alert').html('Ownership has not been successfully changed. <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+                $('div.alert').addClass('alert-danger');
+                $('div.alert').fadeIn(2000);
+                setTimeout(hideAlert, 4000);
+            });
+    });
+    $('#unfollowPlayer').click(function(){
+        $.get($(this).attr('data'), function(data, status, xhr){
+            if (xhr.status == 200) {
+                window.close();
+            }
+        });
     });
 }
-
 function formatPlayerValue(value){
     return '€ ' + Number.parseFloat(value).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 }
-
 function getColorBasedOnRating(rating){
     if(!isNaN(rating)){
         if((rating) >= 95){
@@ -204,7 +228,6 @@ function getColorBasedOnRating(rating){
         }
     }
 }
-
 function getColorBasedOnPosition(position, isWeak){
     switch(position){
         case 'GK':
@@ -226,4 +249,10 @@ function getColorBasedOnPosition(position, isWeak){
             return isWeak?'rgba(242, 0, 0, 0.6)':'rgba(242, 0, 0, 1)';
         break;
     }
+}
+function hideAlert(){
+	$('div.alert').fadeOut(2000, function(){
+		$('div.alert').html('');
+		$('div.alert').removeClass('alert-success alert-danger');
+	});
 }

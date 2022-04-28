@@ -56,10 +56,19 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player changePlayerOwnership(Long id, boolean isUserPlayer, String username) {
-        Player foundPlayer = playerRepository.findByIdAndUsername(id, username).orElseThrow(PlayerNotFoundException::new);
-
-        AppUserPlayer foundAppUserPlayer = foundPlayer.getUsers().stream().findFirst().get();
-        foundAppUserPlayer.setMyPlayer(isUserPlayer);
+        Player foundPlayer = playerRepository.findById(id).orElseThrow(PlayerNotFoundException::new);
+        AppUserPlayer foundedAppUserPlayer = foundPlayer.getUsers()
+                .stream()
+                .filter(appUserPlayer -> appUserPlayer.getAppUser().getUsername().equals(username))
+                .findFirst().orElseThrow(() -> new RuntimeException("The player is not followed by the user " + username));
+        if (isUserPlayer) {
+            if (foundPlayer.getUsers()
+                    .stream()
+                    .filter(AppUserPlayer::isMyPlayer)
+                    .anyMatch(appUserPlayer -> !appUserPlayer.getAppUser().getUsername().equals(username)))
+                throw new RuntimeException("The player is already owned.");
+        }
+        foundedAppUserPlayer.setMyPlayer(isUserPlayer);
 
         return playerRepository.save(foundPlayer);
     }
