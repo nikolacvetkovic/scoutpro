@@ -90,7 +90,7 @@ public class JobServiceImpl implements JobService{
             scheduler.triggerJob(new JobKey(foundedJob.getJobName(), foundedJob.getJobGroup()));
         } catch (SchedulerException e) {
             log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            return false;
         }
         return true;
     }
