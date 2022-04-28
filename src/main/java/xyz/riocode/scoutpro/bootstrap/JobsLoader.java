@@ -83,31 +83,13 @@ public class JobsLoader implements CommandLineRunner {
 //
 //        jobService.createJob(psmlTransferImport);
 //
-//        JobInfo tmCoreScrapeCheck = JobInfo.builder()
-//                .jobClass("xyz.riocode.scoutpro.scheduler.job.TMCoreScrapeCheck")
-//                .jobName("TMCoreScrapeCheck")
-//                .jobGroup("Transfermarkt")
+//        JobInfo scrapeCheck = JobInfo.builder()
+//                .jobClass("xyz.riocode.scoutpro.scheduler.job.ScrapeCheck")
+//                .jobName("ScrapeCheck")
+//                .jobGroup("General")
 //                .customConfigData("")
 //                .build();
 //
-//        jobService.createJob(tmCoreScrapeCheck);
-//
-//        JobInfo pesDbScrapeCheck = JobInfo.builder()
-//                .jobClass("xyz.riocode.scoutpro.scheduler.job.PesDbScrapeCheck")
-//                .jobName("PesDbScrapeCheck")
-//                .jobGroup("PesDb")
-//                .customConfigData("")
-//                .build();
-//
-//        jobService.createJob(pesDbScrapeCheck);
-//
-//        JobInfo psmlScrapeCheck = JobInfo.builder()
-//                .jobClass("xyz.riocode.scoutpro.scheduler.job.PsmlScrapeCheck")
-//                .jobName("PsmlScrapeCheck")
-//                .jobGroup("Psml")
-//                .customConfigData("")
-//                .build();
-//
-//        jobService.createJob(psmlScrapeCheck);
+//        jobService.createJob(scrapeCheck);
     }
 }
