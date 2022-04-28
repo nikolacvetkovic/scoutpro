@@ -33,7 +33,7 @@ public class JobConverter {
                 .id(Long.valueOf(job.getId()))
                 .jobName(job.getName())
                 .jobGroup(job.getGroup())
-                .jobStatus(JobStatus.valueOf(job.getStatus()))
+                .jobStatus((job.getStatus()!=null && !job.getStatus().isEmpty())?JobStatus.valueOf(job.getStatus()):null)
                 .startTime((job.getStartTime()!=null && !job.getStartTime().isEmpty()) ? LocalDateTime.parse(job.getStartTime()):null)
                 .endTime((job.getEndTime()!=null && !job.getEndTime().isEmpty()) ? LocalDateTime.parse(job.getEndTime()):null)
                 .cronJob(job.isCronJob())
