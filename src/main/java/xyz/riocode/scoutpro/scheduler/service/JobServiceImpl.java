@@ -144,7 +144,8 @@ public class JobServiceImpl implements JobService{
                     new TriggerKey(
                             foundedJob.getJobName(),
                             foundedJob.getJobGroup()))) throw new RuntimeException("The job is not scheduled.");
-
+            if (foundedJob.getJobStatus().equals(JobStatus.PAUSED))
+                throw new RuntimeException("The job cannot be unscheduled because it is paused.");
             scheduler.unscheduleJob(new TriggerKey(foundedJob.getJobName(), foundedJob.getJobGroup()));
             foundedJob.setStartTime(null);
             foundedJob.setEndTime(null);
@@ -169,6 +170,8 @@ public class JobServiceImpl implements JobService{
                             foundedJob.getJobName(),
                             foundedJob.getJobGroup()))) throw new RuntimeException("The job is not scheduled.");
             if (job.getStartTime() == null) throw new RuntimeException("The job must have start date.");
+            if (foundedJob.getJobStatus().equals(JobStatus.PAUSED))
+                throw new RuntimeException("The job cannot be unscheduled because it is paused.");
             Trigger trigger = null;
             if (job.isCronJob() && job.getCronExpression() != null) {
                 trigger = jobHelper.createCronTrigger(
