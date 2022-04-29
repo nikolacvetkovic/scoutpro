@@ -8,19 +8,34 @@
 
     <div th:replace="~{fragments/mainContainer :: main(~{::div#jobDashboard})}">
         <div id="jobDashboard">
-            <div class="job-wrapper" th:each="job : ${jobs}">
+            <input id="csrf" type="hidden" th:name="${_csrf.headerName}" th:value="${_csrf.token}"/>
+            <div class="job-wrapper" th:each="job : ${jobs}" th:data-id="${job.id}">
                 <div class="row job-name">
                     <div class="col-lg-6">
                         <span th:text="${job.name}"></span>
                     </div>
                     <div class="col-lg-6 text-right">
-                        <button class="btn btn-run-once">Run Once</button>
-                        <button class="btn btn-update">Update</button>
-                        <button class="btn btn-success">Schedule</button>
-                        <button class="btn btn-reschedule">Reschedule</button>
-                        <button class="btn btn-danger">Unschedule</button>
-                        <button class="btn btn-warning">Pause</button>
-                        <button class="btn btn-info">Unpause</button>
+                        <button id="runJobButton" class="btn btn-run-once" data-success-msg="The job started successfully"
+                                data-error-msg="The job is not started successfully" data-method="GET"
+                                th:data-url="'/job/'+${job.id}+'/run'">Run Once</button>
+                        <button id="updateJobButton" class="btn btn-update" data-success-msg="The job updated successfully"
+                                data-error-msg="The job has not been successfully updated" data-method="PUT"
+                                th:data-url="'/job/'+${job.id}+'/update'">Update</button>
+                        <button id="scheduleJobButton" th:disabled="!(${job.status} == 'CREATED')?'disabled'" class="btn btn-success" data-success-msg="The job scheduled successfully"
+                                data-error-msg="The job has not been successfully scheduled" data-method="PUT"
+                                th:data-url="'/job/'+${job.id}+'/schedule'">Schedule</button>
+                        <button id="rescheduleJobButton" th:disabled="!(${job.status} == 'SCHEDULED')?'disabled'" class="btn btn-reschedule" data-success-msg="The job rescheduled successfully"
+                                data-error-msg="The job has not been successfully rescheduled" data-method="PUT"
+                                th:data-url="'/job/'+${job.id}+'/reschedule'">Reschedule</button>
+                        <button id="unscheduleJobButton" th:disabled="!(${job.status} == 'SCHEDULED')?'disabled'" class="btn btn-danger" data-success-msg="The job unscheduled successfully"
+                                data-error-msg="The job has not been successfully unscheduled" data-method="PUT"
+                                th:data-url="'/job/'+${job.id}+'/unschedule'">Unschedule</button>
+                        <button id="pauseJobButton" th:disabled="!(${job.status} == 'SCHEDULED')?'disabled'" class="btn btn-warning" data-success-msg="The job paused successfully"
+                                data-error-msg="The job has not been successfully paused" data-method="PUT"
+                                th:data-url="'/job/'+${job.id}+'/pause'">Pause</button>
+                        <button id="resumeJobButton" th:disabled="!(${job.status} == 'PAUSED')?'disabled'" class="btn btn-info" data-success-msg="The job resumed successfully"
+                                data-error-msg="The job has not been successfully resumed" data-method="PUT"
+                                th:data-url="'/job/'+${job.id}+'/resume'">Resume</button>
                     </div>
                 </div>
                 <div class="row">
@@ -33,18 +48,18 @@
                                 </tr>
                                 <tr class="d-flex">
                                     <th scope="row" class="col-3">Status</th>
-                                    <td th:text="${job.status}"></td>
+                                    <td th:id="'jobStatus-'+${job.id}" th:text="${job.status}"></td>
                                 </tr>
                                 <tr class="d-flex">
                                     <th scope="row" class="col-3">Start Time</th>
                                     <td>
-                                        <input class="form-control" type="text" name="jobStartTime" id="" th:value="${job.startTime}">
+                                        <input class="form-control" type="datetime-local" name="jobStartTime" th:id="'jobStartTime-'+${job.id}" th:value="${job.startTime}">
                                     </td>
                                 </tr>
                                 <tr class="d-flex">
                                     <th scope="row" class="col-3">End Time</th>
                                     <td>
-                                        <input class="form-control" type="text" name="jobEndTime" id="" th:value="${job.endTime}">
+                                        <input class="form-control" type="datetime-local" name="jobEndTime" th:id="'jobEndTime-'+${job.id}" th:value="${job.endTime}">
                                     </td>
                                 </tr>
                                 <tr class="d-flex">
@@ -52,13 +67,13 @@
                                     <td>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" th:name="'jobType-' + ${job.id}"
-                                                   th:id="'jobType1-' + ${job.id}" th:checked="${job.cronJob}?'checked'"
+                                                   th:id="'jobTypeYes-' + ${job.id}" th:checked="${job.cronJob}?'checked'"
                                                    value="true">
                                             <label class="form-check-label" th:for="'jobType1-' + ${job.id}">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" th:name="'jobType-' + ${job.id}"
-                                                   th:id="'jobType2-' + ${job.id}" th:checked="${job.cronJob}==false?'checked'"
+                                                   th:id="'jobTypeNo-' + ${job.id}" th:checked="${job.cronJob}==false?'checked'"
                                                    value="false">
                                             <label class="form-check-label" th:for="'jobType2-' + ${job.id}">No</label>
                                         </div>
@@ -67,29 +82,36 @@
                                 <tr class="d-flex">
                                     <th scope="row" class="col-3">Cron Exp</th>
                                     <td>
-                                        <input class="form-control" type="text" name="jobCronExp" id="" th:value="${job.cronExp}">
+                                        <input class="form-control" type="text" name="jobCronExp" th:id="'jobCronExp-'+${job.id}" th:value="${job.cronExp}">
                                     </td>
                                 </tr>
                                 <tr class="d-flex">
                                     <th scope="row" class="col-3">Repeat Count</th>
                                     <td>
-                                        <input class="form-control" type="number" name="jobRepeatCount" id="" th:value="${job.repeatCount}">
+                                        <input class="form-control" type="number" name="jobRepeatCount" th:id="'jobRepeatCount-'+${job.id}" th:value="${job.repeatCount}">
                                     </td>
                                 </tr>
                                 <tr class="d-flex">
                                     <th scope="row" class="col-3">Repeat Interval (s)</th>
                                     <td>
-                                        <input class="form-control" type="number" name="jobRepeatInterval" id="" th:value="${job.repeatInterval}">
+                                        <input class="form-control" type="number" name="jobRepeatInterval" th:id="'jobRepeatInterval-'+${job.id}" th:value="${job.repeatInterval}">
                                     </td>
                                 </tr>
                                 <tr class="d-flex">
                                     <th scope="row" class="col-3">Custom Config</th>
                                     <td>
-                                        <textarea class="form-control" name="" id="" cols="40" rows="5" th:text="${job.customConfig}"></textarea>
+                                        <textarea class="form-control" name="" cols="40" rows="5" th:id="'jobCustomConfig-'+${job.id}" th:text="${job.customConfig}"></textarea>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="alert alert-success mt-2 my-2 py-2" style="display: none;">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
