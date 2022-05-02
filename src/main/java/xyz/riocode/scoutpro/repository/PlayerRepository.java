@@ -110,4 +110,28 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Query(value = "SELECT count(p) FROM Player p " +
             "WHERE p.transferLastCheck < :transferLastCheck")
     long countByTransferLastCheckBefore(LocalDateTime transferLastCheck);
+
+    @Query(value = "SELECT p FROM Player p " +
+            "LEFT JOIN FETCH p.transfers t " +
+            "LEFT JOIN FETCH p.marketValues mv " +
+            "WHERE p.psmlLastCheck < :psmlLastCheck",
+            countQuery = "SELECT count(p) FROM Player p " +
+                    "WHERE p.psmlLastCheck < :psmlLastCheck")
+    Page<Player> findByPsmlLastCheckBefore(LocalDateTime psmlLastCheck, Pageable pageable);
+
+    @Query(value = "SELECT count(p) FROM Player p " +
+            "WHERE p.psmlLastCheck < :psmlLastCheck")
+    long countByPsmlLastCheckBefore(LocalDateTime psmlLastCheck);
+
+    @Query(value = "SELECT p FROM Player p " +
+            "LEFT JOIN FETCH p.transfers t " +
+            "LEFT JOIN FETCH p.marketValues mv " +
+            "WHERE p.pesDbLastCheck < :pesDbLastCheck",
+            countQuery = "SELECT count(p) FROM Player p " +
+                    "WHERE p.pesDbLastCheck < :pesDbLastCheck")
+    Page<Player> findByPesDbLastCheckBefore(LocalDateTime pesDbLastCheck, Pageable pageable);
+
+    @Query(value = "SELECT count(p) FROM Player p " +
+            "WHERE p.pesDbLastCheck < :pesDbLastCheck")
+    long countByPesDbLastCheckBefore(LocalDateTime pesDbLastCheck);
 }
