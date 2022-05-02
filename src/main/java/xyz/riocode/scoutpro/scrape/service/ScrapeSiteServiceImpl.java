@@ -73,4 +73,9 @@ public class ScrapeSiteServiceImpl implements ScrapeSiteService{
 
         return scrapeSiteRepository.save(foundedScrapeSite);
     }
+
+    @Override
+    public List<ScrapeSite> getByLastCheckedBefore(LocalDateTime lastChecked) {
+        return scrapeSiteRepository.findByLastCheckedBefore(lastChecked);
+    }
 }
