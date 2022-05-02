@@ -21,6 +21,7 @@ import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorRepository;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Slf4j
 public class PsmlUpdatePlayers extends QuartzJobBean {
@@ -50,14 +51,18 @@ public class PsmlUpdatePlayers extends QuartzJobBean {
         long playersWithError = 0;
 
         int pageSize = jobExecutionContext.getMergedJobDataMap().getIntValue("pageSize");
+        String playerCheckInterval = jobExecutionContext.getMergedJobDataMap().getString("playerCheckInterval");
+        long checkIntervalValue = Long.parseLong(playerCheckInterval.replaceAll("\\D+",""));
+        String checkIntervalUnit = playerCheckInterval.replaceAll("[^a-zA-Z]+","");
+        LocalDateTime dateTimeLimit = LocalDateTime.now().minus(checkIntervalValue, ChronoUnit.valueOf(checkIntervalUnit));
 
-        long count = playerRepository.count();
+        long count = playerRepository.countByPsmlLastCheckBefore(dateTimeLimit);
         if (count > 0) {
             long totalPages = count / pageSize;
             if (count % pageSize > 0) totalPages++;
             Page<Player> page;
             for (int i = 0; i < totalPages; i++) {
-                page = playerRepository.findAll(PageRequest.of(i, pageSize));
+                page = playerRepository.findByPsmlLastCheckBefore(dateTimeLimit, PageRequest.of(i, pageSize));
                 for (Player player : page.getContent()) {
                     try {
                         Thread.sleep(3000);

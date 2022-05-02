@@ -21,6 +21,7 @@ import xyz.riocode.scoutpro.scrape.repository.ScrapeErrorRepository;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,9 +53,12 @@ public class TransfermarktUpdatePlayers extends QuartzJobBean {
         long playersProcessed = 0;
 
         int pageSize = jobExecutionContext.getMergedJobDataMap().getIntValue("pageSize");
+        String playerCheckInterval = jobExecutionContext.getMergedJobDataMap().getString("playerCheckInterval");
+        long checkIntervalValue = Long.parseLong(playerCheckInterval.replaceAll("\\D+",""));
+        String checkIntervalUnit = playerCheckInterval.replaceAll("[^a-zA-Z]+","");
+        LocalDateTime dateTimeLimit = LocalDateTime.now().minus(checkIntervalValue, ChronoUnit.valueOf(checkIntervalUnit));
 
         List<String[]> playersWithError = new ArrayList<>();
-        LocalDateTime dateTimeLimit = LocalDateTime.now().minusMonths(1);
 
         long count = playerRepository.countByTransferLastCheckBefore(dateTimeLimit);
         if (count > 0) {
