@@ -36,21 +36,23 @@ function setListenersOnButtons(){
                 $(jobWrapper).find('div.alert').fadeIn(2000);
                 setTimeout(hideAlert, 4000, jobWrapper);
                 // data
-                $('#jobStatus-'+jobId).text(job.status);
-                $('#jobStartTime-'+jobId).val(job.startTime);
-                $('#jobEndTime-'+jobId).val(job.endTime);
-                $('#jobTypeYes-').attr('checked', job.cronJob?true:false);
-                $('#jobTypeNo-'+jobId).attr('checked', job.cronJob?false:true);
-                $('#jobCronExp-'+jobId).val(job.cronExp);
-                $('#jobRepeatCount-'+jobId).val(job.repeatCount);
-                $('#jobRepeatInterval-'+jobId).val(job.repeatInterval);
-                $('#jobCustomConfig-'+jobId).val(job.customConfig);
-                // buttons state
-                $(jobWrapper).find('#scheduleJobButton').attr('disabled', !(job.status == 'CREATED'));
-                $(jobWrapper).find('#rescheduleJobButton').attr('disabled', !(job.status == 'SCHEDULED'));
-                $(jobWrapper).find('#unscheduleJobButton').attr('disabled', !(job.status == 'SCHEDULED'));
-                $(jobWrapper).find('#pauseJobButton').attr('disabled', !(job.status == 'SCHEDULED'));
-                $(jobWrapper).find('#resumeJobButton').attr('disabled', !(job.status == 'PAUSED'));
+                if (job) {
+                    $('#jobStatus-'+jobId).text(job.status);
+                    $('#jobStartTime-'+jobId).val(job.startTime);
+                    $('#jobEndTime-'+jobId).val(job.endTime);
+                    $('#jobTypeYes-').attr('checked', job.cronJob?true:false);
+                    $('#jobTypeNo-'+jobId).attr('checked', job.cronJob?false:true);
+                    $('#jobCronExp-'+jobId).val(job.cronExp);
+                    $('#jobRepeatCount-'+jobId).val(job.repeatCount);
+                    $('#jobRepeatInterval-'+jobId).val(job.repeatInterval);
+                    $('#jobCustomConfig-'+jobId).val(job.customConfig);
+                    // buttons state
+                    $(jobWrapper).find('#scheduleJobButton').attr('disabled', !(job.status == 'CREATED'));
+                    $(jobWrapper).find('#rescheduleJobButton').attr('disabled', !(job.status == 'SCHEDULED'));
+                    $(jobWrapper).find('#unscheduleJobButton').attr('disabled', !(job.status == 'SCHEDULED'));
+                    $(jobWrapper).find('#pauseJobButton').attr('disabled', !(job.status == 'SCHEDULED'));
+                    $(jobWrapper).find('#resumeJobButton').attr('disabled', !(job.status == 'PAUSED'));
+                }
             },
             error: function(response){
                 $(jobWrapper).find('div.alert').html($(clickedButton).attr('data-error-msg') +'. <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
