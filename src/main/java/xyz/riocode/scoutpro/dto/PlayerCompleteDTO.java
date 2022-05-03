@@ -35,7 +35,6 @@ public class PlayerCompleteDTO {
     private Set<String> weaknesses;
     private Set<String> stylesOfPlay;
     private List<CompetitionStatisticDTO> competitionStatisticDTOS;
-    private List<PositionStatisticDTO> positionStatisticDTOS;
     private List<GameStatisticDTO> gameStatisticDTOS;
     private String statisticLastCheck;
 

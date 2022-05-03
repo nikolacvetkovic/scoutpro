@@ -20,12 +20,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component("TMTemplate")
-public class TMScrapeTemplateImpl implements ScrapeTemplate {
+@Component("TMCoreTemplate")
+public class TMCoreScrapeTemplateImpl implements ScrapeTemplate {
 
     private final ScrapeFieldRepository scrapeFieldRepository;
 
-    public TMScrapeTemplateImpl(ScrapeFieldRepository scrapeFieldRepository) {
+    public TMCoreScrapeTemplateImpl(ScrapeFieldRepository scrapeFieldRepository) {
         this.scrapeFieldRepository = scrapeFieldRepository;
     }
 

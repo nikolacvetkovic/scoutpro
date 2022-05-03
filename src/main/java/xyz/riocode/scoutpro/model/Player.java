@@ -66,8 +66,10 @@ public class Player implements Serializable {
     @Column(name = "transfermarkt_position")
     private String transfermarktPosition;
 
-    @Column(name = "transfermarkt_url")
-    private String transfermarktUrl;
+    @Column(name = "transfermarkt_core_url")
+    private String transfermarktCoreUrl;
+    @Column(name = "transfermarkt_stats_url")
+    private String transfermarktStatsUrl;
     @Column(name = "whoscored_url")
     private String whoScoredUrl;
     @Column(name = "pesdb_url")
@@ -287,10 +289,6 @@ public class Player implements Serializable {
     @OrderBy("id DESC")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<CompetitionStatistic> competitionStatistics = new HashSet<>();
-
-    @OrderBy("id DESC")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player", fetch = FetchType.LAZY, orphanRemoval = true)
-    private Set<PositionStatistic> positionStatistics = new HashSet<>();
 
     @OrderBy("dateOfGame")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player", fetch = FetchType.LAZY, orphanRemoval = true)

@@ -1,26 +1,20 @@
 package xyz.riocode.scoutpro.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Setter
 @Getter
-@NoArgsConstructor
 public class CompetitionStatisticDTO {
 
-    private String competition;
-    private int startedApps;
-    private int subApps;
-    private int mins;
-    private int goals;
-    private int assists;
-    private int yellowCards;
-    private int redCards;
-    private String shotsPerGame;
-    private String passSuccess;
-    private String aerialsWon;
-    private int manOfTheMatch;
-    private String rating;
+    private String competitionName;
+    private String appearances;
+    private String goals;
+    private String assists;
+    private String yellowCards;
+    private String redCards;
+    private String minutesPlayed;
 
 }

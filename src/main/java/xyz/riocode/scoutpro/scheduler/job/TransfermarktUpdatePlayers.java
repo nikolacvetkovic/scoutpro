@@ -70,7 +70,7 @@ public class TransfermarktUpdatePlayers extends QuartzJobBean {
                 for (Player player : page.getContent()) {
                     try {
                         Thread.sleep(10000);
-                        scrapeEngine.work(new URL(player.getTransfermarktUrl()), player);
+                        scrapeEngine.work(new URL(player.getTransfermarktCoreUrl()), player);
                         playerRepository.save(player);
                         playersProcessed++;
                         log.debug("Transfermarkt fields are updated for player: {} - {}", player.getId(), player.getName());

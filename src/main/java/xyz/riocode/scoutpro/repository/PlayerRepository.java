@@ -26,6 +26,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             " LEFT JOIN FETCH p.psmlTransfers " +
             " LEFT JOIN FETCH p.marketValues " +
             " LEFT JOIN FETCH p.competitionStatistics " +
+            " LEFT JOIN FETCH p.gameStatistics " +
             " LEFT JOIN FETCH p.transfers ",
             countQuery = "SELECT count(p) FROM Player p")
     Page<Player> findAll(Pageable pageable);
@@ -63,7 +64,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             " LEFT JOIN FETCH p.transfers " +
             " LEFT JOIN FETCH p.marketValues " +
             " LEFT JOIN FETCH p.competitionStatistics " +
-            " LEFT JOIN FETCH p.positionStatistics " +
             " LEFT JOIN FETCH p.gameStatistics " +
             " JOIN FETCH p.users up " +
             " JOIN FETCH up.appUser u " +
@@ -88,7 +88,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             "AND p.name LIKE LOWER(CONCAT('%', :playerName, '%'))")
     List<Player> findByNameContainsAndUser(String playerName, String username);
 
-    Player findByTransfermarktUrl(String transfermarktUrl);
+    Player findByTransfermarktCoreUrl(String transfermarktCoreUrl);
 
     @Query("SELECT p FROM Player p " +
             "WHERE p.pesDbPlayerName = :pesDbName")

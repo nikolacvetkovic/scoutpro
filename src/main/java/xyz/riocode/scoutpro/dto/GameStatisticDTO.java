@@ -1,25 +1,25 @@
 package xyz.riocode.scoutpro.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 public class GameStatisticDTO {
 
-    private String competition;
     private String dateOfGame;
-    private String team1;
-    private String team2;
+    private String playerTeam;
+    private String opponentTeam;
+    private String homeAwayFlag;
     private String result;
-    private boolean manOfTheMatch;
-    private int goals;
-    private int assists;
+    private String position;
+    private String goals;
+    private String assists;
     private boolean yellowCard;
     private boolean redCard;
-    private int minutesPlayed;
-    private String rating;
+    private String minutesPlayed;
+    private String notPlayedReason;
 
 }

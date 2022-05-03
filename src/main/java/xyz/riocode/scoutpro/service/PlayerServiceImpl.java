@@ -145,11 +145,11 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     private void scrapeAll(Player player) {
-        Player foundPlayer = playerRepository.findByTransfermarktUrl(player.getTransfermarktUrl());
+        Player foundPlayer = playerRepository.findByTransfermarktCoreUrl(player.getTransfermarktCoreUrl());
         if(foundPlayer != null) throw new DuplicatePlayerException();
 
         try {
-            scrapeEngine.work(new URL(player.getTransfermarktUrl()), player);
+            scrapeEngine.work(new URL(player.getTransfermarktCoreUrl()), player);
             scrapeEngine.work(new URL(player.getPesDbUrl()), player);
             scrapeEngine.work(new URL(player.getPsmlUrl()), player);
         } catch (MalformedURLException e) {

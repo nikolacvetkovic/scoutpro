@@ -13,23 +13,28 @@ import java.util.stream.Collectors;
 @Component
 public class GameStatisticConverter {
 
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
+
     public List<GameStatisticDTO> gameStatisticsToGameStatisticDTOs(Set<GameStatistic> gameStatistics) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
-        return gameStatistics.stream().map(gameStatistic -> {
-            GameStatisticDTO gameStatisticDTO = new GameStatisticDTO();
-            gameStatisticDTO.setDateOfGame(gameStatistic.getDateOfGame().format(dateFormatter));
-            gameStatisticDTO.setCompetition(gameStatistic.getCompetition());
-            gameStatisticDTO.setTeam1(gameStatistic.getTeam1());
-            gameStatisticDTO.setTeam2(gameStatistic.getTeam2());
-            gameStatisticDTO.setResult(gameStatistic.getResult());
-            gameStatisticDTO.setMinutesPlayed(gameStatistic.getMinutesPlayed());
-            gameStatisticDTO.setGoals(gameStatistic.getGoals());
-            gameStatisticDTO.setAssists(gameStatistic.getAssists());
-            gameStatisticDTO.setYellowCard(gameStatistic.isYellowCard());
-            gameStatisticDTO.setRedCard(gameStatistic.isRedCard());
-            gameStatisticDTO.setManOfTheMatch(gameStatistic.isManOfTheMatch());
-            gameStatisticDTO.setRating(gameStatistic.getRating().toString());
-            return gameStatisticDTO;
-        }).collect(Collectors.toList());
+        return gameStatistics.stream()
+                .map(this::gameStatisticToGameStatisticDTO)
+                .collect(Collectors.toList());
+    }
+
+    public GameStatisticDTO gameStatisticToGameStatisticDTO(GameStatistic gs) {
+        return GameStatisticDTO.builder()
+                .dateOfGame(gs.getDateOfGame().format(dateFormatter))
+                .playerTeam(gs.getPlayerTeam())
+                .opponentTeam(gs.getOpponentTeam())
+                .homeAwayFlag(gs.getHomeAwayFlag())
+                .result(gs.getResult())
+                .position(gs.getPosition())
+                .goals(gs.getGoals())
+                .assists(gs.getAssists())
+                .yellowCard(gs.isYellowCard())
+                .redCard(gs.isRedCard())
+                .minutesPlayed(gs.getMinutesPlayed())
+                .notPlayedReason(gs.getNotPlayedReason())
+                .build();
     }
 }

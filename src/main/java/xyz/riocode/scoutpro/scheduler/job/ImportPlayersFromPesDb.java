@@ -106,10 +106,10 @@ public class ImportPlayersFromPesDb extends QuartzJobBean {
                                 continue;
                             }
                             String psmlQueryUrl = ScrapeHelper.getAttributeValue(psmlPlayer, "td:nth-of-type(1) a", "href");
-                            String transfermarktUrl = ScrapeHelper.getAttributeValue(psmlPlayer, "td:nth-of-type(3) a", "href");
+                            String transfermarktCoreUrl = ScrapeHelper.getAttributeValue(psmlPlayer, "td:nth-of-type(3) a", "href");
                             Thread.sleep(15000);
                             Player player = new Player();
-                            player.setTransfermarktUrl(transfermarktUrl);
+                            player.setTransfermarktCoreUrl(transfermarktCoreUrl);
                             player.setPesDbUrl(pesDbBaseUrl + e.getValue());
                             player.setPsmlUrl(PSML_BASE_URL + psmlQueryUrl);
                             playerService.create(player);

@@ -101,14 +101,14 @@ public class ImportPlayersFromPsmlTeams extends QuartzJobBean {
                             Document playerPage = ScrapeHelper.createDocument(scrapeLoader.loadAndGetPageContent(new URL(psmlUrl), psmlPageLoader));
                             String pesDbUrl = ScrapeHelper.getAttributeValue(playerPage, "table.innerTable tr:nth-of-type(2) td:nth-of-type(1) p a", "href");
                             String tmUrl = ScrapeHelper.getAttributeValue(playerPage, "table.innerTable tr:nth-of-type(2) td:nth-of-type(3) p a", "href");
-                            if (playerRepository.findByTransfermarktUrl(tmUrl) != null) {
+                            if (playerRepository.findByTransfermarktCoreUrl(tmUrl) != null) {
                                 log.debug("Player {} exists", playerData.getKey());
                                 playersExist++;
                                 continue;
                             }
                             Thread.sleep(15000);
                             Player player = new Player();
-                            player.setTransfermarktUrl(tmUrl);
+                            player.setTransfermarktCoreUrl(tmUrl);
                             player.setPesDbUrl(pesDbUrl);
                             player.setPsmlUrl(psmlUrl);
                             playerService.create(player);

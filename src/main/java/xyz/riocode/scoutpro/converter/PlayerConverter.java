@@ -23,19 +23,16 @@ public class PlayerConverter {
     private final TransferConverter transferConverter;
     private final MarketValueConverter marketValueConverter;
     private final CompetitionStatisticConverter competitionStatisticConverter;
-    private final PositionStatisticConverter positionStatisticConverter;
     private final GameStatisticConverter gameStatisticConverter;
     private final PsmlTransferConverter psmlTransferConverter;
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withLocale(Locale.US);
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
 
     public PlayerConverter(TransferConverter transferConverter, MarketValueConverter marketValueConverter,
-                           CompetitionStatisticConverter competitionStatisticConverter, PositionStatisticConverter positionStatisticConverter,
-                           GameStatisticConverter gameStatisticConverter, PsmlTransferConverter psmlTransferConverter) {
+                           CompetitionStatisticConverter competitionStatisticConverter, GameStatisticConverter gameStatisticConverter, PsmlTransferConverter psmlTransferConverter) {
         this.transferConverter = transferConverter;
         this.marketValueConverter = marketValueConverter;
         this.competitionStatisticConverter = competitionStatisticConverter;
-        this.positionStatisticConverter = positionStatisticConverter;
         this.gameStatisticConverter = gameStatisticConverter;
         this.psmlTransferConverter = psmlTransferConverter;
     }
@@ -49,7 +46,7 @@ public class PlayerConverter {
                 .map(AppUserPlayer::isMyPlayer)
                 .findFirst()
                 .get());
-        playerFormDTO.setTransfermarktUrl(player.getTransfermarktUrl());
+        playerFormDTO.setTransfermarktUrl(player.getTransfermarktCoreUrl());
         playerFormDTO.setWhoScoredUrl(player.getWhoScoredUrl());
         playerFormDTO.setPesDbUrl(player.getPesDbUrl());
         playerFormDTO.setPsmlUrl(player.getPsmlUrl());
@@ -66,7 +63,7 @@ public class PlayerConverter {
         appUserPlayer.setMyPlayer(playerDTO.isMyPlayer());
         appUserPlayer.setPlayer(player);
         player.getUsers().add(appUserPlayer);
-        player.setTransfermarktUrl(playerDTO.getTransfermarktUrl());
+        player.setTransfermarktCoreUrl(playerDTO.getTransfermarktUrl());
         player.setWhoScoredUrl(playerDTO.getWhoScoredUrl());
         player.setPesDbUrl(playerDTO.getPesDbUrl());
         player.setPsmlUrl(playerDTO.getPsmlUrl());

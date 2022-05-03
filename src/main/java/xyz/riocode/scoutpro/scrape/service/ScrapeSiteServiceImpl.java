@@ -52,7 +52,8 @@ public class ScrapeSiteServiceImpl implements ScrapeSiteService{
         Player player = players.get(RandomUtils.nextInt(0, players.size()));
         List<URL> urlsToCheck;
         try {
-            urlsToCheck = List.of(new URL(player.getTransfermarktUrl()),
+            urlsToCheck = List.of(new URL(player.getTransfermarktCoreUrl()),
+                                            new URL(player.getTransfermarktStatsUrl()),
                                             new URL(player.getPesDbUrl()),
                                             new URL(player.getPsmlUrl())
             );

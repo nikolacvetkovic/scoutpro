@@ -2,6 +2,7 @@ package xyz.riocode.scoutpro.bootstrap;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.model.*;
 import xyz.riocode.scoutpro.model.security.AppUserPlayer;
 import xyz.riocode.scoutpro.model.security.AppUserPlayerId;
@@ -17,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
-//@Component
+@Component
 public class DataLoader implements CommandLineRunner {
 
     private final PlayerRepository playerRepository;
@@ -57,7 +58,7 @@ public class DataLoader implements CommandLineRunner {
 
     private Player createPlayer(){
         Player player = new Player();
-        player.setTransfermarktUrl("https://www.transfermarkt.com/frenkie-de-jong/profil/spieler/326330");
+        player.setTransfermarktCoreUrl("https://www.transfermarkt.com/frenkie-de-jong/profil/spieler/326330");
         player.setWhoScoredUrl("https://www.whoscored.com/Players/279423/Show/Frenkie-de-Jong");
         player.setPesDbUrl("http://pesdb.net/pes2019/?id=108662");
         player.setPsmlUrl("http://psml.rs/?action=shwply&playerID=108662");
@@ -181,39 +182,27 @@ public class DataLoader implements CommandLineRunner {
 //        player.setPesDbLastCheck(LocalDateTime.now());
     }
 
-    private void saveAllStatisticsAndCharacteristics(Player player){
+    private void saveAllStatistics(Player player){
         Set<CompetitionStatistic> competitionStatistics = new HashSet<>();
         CompetitionStatistic cs1 = new CompetitionStatistic();
-        cs1.setCompetition("FIFA World Cup");
-        cs1.setStartedApps(6);
-        cs1.setSubApps(1);
-        cs1.setMins(645);
-        cs1.setGoals(1);
-        cs1.setAssists(1);
-        cs1.setYellowCards(2);
-        cs1.setRedCards(0);
-        cs1.setShotsPerGame(BigDecimal.valueOf(1.6));
-        cs1.setPassSuccess(BigDecimal.valueOf(88.8));
-        cs1.setAerialsWon(BigDecimal.valueOf(5.9));
-        cs1.setManOfTheMatch(1);
-        cs1.setRating(BigDecimal.valueOf(7.22));
+        cs1.setCompetitionName("FIFA World Cup");
+        cs1.setAppearances("6");
+        cs1.setGoals("1");
+        cs1.setAssists("1");
+        cs1.setYellowCards("2");
+        cs1.setRedCards("0");
+        cs1.setMinutesPlayed("645");
         cs1.setPlayer(player);
         competitionStatistics.add(cs1);
 
         CompetitionStatistic cs2 = new CompetitionStatistic();
-        cs2.setCompetition("Premier League");
-        cs2.setStartedApps(31);
-        cs2.setSubApps(0);
-        cs2.setMins(2599);
-        cs2.setGoals(3);
-        cs2.setAssists(0);
-        cs2.setYellowCards(6);
-        cs2.setRedCards(1);
-        cs2.setShotsPerGame(BigDecimal.valueOf(1.0));
-        cs2.setPassSuccess(BigDecimal.valueOf(85.6));
-        cs2.setAerialsWon(BigDecimal.valueOf(3.8));
-        cs2.setManOfTheMatch(2);
-        cs2.setRating(BigDecimal.valueOf(7.01));
+        cs2.setCompetitionName("Premier League");
+        cs2.setAppearances("31");
+        cs2.setGoals("3");
+        cs2.setAssists("0");
+        cs2.setYellowCards("6");
+        cs2.setRedCards("1");
+        cs2.setMinutesPlayed("2599");
         cs2.setPlayer(player);
         competitionStatistics.add(cs2);
 
@@ -221,61 +210,37 @@ public class DataLoader implements CommandLineRunner {
         player.setStatisticLastCheck(LocalDateTime.now());
     }
 
-    private void savePositionStatistics(Player player){
-        Set<PositionStatistic> positionStatistics = new HashSet<>();
-        PositionStatistic ps1 = new PositionStatistic();
-        ps1.setPosition("DC");
-        ps1.setApps(42);
-        ps1.setGoals(4);
-        ps1.setAssists(1);
-        ps1.setRating(BigDecimal.valueOf(7.04));
-        ps1.setPlayer(player);
-        positionStatistics.add(ps1);
-
-        PositionStatistic ps2 = new PositionStatistic();
-        ps2.setPosition("Sub");
-        ps2.setApps(1);
-        ps2.setGoals(0);
-        ps2.setAssists(0);
-        ps2.setRating(BigDecimal.valueOf(6.27));
-        ps2.setPlayer(player);
-        positionStatistics.add(ps2);
-
-        player.setPositionStatistics(positionStatistics);
-        player.setStatisticLastCheck(LocalDateTime.now());
-    }
-
     private void saveGameStatistics(Player player){
         Set<GameStatistic> gameStatistics = new HashSet<>();
         GameStatistic gs1 = new GameStatistic();
-        gs1.setCompetition("Premier League");
         gs1.setDateOfGame(LocalDate.of(2019, 3, 16));
-        gs1.setTeam1("Burnley");
-        gs1.setTeam2("Leicester");
+        gs1.setPlayerTeam("Burnley");
+        gs1.setOpponentTeam("Leicester");
+        gs1.setHomeAwayFlag("H");
         gs1.setResult("1:2");
-        gs1.setAssists(0);
-        gs1.setGoals(0);
-        gs1.setManOfTheMatch(false);
-        gs1.setMinutesPlayed(4);
-        gs1.setRating(BigDecimal.valueOf(5.24));
+        gs1.setPosition("AMF");
+        gs1.setGoals("0");
+        gs1.setAssists("0");
         gs1.setYellowCard(false);
         gs1.setRedCard(true);
+        gs1.setMinutesPlayed("4");
+        gs1.setNotPlayedReason(null);
         gs1.setPlayer(player);
         gameStatistics.add(gs1);
 
         GameStatistic gs2 = new GameStatistic();
-        gs2.setCompetition("EURO Qualification Grp. A");
         gs2.setDateOfGame(LocalDate.of(2019, 3, 22));
-        gs2.setTeam1("England");
-        gs2.setTeam2("Czech Republic");
+        gs2.setPlayerTeam("England");
+        gs2.setOpponentTeam("Czech Republic");
+        gs2.setHomeAwayFlag("A");
         gs2.setResult("5:0");
-        gs2.setAssists(0);
-        gs2.setGoals(0);
-        gs2.setManOfTheMatch(false);
-        gs2.setMinutesPlayed(90);
-        gs2.setRating(BigDecimal.valueOf(0.00));
+        gs2.setPosition("AMF");
+        gs2.setGoals("0");
+        gs2.setAssists("0");
         gs2.setYellowCard(false);
         gs2.setRedCard(false);
+        gs2.setMinutesPlayed("90");
+        gs2.setNotPlayedReason(null);
         gs2.setPlayer(player);
         gameStatistics.add(gs2);
 

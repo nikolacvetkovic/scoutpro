@@ -28,11 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-class TMScrapeTemplateImplTest {
+class TMCoreScrapeTemplateImplTest {
 
     Player player;
     Document document;
-    TMScrapeTemplateImpl tmScrapeTemplate;
+    TMCoreScrapeTemplateImpl tmScrapeTemplate;
     List<ScrapeField> scrapeFields;
     MarketValue marketValue;
     Transfer transfer;
@@ -102,7 +102,7 @@ class TMScrapeTemplateImplTest {
         transfer.setMarketValue("€48.00m");
 
         document = Jsoup.parse(file, "UTF-8", "https://pesdb.net");
-        tmScrapeTemplate = new TMScrapeTemplateImpl(scrapeFieldRepository);
+        tmScrapeTemplate = new TMCoreScrapeTemplateImpl(scrapeFieldRepository);
     }
 
     @Test
