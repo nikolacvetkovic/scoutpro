@@ -1,26 +1,36 @@
--- cleaning --
-drop SCHEMA if exists scout_pro_db;
-drop user if exists 'scout_pro'@'localhost';
-
--- creating --
-CREATE SCHEMA if not exists scout_pro_db;
-
--- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
+DROP SCHEMA IF EXISTS `scout_pro_db`;
+CREATE SCHEMA IF NOT EXISTS `scout_pro_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `scout_pro_db`;
+-- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
 --
 -- Host: localhost    Database: scout_pro_db
 -- ------------------------------------------------------
--- Server version	8.0.26
+-- Server version	8.0.28
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `app_privilege`
+--
+
+DROP TABLE IF EXISTS `app_privilege`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `app_privilege` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `privilege_name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `app_role`
@@ -31,8 +41,25 @@ DROP TABLE IF EXISTS `app_role`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `app_role` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(10) DEFAULT NULL,
+  `role_name` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `app_role_privilege`
+--
+
+DROP TABLE IF EXISTS `app_role_privilege`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `app_role_privilege` (
+  `app_role_id` bigint NOT NULL,
+  `app_privilege_id` bigint NOT NULL,
+  PRIMARY KEY (`app_role_id`,`app_privilege_id`),
+  KEY `app_privilege_id` (`app_privilege_id`),
+  CONSTRAINT `app_role_privilege_ibfk_1` FOREIGN KEY (`app_role_id`) REFERENCES `app_role` (`id`),
+  CONSTRAINT `app_role_privilege_ibfk_2` FOREIGN KEY (`app_privilege_id`) REFERENCES `app_privilege` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -46,10 +73,13 @@ DROP TABLE IF EXISTS `app_user`;
 CREATE TABLE `app_user` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `enabled` bit(1) DEFAULT NULL,
-  `pass` varchar(50) DEFAULT NULL,
+  `pass` varchar(150) DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL,
+  `non_locked` tinyint(1) DEFAULT NULL,
+  `non_expired` tinyint(1) DEFAULT NULL,
+  `credentials_non_expired` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,37 +118,6 @@ CREATE TABLE `app_user_role` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `app_privilege`
---
-
-DROP TABLE IF EXISTS `app_privilege`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `app_privilege` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `privilege_name` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `app_role_privilege`
---
-
-DROP TABLE IF EXISTS `app_role_privilege`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `app_role_privilege` (
-  `app_role_id` bigint NOT NULL,
-  `app_privilege_id` bigint NOT NULL,
-  PRIMARY KEY (`app_role_id`,`app_privilege_id`),
-  KEY `app_privilege_id` (`app_privilege_id`),
-  CONSTRAINT `app_role_privilege_ibfk_1` FOREIGN KEY (`app_role_id`) REFERENCES `app_role` (`id`),
-  CONSTRAINT `app_role_privilege_ibfk_2` FOREIGN KEY (`app_privilege_id`) REFERENCES `app_privilege` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `competition_statistic`
 --
 
@@ -127,24 +126,18 @@ DROP TABLE IF EXISTS `competition_statistic`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `competition_statistic` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `aerials_won` decimal(19,2) NOT NULL,
-  `assists` int NOT NULL,
-  `competition` varchar(100) NOT NULL,
-  `goals` int NOT NULL,
-  `man_of_the_match` int NOT NULL,
-  `mins` int NOT NULL,
-  `pass_success` decimal(19,2) NOT NULL,
-  `rating` decimal(19,2) NOT NULL,
-  `red_cards` int NOT NULL,
-  `shots_per_game` decimal(19,2) NOT NULL,
-  `started_apps` int NOT NULL,
-  `sub_apps` int NOT NULL,
-  `yellow_cards` int NOT NULL,
+  `competition_name` varchar(100) NOT NULL,
+  `appearances` varchar(5) NOT NULL,
+  `goals` varchar(5) NOT NULL,
+  `assists` varchar(5) NOT NULL,
+  `yellow_cards` varchar(5) NOT NULL,
+  `red_cards` varchar(5) NOT NULL,
+  `minutes_played` varchar(10) NOT NULL,
   `player_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK8b80shlrwtdtalxgill24625n` (`player_id`),
   CONSTRAINT `FK8b80shlrwtdtalxgill24625n` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,23 +149,45 @@ DROP TABLE IF EXISTS `game_statistic`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `game_statistic` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `assists` int NOT NULL,
-  `competition` varchar(50) NOT NULL,
   `date_of_game` date NOT NULL,
-  `goals` int NOT NULL,
-  `man_of_the_match` bit(1) NOT NULL,
-  `minutes_played` int NOT NULL,
-  `rating` decimal(19,2) NOT NULL,
-  `red_card` bit(1) NOT NULL,
-  `result` varchar(5) NOT NULL,
-  `team1` varchar(50) NOT NULL,
-  `team2` varchar(50) NOT NULL,
-  `yellow_card` bit(1) NOT NULL,
+  `player_team` varchar(50) NOT NULL,
+  `opponent_team` varchar(50) NOT NULL,
+  `home_away_flag` varchar(1) NOT NULL,
+  `result` varchar(30) NOT NULL,
+  `position` varchar(5) DEFAULT NULL,
+  `goals` varchar(5) DEFAULT NULL,
+  `assists` varchar(5) DEFAULT NULL,
+  `yellow_card` bit(1) DEFAULT NULL,
+  `red_card` bit(1) DEFAULT NULL,
+  `minutes_played` varchar(10) DEFAULT NULL,
+  `not_played_reason` varchar(100) DEFAULT NULL,
   `player_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKdefhiawlaja3qvm51rj6n1vsj` (`player_id`),
   CONSTRAINT `FKdefhiawlaja3qvm51rj6n1vsj` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `job_execution_history`
+--
+
+DROP TABLE IF EXISTS `job_execution_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `job_execution_history` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `start_time` datetime DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `job_id` bigint DEFAULT NULL,
+  `players_processed` bigint DEFAULT NULL,
+  `players_with_error` bigint DEFAULT NULL,
+  `error_stack_trace` text,
+  PRIMARY KEY (`id`),
+  KEY `FKm8lfva83fs5nhl51sxmqj693zz` (`job_id`),
+  CONSTRAINT `FKm8lfva83fs5nhl51sxmqj693zz` FOREIGN KEY (`job_id`) REFERENCES `job_info` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -196,7 +211,7 @@ CREATE TABLE `job_info` (
   `repeat_interval_in_seconds` int DEFAULT NULL,
   `start_time` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +230,7 @@ CREATE TABLE `market_value` (
   PRIMARY KEY (`id`),
   KEY `FKc8io3l9h33oifjjcpef32gxdg` (`player_id`),
   CONSTRAINT `FKc8io3l9h33oifjjcpef32gxdg` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50053 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -302,35 +317,16 @@ CREATE TABLE `player` (
   `pesdb_tight_possession` int NOT NULL,
   `transfer_last_check` datetime(6) DEFAULT NULL,
   `transfermarkt_position` varchar(40) NOT NULL,
-  `transfermarkt_url` varchar(255) DEFAULT NULL,
+  `transfermarkt_core_url` varchar(255) DEFAULT NULL,
   `pesdb_weak_foot_accuracy` int NOT NULL,
   `pesdb_weak_foot_usage` int DEFAULT NULL,
   `whoscored_weaknesses` varchar(255) DEFAULT NULL,
   `pesdb_week_condition` char(1) NOT NULL,
   `whoscored_url` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `position_statistic`
---
-
-DROP TABLE IF EXISTS `position_statistic`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `position_statistic` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `apps` int NOT NULL,
-  `assists` int NOT NULL,
-  `goals` int NOT NULL,
-  `position` varchar(3) NOT NULL,
-  `rating` decimal(19,2) NOT NULL,
-  `player_id` bigint NOT NULL,
+  `transfermarkt_stats_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FKc69sk62ywdsfw7cet0yq1pcco` (`player_id`),
-  CONSTRAINT `FKc69sk62ywdsfw7cet0yq1pcco` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `idx_player_name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1075 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -350,7 +346,7 @@ CREATE TABLE `psml_transfer` (
   PRIMARY KEY (`id`),
   KEY `FK5gs2nh408j6c9x189oxmxkrqp` (`player_id`),
   CONSTRAINT `FK5gs2nh408j6c9x189oxmxkrqp` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -571,6 +567,27 @@ CREATE TABLE `qrtz_triggers` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `scrape_error`
+--
+
+DROP TABLE IF EXISTS `scrape_error`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `scrape_error` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `scrape_time` datetime DEFAULT NULL,
+  `job_id` bigint DEFAULT NULL,
+  `player_id` bigint DEFAULT NULL,
+  `stack_trace` text,
+  PRIMARY KEY (`id`),
+  KEY `FKm8lfva83fs5nhl51sxmqj693zy` (`job_id`),
+  KEY `FKm8lfva83fs5nhl51sxmqj693zi` (`player_id`),
+  CONSTRAINT `FKm8lfva83fs5nhl51sxmqj693zi` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`),
+  CONSTRAINT `FKm8lfva83fs5nhl51sxmqj693zy` FOREIGN KEY (`job_id`) REFERENCES `job_info` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `scrape_field`
 --
 
@@ -585,7 +602,7 @@ CREATE TABLE `scrape_field` (
   PRIMARY KEY (`id`),
   KEY `FK1v1jd7u0srcorn5rlr1qeq5a8` (`scrape_site_id`),
   CONSTRAINT `FK1v1jd7u0srcorn5rlr1qeq5a8` FOREIGN KEY (`scrape_site_id`) REFERENCES `scrape_site` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -598,8 +615,13 @@ DROP TABLE IF EXISTS `scrape_site`;
 CREATE TABLE `scrape_site` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
+  `url_regex` varchar(250) DEFAULT NULL,
+  `loader_name` varchar(50) DEFAULT NULL,
+  `template_name` varchar(50) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  `last_checked` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -620,7 +642,7 @@ CREATE TABLE `transfer` (
   PRIMARY KEY (`id`),
   KEY `FKe98lusfudhauj501o005b2nma` (`player_id`),
   CONSTRAINT `FKe98lusfudhauj501o005b2nma` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8476 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -631,8 +653,3 @@ CREATE TABLE `transfer` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2021-09-03 12:44:07
-
-create user 'scout_pro'@'localhost' identified by 'scout_pro_user';
-grant select, insert, update, delete on scout_pro_db.* to 'scout_pro'@'localhost';
