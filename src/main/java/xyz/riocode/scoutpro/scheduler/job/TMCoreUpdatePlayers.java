@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
-public class TransfermarktUpdatePlayers extends QuartzJobBean {
+public class TMCoreUpdatePlayers extends QuartzJobBean {
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -42,7 +42,7 @@ public class TransfermarktUpdatePlayers extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        log.info("TransfermarktUpdatePlayers job start");
+        log.info("TMCoreUpdatePlayers job start");
         JobInfo jobInfo = jobInfoRepository.findByJobNameAndJobGroup(jobExecutionContext.getJobDetail().getKey().getName(),
                 jobExecutionContext.getJobDetail().getKey().getGroup());
         JobExecutionHistory jobExecutionHistory = JobExecutionHistory.builder()
@@ -86,7 +86,7 @@ public class TransfermarktUpdatePlayers extends QuartzJobBean {
                 }
             }
         }
-        log.info("TransfermarktUpdatePlayers job finish.");
+        log.info("TMCoreUpdatePlayers job finish.");
         log.debug("Unsuccessful scrape for players:");
         for(String[] s : playersWithError){
             log.debug(Arrays.toString(s));

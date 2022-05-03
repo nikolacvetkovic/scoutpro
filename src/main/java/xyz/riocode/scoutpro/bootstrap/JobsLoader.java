@@ -65,15 +65,6 @@ public class JobsLoader implements CommandLineRunner {
 //
 //        jobService.createJob(psmlUpdatePlayers);
 //
-//        JobInfo transfermarktUpdatePlayers = JobInfo.builder()
-//                .jobClass("xyz.riocode.scoutpro.scheduler.job.TransfermarktUpdatePlayers")
-//                .jobName("TransfermarktUpdatePlayers")
-//                .jobGroup("Transfermarkt")
-//                .customConfigData("{\"pageSize\":20}")
-//                .build();
-//
-//        jobService.createJob(transfermarktUpdatePlayers);
-
 //        JobInfo psmlTransferImport = JobInfo.builder()
 //                .jobClass("xyz.riocode.scoutpro.scheduler.job.PsmlTransferImport")
 //                .jobName("PsmlTransferImport")
@@ -91,5 +82,25 @@ public class JobsLoader implements CommandLineRunner {
 //                .build();
 //
 //        jobService.createJob(scrapeCheck);
+//
+//        JobInfo tmCoreUpdatePlayers = JobInfo.builder()
+//                .jobClass("xyz.riocode.scoutpro.scheduler.job.TMCoreUpdatePlayers")
+//                .jobName("TMCoreUpdatePlayers")
+//                .jobGroup("Transfermarkt")
+//                .customConfigData("{\"pageSize\":20,\n" +
+//                        " \"playerCheckInterval\": \"1MONTHS\"}")
+//                .build();
+//
+//        jobService.createJob(tmCoreUpdatePlayers);
+//
+//        JobInfo tmStatsUpdatePlayers = JobInfo.builder()
+//                .jobClass("xyz.riocode.scoutpro.scheduler.job.TMStatsUpdatePlayers")
+//                .jobName("TMStatsUpdatePlayers")
+//                .jobGroup("Transfermarkt")
+//                .customConfigData("{\"pageSize\":20,\n" +
+//                        " \"playerCheckInterval\": \"7DAYS\"}")
+//                .build();
+//
+//        jobService.createJob(tmStatsUpdatePlayers);
     }
 }
