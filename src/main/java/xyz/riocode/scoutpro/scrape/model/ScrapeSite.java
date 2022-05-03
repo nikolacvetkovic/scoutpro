@@ -27,8 +27,8 @@ public class ScrapeSite implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "hostname")
-    private String hostname;
+    @Column(name = "url_regex")
+    private String urlRegex;
 
     @Column(name = "loader_name")
     private String loaderName;

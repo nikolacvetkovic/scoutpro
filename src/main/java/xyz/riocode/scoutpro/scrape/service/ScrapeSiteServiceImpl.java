@@ -60,7 +60,7 @@ public class ScrapeSiteServiceImpl implements ScrapeSiteService{
             throw new RuntimeException(ex);
         }
         for (URL url : urlsToCheck) {
-            if (url.getHost().equals(foundedScrapeSite.getHostname())) {
+            if (url.toString().matches(foundedScrapeSite.getUrlRegex())) {
                 try {
                     scrapeEngine.work(url, player);
                     playerRepository.save(player);

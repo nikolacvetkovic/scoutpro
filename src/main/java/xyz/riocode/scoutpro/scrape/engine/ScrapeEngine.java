@@ -9,6 +9,7 @@ import xyz.riocode.scoutpro.scrape.repository.ScrapeSiteRepository;
 import xyz.riocode.scoutpro.scrape.template.ScrapeTemplate;
 
 import java.net.URL;
+import java.util.List;
 
 @Component
 public class ScrapeEngine {
@@ -24,17 +25,21 @@ public class ScrapeEngine {
     }
 
     public Player work(URL scrapeUrl, Player player) {
-        //todo - resolve what loader and template to use
-        ScrapeSite scrapeSite = scrapeSiteRepository.findByHostname(scrapeUrl.getHost());
-        String loaderName = scrapeSite.getLoaderName();
-        String templateName = scrapeSite.getTemplateName();
+        //resolve what loader and template to use
+        List<ScrapeSite> scrapeSites = scrapeSiteRepository.findAll();
+        ScrapeSite foundedScrapeSite = scrapeSites.stream()
+                .filter(scrapeSite -> scrapeUrl.toString().matches(scrapeSite.getUrlRegex()))
+                .findFirst()
+                .orElseThrow();
+        String loaderName = foundedScrapeSite.getLoaderName();
+        String templateName = foundedScrapeSite.getTemplateName();
         PageLoader pageLoader = beanFactory.getBean(loaderName, PageLoader.class);
         ScrapeTemplate template = beanFactory.getBean(templateName, ScrapeTemplate.class);
 
-        //todo - load page and get content
+        //load page and get content
         String pageContent = scrapeLoader.loadAndGetPageContent(scrapeUrl, pageLoader);
 
-        //todo - scrape
+        //scrape
         template.scrape(pageContent, player);
 
         return player;

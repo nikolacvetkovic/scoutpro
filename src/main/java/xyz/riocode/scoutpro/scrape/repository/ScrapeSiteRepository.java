@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface ScrapeSiteRepository extends JpaRepository<ScrapeSite, Long> {
 
-    ScrapeSite findByHostname(String hostname);
     @Query(value = "SELECT s FROM ScrapeSite s " +
             "WHERE s.lastChecked < :lastChecked")
     List<ScrapeSite> findByLastCheckedBefore(LocalDateTime lastChecked);
