@@ -78,6 +78,7 @@ public class TMCoreUpdatePlayers extends QuartzJobBean {
                         scrapeErrorRepository.save(ScrapeError.builder()
                                 .scrapeTime(LocalDateTime.now())
                                 .jobInfo(jobInfo)
+                                .player(player)
                                 .stackTrace(ExceptionUtils.getStackTrace(ex))
                                 .build());
                         playersWithError.add(new String[]{player.getId() + " - " + player.getName(), ex.getMessage()});

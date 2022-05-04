@@ -75,6 +75,7 @@ public class PsmlUpdatePlayers extends QuartzJobBean {
                         scrapeErrorRepository.save(ScrapeError.builder()
                                 .scrapeTime(LocalDateTime.now())
                                 .jobInfo(jobInfo)
+                                .player(player)
                                 .stackTrace(ExceptionUtils.getStackTrace(ex))
                                 .build());
                     }

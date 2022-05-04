@@ -94,6 +94,7 @@ public class PsmlTransferImport extends QuartzJobBean {
                             .scrapeTime(LocalDateTime.now())
                             .player(player)
                             .jobInfo(jobInfo)
+                            .player(player)
                             .stackTrace(ExceptionUtils.getStackTrace(ex))
                             .build());
                     log.error(ex.getMessage(), ex);
