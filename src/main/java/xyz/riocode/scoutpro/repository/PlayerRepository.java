@@ -136,8 +136,8 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     long countByPesDbLastCheckBefore(LocalDateTime pesDbLastCheck);
 
     @Query(value = "SELECT p FROM Player p " +
-            "LEFT JOIN FETCH p.transfers t " +
-            "LEFT JOIN FETCH p.marketValues mv " +
+            "LEFT JOIN FETCH p.competitionStatistics " +
+            "LEFT JOIN FETCH p.gameStatistics " +
             "WHERE p.statisticLastCheck < :statisticLastCheck",
             countQuery = "SELECT count(p) FROM Player p " +
                     "WHERE p.statisticLastCheck < :statisticLastCheck")
