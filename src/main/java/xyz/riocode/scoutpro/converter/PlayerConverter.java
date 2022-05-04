@@ -1,6 +1,5 @@
 package xyz.riocode.scoutpro.converter;
 
-import org.hibernate.LazyInitializationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.dto.*;
@@ -183,8 +182,8 @@ public class PlayerConverter {
         playerCompleteDTO.setPosition(player.getPrimaryPosition());
         playerCompleteDTO.setOverallRating(player.getOverallRating());
 
-        try {
-            player.getTransfers().size();
+
+        if (player.getUsers().stream().anyMatch(appUserPlayer -> appUserPlayer.getAppUser().getUsername().equals(username))) {
             playerCompleteDTO.setMyPlayer(player.getUsers().stream()
                     .filter(appUserPlayer -> appUserPlayer.getAppUser().getUsername().equals(username))
                     .map(AppUserPlayer::isMyPlayer)
@@ -202,13 +201,13 @@ public class PlayerConverter {
             playerCompleteDTO.setMarketValueDTOS(marketValueConverter.marketValuesToMarketValueDTOs(player.getMarketValues()));
             playerCompleteDTO.setMarketValueLastCheck(player.getMarketValueLastCheck() != null ? player.getMarketValueLastCheck().format(dateTimeFormatter) : " - ");
 
-//            playerCompleteDTO.setCompetitionStatisticDTOS(competitionStatisticConverter.competitionStatisticsToCompetitionStatisticDTOs(player.getCompetitionStatistics()));
-//            playerCompleteDTO.setPositionStatisticDTOS(positionStatisticConverter.positionStatisticsToPositionStatisticDTOs(player.getPositionStatistics()));
-//            playerCompleteDTO.setGameStatisticDTOS(gameStatisticConverter.gameStatisticsToGameStatisticDTOs(player.getGameStatistics()));
-//            playerCompleteDTO.setStatisticLastCheck(player.getStatisticLastCheck().format(dateTimeFormatter));
-//            playerCompleteDTO.setStrengths(player.getStrengths());
-//            playerCompleteDTO.setWeaknesses(player.getWeaknesses());
-//            playerCompleteDTO.setStylesOfPlay(player.getStylesOfPlay());
+            //            playerCompleteDTO.setCompetitionStatisticDTOS(competitionStatisticConverter.competitionStatisticsToCompetitionStatisticDTOs(player.getCompetitionStatistics()));
+            //            playerCompleteDTO.setPositionStatisticDTOS(positionStatisticConverter.positionStatisticsToPositionStatisticDTOs(player.getPositionStatistics()));
+            //            playerCompleteDTO.setGameStatisticDTOS(gameStatisticConverter.gameStatisticsToGameStatisticDTOs(player.getGameStatistics()));
+            //            playerCompleteDTO.setStatisticLastCheck(player.getStatisticLastCheck().format(dateTimeFormatter));
+            //            playerCompleteDTO.setStrengths(player.getStrengths());
+            //            playerCompleteDTO.setWeaknesses(player.getWeaknesses());
+            //            playerCompleteDTO.setStylesOfPlay(player.getStylesOfPlay());
 
             playerCompleteDTO.setPesDbPlayerName(player.getPesDbPlayerName());
             playerCompleteDTO.setPesDbTeamName(player.getPesDbTeamName());
@@ -255,8 +254,6 @@ public class PlayerConverter {
             playerCompleteDTO.setPsmlValue(player.getPsmlValue().toString());
             playerCompleteDTO.setPsmlTransferDTOS(psmlTransferConverter.psmlTransfersToPsmlTransferDTOs(player.getPsmlTransfers()));
             playerCompleteDTO.setPsmlLastCheck(player.getPsmlLastCheck() != null ? player.getPsmlLastCheck().format(dateTimeFormatter) : " - ");
-        } catch (LazyInitializationException exception){
-
         }
 
         return playerCompleteDTO;
