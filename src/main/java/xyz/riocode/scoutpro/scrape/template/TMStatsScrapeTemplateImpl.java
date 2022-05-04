@@ -64,6 +64,8 @@ public class TMStatsScrapeTemplateImpl implements ScrapeTemplate{
     protected void scrapeGamesStats(Document doc, Player player, Map<String, String> scrapeFields) {
         Elements gameElements = ScrapeHelper.getElements(doc, "div.large-8 div.box:nth-of-type(n+3) div.responsive-table tbody tr");
         for (Element e : gameElements) {
+            if (ScrapeHelper.getElements(e, "td").size() == 1) continue;
+
             LocalDate dateOfGame = LocalDate.parse(ScrapeHelper.getElementData(e, "tr td:nth-of-type(2)"),
                     DateTimeFormatter.ofPattern("M/d/yy").withLocale(Locale.US));
             String homeAwayFlag = ScrapeHelper.getElementData(e, "td:nth-of-type(3)");
