@@ -162,10 +162,10 @@ function setGameStats(){
         }
     });
 
-    var minutesPlayed = $('#gameStats td[data-attribute=minutesPlayed]').get();
-    minutesPlayed.forEach(function(m){
-        $(m).html($(m).text()+'"');
-    });
+//    var minutesPlayed = $('#gameStats td[data-attribute=minutesPlayed]').get();
+//    minutesPlayed.forEach(function(m){
+//        $(m).html($(m).text()+'"');
+//    });
 
 }
 function setListenerOnButtons(){

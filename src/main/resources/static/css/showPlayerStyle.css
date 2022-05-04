@@ -77,10 +77,11 @@ h6.separator{
     color: gold;
 }
 #gameStats tr td:last-child{
-    font-weight: bold;
-    color: rgb(168, 119, 50);
+    color: red;
 }
-#competitionStats tr:last-child{
+#gameStats td.home-away-flag{
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
     font-weight: bold;
 }
 #overlay {

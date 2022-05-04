@@ -201,13 +201,9 @@ public class PlayerConverter {
             playerCompleteDTO.setMarketValueDTOS(marketValueConverter.marketValuesToMarketValueDTOs(player.getMarketValues()));
             playerCompleteDTO.setMarketValueLastCheck(player.getMarketValueLastCheck() != null ? player.getMarketValueLastCheck().format(dateTimeFormatter) : " - ");
 
-            //            playerCompleteDTO.setCompetitionStatisticDTOS(competitionStatisticConverter.competitionStatisticsToCompetitionStatisticDTOs(player.getCompetitionStatistics()));
-            //            playerCompleteDTO.setPositionStatisticDTOS(positionStatisticConverter.positionStatisticsToPositionStatisticDTOs(player.getPositionStatistics()));
-            //            playerCompleteDTO.setGameStatisticDTOS(gameStatisticConverter.gameStatisticsToGameStatisticDTOs(player.getGameStatistics()));
-            //            playerCompleteDTO.setStatisticLastCheck(player.getStatisticLastCheck().format(dateTimeFormatter));
-            //            playerCompleteDTO.setStrengths(player.getStrengths());
-            //            playerCompleteDTO.setWeaknesses(player.getWeaknesses());
-            //            playerCompleteDTO.setStylesOfPlay(player.getStylesOfPlay());
+            playerCompleteDTO.setCompetitionStatisticDTOS(competitionStatisticConverter.competitionStatisticsToCompetitionStatisticDTOs(player.getCompetitionStatistics()));
+            playerCompleteDTO.setGameStatisticDTOS(gameStatisticConverter.gameStatisticsToGameStatisticDTOs(player.getGameStatistics()));
+            playerCompleteDTO.setStatisticLastCheck(player.getStatisticLastCheck().format(dateTimeFormatter));
 
             playerCompleteDTO.setPesDbPlayerName(player.getPesDbPlayerName());
             playerCompleteDTO.setPesDbTeamName(player.getPesDbTeamName());

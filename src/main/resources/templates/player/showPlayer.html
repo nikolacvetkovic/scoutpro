@@ -165,45 +165,29 @@
                         </table>
                     </div>
                     <div class="wrapper">
-                        <h6 class="separator">Competition Statistics <span style="font-size: 12px;" th:text="'(' +${player.statisticLastCheck}+ ')'"></span> <span class="badge badge-primary measure" th:data-url="'/ws/scrape/full/'+${player.id}">Measure Now!</span></h6>
-                        <table id="competitionStats" class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Competition</th>
-                                <th>Apps</th>
-                                <th>Mins</th>
-                                <th>Goals</th>
-                                <th>Assists</th>
-                                <th>Yel</th>
-                                <th>Red</th>
-                                <th>SpG</th>
-                                <th>PS</th>
-                                <th>Aerials Won</th>
-                                <th>MotM</th>
-                                <th>Rating</th>
-                            </tr>
-                            </thead>
+                        <h6 class="separator">Game Statistics <span style="font-size: 12px;" th:text="'(' +${player.statisticLastCheck}+ ')'"></span></h6>
+                        <table id="gameStats" class="table table-hover">
                             <tbody>
-                            <tr th:each="cs : ${player.competitionStatisticDTOS}">
-                                <td th:text="${cs.competition}"></td>
-                                <td th:text="${cs.startedApps} + '(' + ${cs.subApps} + ')'"></td>
-                                <td th:text="${cs.mins}"></td>
-                                <td th:text="${cs.goals}"></td>
-                                <td th:text="${cs.assists}"></td>
-                                <td th:text="${cs.yellowCards}"></td>
-                                <td th:text="${cs.redCards}"></td>
-                                <td th:text="${cs.shotsPerGame}"></td>
-                                <td th:text="${cs.passSuccess}"></td>
-                                <td th:text="${cs.aerialsWon}"></td>
-                                <td th:text="${cs.manOfTheMatch}"></td>
-                                <td th:text="${cs.rating}"></td>
+                            <tr th:each="gs : ${player.gameStatisticDTOS}">
+                                <td th:text="${gs.dateOfGame}"></td>
+                                <td class="home-away-flag" th:text="${gs.homeAwayFlag}"></td>
+                                <td th:text="${gs.playerTeam}"></td>
+                                <td th:text="${gs.result}"></td>
+                                <td th:text="${gs.opponentTeam}"></td>
+                                <td th:text="${gs.position}"></td>
+                                <td data-attribute="goals" th:text="${gs.goals}"></td>
+                                <td data-attribute="assists" th:text="${gs.assists}"></td>
+                                <td data-attribute="yellow" th:text="${gs.yellowCard}"></td>
+                                <td data-attribute="red" th:text="${gs.redCard}"></td>
+                                <td data-attribute="minutesPlayed" th:text="${gs.minutesPlayed}"></td>
+                                <td th:text="${gs.notPlayedReason}"></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div id="pesDb" class="" style="border-bottom: solid green 2px; padding: 10px 0px">
+                    <div id="pesDb" class="wrapper" style="padding-left: 0px;">
                         <h6 class="separator">PesDB Data <span id="pesDbLastCheck" style="font-size: 12px;" th:text="'(' +${player.pesDbLastCheck}+ ')'"></span> <span class="badge badge-primary measure" th:data-url="'/pesdb/scrape/'+${player.id}">Measure Now!</span></h6>
                         <div class="row" style="margin-left: 0px; margin-right: 0px;">
                             <div class="col-sm-4 col-lg-4" style="padding: 0">
@@ -412,24 +396,30 @@
                             </div>
                         </div>
                     </div>
-                    <div class="" style="border-bottom: solid green 2px; padding: 10px 0px;">
-                        <h6 class="separator">Game Statistics</h6>
-                        <table id="gameStats" class="table table-hover">
+                    <div class="wrapper">
+                        <h6 class="separator">Competition Statistics <span style="font-size: 12px;" th:text="'(' +${player.statisticLastCheck}+ ')'"></span> <span class="badge badge-primary measure" th:data-url="'/ws/scrape/full/'+${player.id}">Measure Now!</span></h6>
+                        <table id="competitionStats" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Competition</th>
+                                <th>Appearances</th>
+                                <th>Goals</th>
+                                <th>Assists</th>
+                                <th>Yel</th>
+                                <th>Red</th>
+                                <th>Minutes Played</th>
+                            </tr>
+                            </thead>
                             <tbody>
-                                <tr th:each="gs : ${player.gameStatisticDTOS}">
-                                    <td th:text="${gs.competition}"></td>
-                                    <td th:text="${gs.dateOfGame}"></td>
-                                    <td th:text="${gs.team1}"></td>
-                                    <td th:text="${gs.result}"></td>
-                                    <td th:text="${gs.team2}"></td>
-                                    <td data-attribute="motm" th:text="${gs.manOfTheMatch}"></td>
-                                    <td data-attribute="goals" th:text="${gs.goals}"></td>
-                                    <td data-attribute="assists" th:text="${gs.assists}"></td>
-                                    <td data-attribute="yellow" th:text="${gs.yellowCard}"></td>
-                                    <td data-attribute="red" th:text="${gs.redCard}"></td>
-                                    <td data-attribute="minutesPlayed" th:text="${gs.minutesPlayed}"></td>
-                                    <td th:text="${gs.rating}"></td>
-                                </tr>
+                            <tr th:each="cs : ${player.competitionStatisticDTOS}">
+                                <td th:text="${cs.competitionName}"></td>
+                                <td th:text="${cs.appearances}"></td>
+                                <td th:text="${cs.goals}"></td>
+                                <td th:text="${cs.assists}"></td>
+                                <td th:text="${cs.yellowCards}"></td>
+                                <td th:text="${cs.redCards}"></td>
+                                <td th:text="${cs.minutesPlayed}"></td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
