@@ -74,14 +74,4 @@ public class PlayerDashboardDTO {
     private String psmlLastTransferFee;
     private String psmlLastCheck;
 
-    private String totalStartedApps;
-    private String totalMins;
-    private String totalGoals;
-    private String totalAssists;
-    private String averageShotsPerGame;
-    private String averagePassSuccess;
-    private String averageAerialsWon;
-    private String totalManOfTheMatch;
-    private String averageRating;
-    private String statisticsLastCheck;
 }

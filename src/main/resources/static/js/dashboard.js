@@ -77,7 +77,6 @@ function setListenersOnRows(){
         fillTransfermarkInfo(this);
         fillPsmlInfo(this);
         fillPesDbInfo(this);
-        fillWhoScoredInfo(this);
         setBackgroundColorOnSelectedPlayer(this);
     });    
 }
@@ -154,22 +153,6 @@ function fillPesDbInfo(selectedPlayerTr){
     setColorOnPositions();
 }
 
-function fillWhoScoredInfo(selectedPlayerTr){
-    $('#ws tr td').empty();
-    $('#totalStartedApps').append($(selectedPlayerTr).find('td[id*=totalStartedApps]').text());
-    $('#totalMins').append($(selectedPlayerTr).find('td[id*=totalMins]').text());
-    $('#totalGoals').append($(selectedPlayerTr).find('td[id*=totalGoals]').text());
-    $('#totalAssists').append($(selectedPlayerTr).find('td[id*=totalAssists]').text());
-    $('#averageShotsPerGame').append($(selectedPlayerTr).find('td[id*=averageShotsPerGame]').text());
-    $('#averagePassSuccess').append($(selectedPlayerTr).find('td[id*=averagePassSuccess]').text());
-    $('#averageAerialsWon').append($(selectedPlayerTr).find('td[id*=averageAerialsWon]').text());
-    $('#totalManOfTheMatch').append($(selectedPlayerTr).find('td[id*=totalManOfTheMatch]').text());
-    $('#averageRating').append($(selectedPlayerTr).find('td[id*=averageRating]').text());
-    $('#statisticsLastCheck').empty();
-    $('#statisticsLastCheck').append('(' + $(selectedPlayerTr).find('td[id*=statisticsLastCheck]').text() + ')');
-    $('#ws span.measure').attr('data-url', '/ws/scrape/light/'+$(selectedPlayerTr).find('td[id*=id]').text());
-}
-
 function setColorOnRatings(){
     var ratings = document.querySelectorAll('#pesDb table tr td:nth-of-type(2)');
     ratings.forEach(function(rating){
@@ -207,7 +190,6 @@ function setUrlsOnMeasureBadges(selectedPlayer){
     $('#tm h6 span.badge').attr('data-url', '/player/transfermarkt/' + selectedPlayer.id);
     $('#psml h6 span.badge').attr('data-url', '/player/psml/' + selectedPlayer.id);
     $('#pesDb h6 span.badge').attr('data-url', '/player/pesdb/' + selectedPlayer.id);
-    $('#ws h6 span.badge').attr('data-url', '/player/whoscored/' + selectedPlayer.id);
 }
 
 function setListenersOnBadges(){
@@ -245,12 +227,6 @@ function setListenersOnBadges(){
                             if(updatedPlayer.id === currentlySelectedPlayerId){
                                 fillPesDbInfo(updatedPlayer);
                             }                            
-                            break;
-                        case 'whoscored':
-                            updateDataScript(updatedPlayer, updateDataScriptWhoScored);
-                            if(updatedPlayer.id === currentlySelectedPlayerId){
-                                fillWhoScoredInfo(updatedPlayer);
-                            }  
                             break;
                     }
                     removeLoadingSpinner();
@@ -435,9 +411,6 @@ function setLoadingSpinner(site){
         case 'pesdb':
             createSpinnerPesDb();
         break;
-        case 'whoscored':
-            createSpinnerWhoScored();
-        break;
     }
 }
 
@@ -465,23 +438,10 @@ function createSpinnerPesDb(){
         }).addClass('spinner').append($('<img>').attr('src', '/Gear-3.6s-200px.gif').css({'max-height': '100%', 'max-width': '100%', 'margin': '12% auto', 'display': 'block'})));
 }
 
-function createSpinnerWhoScored(){
-    $('#ws .row').append($('<div>').css({
-        'height': '100%',
-        'width': '100%',
-        'position' : 'absolute',
-        'z-index': 10,
-        'top': 0,
-        'left': '0',
-        'background-color': 'rgba(150, 150, 150, 0.8)'
-        }).addClass('spinner').append($('<img>').attr('src', '/Gear-3.6s-200px.gif').css({'height': '80%', 'display': 'block', 'margin': '1em auto'})));
-}
-
 function removeLoadingSpinner(){
     $('#tm .row .spinner').remove();
     $('#psml .row .spinner').remove();
     $('#pesDb .row .spinner').remove();
-    $('#ws .row .spinner').remove();
 }
 
 function sortPlayerTableByNumber(orderBy, order){

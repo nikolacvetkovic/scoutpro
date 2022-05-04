@@ -51,7 +51,7 @@ hr {
 p {
     margin: 0;
 }
-#pesDb table tr td, #ws table tr td, #tm table tr td, #psml table tr td {
+#pesDb table tr td, #tm table tr td, #psml table tr td {
     padding: 0;
 }
 span.badge {
@@ -75,9 +75,6 @@ span.lastMeasured {
 }
 .fa-arrow-circle-up {
     color: green;
-}
-#ws th{
-    font-size: 12px;
 }
 #pesDb tr td:nth-of-type(1){
     width: 70%;

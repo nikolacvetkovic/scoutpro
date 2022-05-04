@@ -148,22 +148,6 @@ public class PlayerConverter {
             }
             playerDashboardDTO.setPsmlLastCheck(player.getPsmlLastCheck().format(dateTimeFormatter));
 
-//            Optional<CompetitionStatistic> competitionStatisticOptional = player.getCompetitionStatistics().stream().findFirst();
-//            if (competitionStatisticOptional.isPresent()) {
-//                CompetitionStatistic competitionStatistic = competitionStatisticOptional.get();
-//                playerDashboardDTO.setTotalStartedApps(String.valueOf(competitionStatistic.getStartedApps()));
-//                playerDashboardDTO.setTotalMins(String.valueOf(competitionStatistic.getMins()));
-//                playerDashboardDTO.setTotalAssists(String.valueOf(competitionStatistic.getAssists()));
-//                playerDashboardDTO.setTotalGoals(String.valueOf(competitionStatistic.getGoals()));
-//                playerDashboardDTO.setTotalAssists(String.valueOf(competitionStatistic.getAssists()));
-//                playerDashboardDTO.setAverageShotsPerGame(competitionStatistic.getShotsPerGame().toString());
-//                playerDashboardDTO.setAveragePassSuccess(competitionStatistic.getPassSuccess().toString());
-//                playerDashboardDTO.setAverageAerialsWon(competitionStatistic.getAerialsWon().toString());
-//                playerDashboardDTO.setTotalManOfTheMatch(String.valueOf(competitionStatistic.getManOfTheMatch()));
-//                playerDashboardDTO.setAverageRating(competitionStatistic.getRating().toString());
-//                playerDashboardDTO.setStatisticsLastCheck(player.getStatisticLastCheck().format(dateTimeFormatter));
-//            }
-
             playerDashboardDTOS.add(playerDashboardDTO);
         }
         dashboardDTO.setPlayers(playerDashboardDTOS);

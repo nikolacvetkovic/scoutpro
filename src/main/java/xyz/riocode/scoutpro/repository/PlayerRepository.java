@@ -14,7 +14,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Query(value = "SELECT p FROM Player p " +
                 " LEFT JOIN FETCH p.psmlTransfers " +
                 " LEFT JOIN FETCH p.marketValues " +
-                " LEFT JOIN FETCH p.competitionStatistics " +
                 " JOIN FETCH p.users up " +
                 " JOIN FETCH up.appUser u " +
                 " WHERE u.username = :username",
