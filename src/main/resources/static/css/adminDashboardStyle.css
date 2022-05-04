@@ -17,7 +17,7 @@ table.table-scroll thead, table.table-scroll tbody tr {
     table-layout: fixed;
 }
 table.table-scroll tbody {
-    height: 10rem;
+    height: 20rem;
     table-layout: fixed;
     overflow: auto;
     display: block;
