@@ -290,7 +290,7 @@ public class Player implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<CompetitionStatistic> competitionStatistics = new HashSet<>();
 
-    @OrderBy("dateOfGame")
+    @OrderBy("dateOfGame DESC")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<GameStatistic> gameStatistics = new HashSet<>();
 
