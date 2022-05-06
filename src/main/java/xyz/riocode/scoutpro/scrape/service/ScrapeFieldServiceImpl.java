@@ -1,7 +1,6 @@
 package xyz.riocode.scoutpro.scrape.service;
 
 import org.springframework.stereotype.Service;
-import xyz.riocode.scoutpro.converter.ScrapeFieldConverter;
 import xyz.riocode.scoutpro.exception.ScrapeFieldNotFound;
 import xyz.riocode.scoutpro.scrape.model.ScrapeField;
 import xyz.riocode.scoutpro.scrape.repository.ScrapeFieldRepository;
@@ -17,7 +16,7 @@ public class ScrapeFieldServiceImpl implements ScrapeFieldService {
 
     private final ScrapeFieldRepository scrapeFieldRepository;
 
-    public ScrapeFieldServiceImpl(ScrapeFieldRepository scrapeFieldRepository, ScrapeFieldConverter scrapeFieldConverter) {
+    public ScrapeFieldServiceImpl(ScrapeFieldRepository scrapeFieldRepository) {
         this.scrapeFieldRepository = scrapeFieldRepository;
     }
 
