@@ -17,9 +17,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -40,30 +40,9 @@ class TMCoreScrapeTemplateImplTest {
     @Mock
     ScrapeFieldRepository scrapeFieldRepository;
 
-    private Map<String, String> getScrapeFieldsMap() {
-        Map<String, String> scrapeFields = new HashMap<>();
-        scrapeFields.put("playerName", "h1[itemprop=name]");
-        scrapeFields.put("clubTeam", "div.info-table span:contains(Current club)+span a:nth-of-type(2)");
-        scrapeFields.put("contractUntil", "div.info-table span:contains(Contract expires)+span");
-        scrapeFields.put("nationality", "span[itemprop=nationality]");
-        scrapeFields.put("position", "div.info-table span:contains(Position)+span");
-        scrapeFields.put("birthDate", "span[itemprop=birthDate]");
-        scrapeFields.put("age", "div.info-table span:matches(Age:)+span");
-        scrapeFields.put("nationalTeam", "div.info-table span:contains(Citizenship)+span img");
-        scrapeFields.put("transferTable", "div.responsive-table tr.zeile-transfer");
-        scrapeFields.put("dateOfTransfer", "td:nth-of-type(2)");
-        scrapeFields.put("fromTeam_1st", "td:nth-of-type(5) a");
-        scrapeFields.put("fromTeam_2nd", "td:nth-of-type(5)");
-        scrapeFields.put("toTeam_1st", "td:nth-of-type(8) a");
-        scrapeFields.put("toTeam_2nd", "td:nth-of-type(8)");
-        scrapeFields.put("marketValue", "td.zelle-mw");
-        scrapeFields.put("transferFee", "td.zelle-abloese");
-        return scrapeFields;
-    }
-
     private List<ScrapeField> getScrapeFieldsList() {
         List<ScrapeField> scrapeFields = new ArrayList<>();
-        scrapeFields.add(ScrapeField.builder().name("playerName").selector("h1[itemprop=name]").build());
+        scrapeFields.add(ScrapeField.builder().name("playerName").selector("div#main header.data-header div.data-header__profile-container img").build());
         scrapeFields.add(ScrapeField.builder().name("clubTeam").selector("div.info-table span:contains(Current club)+span a:nth-of-type(2)").build());
         scrapeFields.add(ScrapeField.builder().name("contractUntil").selector("div.info-table span:contains(Contract expires)+span").build());
         scrapeFields.add(ScrapeField.builder().name("nationality").selector("span[itemprop=nationality]").build());
@@ -71,15 +50,19 @@ class TMCoreScrapeTemplateImplTest {
         scrapeFields.add(ScrapeField.builder().name("birthDate").selector("span[itemprop=birthDate]").build());
         scrapeFields.add(ScrapeField.builder().name("age").selector("div.info-table span:matches(Age:)+span").build());
         scrapeFields.add(ScrapeField.builder().name("nationalTeam").selector("div.info-table span:contains(Citizenship)+span img").build());
-        scrapeFields.add(ScrapeField.builder().name("transferTable").selector("div.responsive-table tr.zeile-transfer").build());
-        scrapeFields.add(ScrapeField.builder().name("dateOfTransfer").selector("td:nth-of-type(2)").build());
-        scrapeFields.add(ScrapeField.builder().name("fromTeam_1st").selector("td:nth-of-type(5) a").build());
+        scrapeFields.add(ScrapeField.builder().name("transferTable").selector("div[data-viewport=Transferhistorie] div[class=tm-player-transfer-history-grid]").build());
+        scrapeFields.add(ScrapeField.builder().name("dateOfTransfer").selector("div.tm-player-transfer-history-grid__date").build());
+        scrapeFields.add(ScrapeField.builder().name("fromTeam_1st").selector("div.tm-player-transfer-history-grid__old-club a:nth-of-type(2)").build());
         scrapeFields.add(ScrapeField.builder().name("fromTeam_2nd").selector("td:nth-of-type(5)").build());
-        scrapeFields.add(ScrapeField.builder().name("toTeam_1st").selector("td:nth-of-type(8) a").build());
+        scrapeFields.add(ScrapeField.builder().name("toTeam_1st").selector("div.tm-player-transfer-history-grid__new-club a:nth-of-type(2)").build());
         scrapeFields.add(ScrapeField.builder().name("toTeam_2nd").selector("td:nth-of-type(8)").build());
-        scrapeFields.add(ScrapeField.builder().name("marketValue").selector("td.zelle-mw").build());
-        scrapeFields.add(ScrapeField.builder().name("transferFee").selector("td.zelle-abloese").build());
+        scrapeFields.add(ScrapeField.builder().name("marketValue").selector("div.tm-player-transfer-history-grid__market-value").build());
+        scrapeFields.add(ScrapeField.builder().name("transferFee").selector("div.tm-player-transfer-history-grid__fee").build());
         return scrapeFields;
+    }
+
+    private Map<String, String> getScrapeFieldsMap() {
+        return this.scrapeFields.stream().collect(Collectors.toMap(ScrapeField::getName, ScrapeField::getSelector));
     }
 
     @BeforeEach
@@ -97,7 +80,7 @@ class TMCoreScrapeTemplateImplTest {
         transfer = new Transfer();
         transfer.setFromTeam("Fiorentina");
         transfer.setToTeam("Juventus");
-        transfer.setTransferFee("Loan fee: €10.00m");
+        transfer.setTransferFee("Loan fee: €12.60m");
         transfer.setDateOfTransfer(LocalDate.of(2020, 10, 5));
         transfer.setMarketValue("€48.00m");
 
@@ -113,15 +96,15 @@ class TMCoreScrapeTemplateImplTest {
 
         assertEquals("Federico Chiesa", player.getName());
         assertEquals("Juventus FC", player.getClubTeam());
-        assertEquals("Jun 30, 2022", player.getContractUntil());
+        assertEquals("Jun 30, 2025", player.getContractUntil());
         assertEquals("Italy", player.getNationality());
         assertEquals("attack - Right Winger", player.getTransfermarktPosition());
         assertEquals("Oct 25, 1997 ", player.getDateOfBirth());
-        assertEquals(23, player.getAge());
+        assertEquals(24, player.getAge());
         assertEquals("Italy", player.getNationalTeam());
-        assertThat(player.getMarketValues(), hasSize(21));
+        assertThat(player.getMarketValues(), hasSize(22));
         assertThat(player.getMarketValues(), hasItem(marketValue));
-        assertThat(player.getTransfers(), hasSize(4));
+        assertThat(player.getTransfers(), hasSize(5));
         assertThat(player.getTransfers(), hasItem(transfer));
     }
 
@@ -131,11 +114,11 @@ class TMCoreScrapeTemplateImplTest {
 
         assertEquals("Federico Chiesa", player.getName());
         assertEquals("Juventus FC", player.getClubTeam());
-        assertEquals("Jun 30, 2022", player.getContractUntil());
+        assertEquals("Jun 30, 2025", player.getContractUntil());
         assertEquals("Italy", player.getNationality());
         assertEquals("attack - Right Winger", player.getTransfermarktPosition());
         assertEquals("Oct 25, 1997 ", player.getDateOfBirth());
-        assertEquals(23, player.getAge());
+        assertEquals(24, player.getAge());
         assertEquals("Italy", player.getNationalTeam());
     }
 
@@ -143,7 +126,7 @@ class TMCoreScrapeTemplateImplTest {
     void scrapeMarketValues() {
         tmScrapeTemplate.scrapeMarketValues(document, player, getScrapeFieldsMap());
 
-        assertThat(player.getMarketValues(), hasSize(21));
+        assertThat(player.getMarketValues(), hasSize(22));
         assertThat(player.getMarketValues(), hasItem(marketValue));
     }
 
@@ -151,7 +134,7 @@ class TMCoreScrapeTemplateImplTest {
     void scrapeTransfers() {
         tmScrapeTemplate.scrapeTransfers(document, player, getScrapeFieldsMap());
 
-        assertThat(player.getTransfers(), hasSize(4));
+        assertThat(player.getTransfers(), hasSize(5));
         assertThat(player.getTransfers(), hasItem(transfer));
     }
 
@@ -172,4 +155,6 @@ class TMCoreScrapeTemplateImplTest {
         assertThat(player.getTransfers(), hasSize(6));
         assertThat(player.getTransfers(), hasItem(transfer));
     }
+
+
 }
