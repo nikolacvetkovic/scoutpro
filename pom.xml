@@ -27,7 +27,6 @@
     <font-awesome.version>5.7.2</font-awesome.version>
     <chartjs.version>2.8.0</chartjs.version>
     <postgres-driver.version>42.2.5</postgres-driver.version>
-    <mockito.version>2.27.0</mockito.version>
     <selenium.version>4.1.1</selenium.version>
   </properties>
   
@@ -176,6 +175,17 @@
       <dependency>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-test</artifactId>
+          <exclusions>
+              <exclusion>
+                  <groupId>org.mockito</groupId>
+                  <artifactId>mockito-core</artifactId>
+              </exclusion>
+          </exclusions>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-inline</artifactId>
           <scope>test</scope>
       </dependency>
   </dependencies>
