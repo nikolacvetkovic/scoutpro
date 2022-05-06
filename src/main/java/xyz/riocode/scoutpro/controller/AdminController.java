@@ -31,33 +31,23 @@ public class AdminController {
     private final ScrapeErrorService scrapeErrorService;
     private final JobExecutionHistoryService jobExecutionHistoryService;
     private final JobService jobService;
-    private final ScrapeSiteConverter scrapeSiteConverter;
-    private final ScrapeErrorConverter scrapeErrorConverter;
-    private final JobExecutionHistoryConverter jobExecutionHistoryConverter;
-    private final JobConverter jobConverter;
 
-    public AdminController(ScrapeSiteService scrapeSiteService, ScrapeSiteConverter scrapeSiteConverter,
-                           ScrapeErrorService scrapeErrorService, JobExecutionHistoryService jobExecutionHistoryService,
-                           JobService jobService, ScrapeErrorConverter scrapeErrorConverter,
-                           JobExecutionHistoryConverter jobExecutionHistoryConverter, JobConverter jobConverter) {
+    public AdminController(ScrapeSiteService scrapeSiteService, ScrapeErrorService scrapeErrorService,
+                           JobExecutionHistoryService jobExecutionHistoryService, JobService jobService) {
         this.scrapeSiteService = scrapeSiteService;
-        this.scrapeSiteConverter = scrapeSiteConverter;
         this.scrapeErrorService = scrapeErrorService;
         this.jobExecutionHistoryService = jobExecutionHistoryService;
         this.jobService = jobService;
-        this.scrapeErrorConverter = scrapeErrorConverter;
-        this.jobExecutionHistoryConverter = jobExecutionHistoryConverter;
-        this.jobConverter = jobConverter;
     }
 
     @AdminDashboardPrivilege
     @GetMapping("/dashboard")
     public String showAdminDashboard(ModelMap modelMap){
-        List<ScrapeSiteDTO> scrapeSiteDTOs = scrapeSiteConverter.scrapeSitesToScrapeSiteDTOs(
+        List<ScrapeSiteDTO> scrapeSiteDTOs = ScrapeSiteConverter.scrapeSitesToScrapeSiteDTOs(
                                                                                     scrapeSiteService.getAll());
-        List<ScrapeErrorDTO> scrapeErrorsDTOs = scrapeErrorConverter.scrapeErrorToScrapeErrorDTO(
+        List<ScrapeErrorDTO> scrapeErrorsDTOs = ScrapeErrorConverter.scrapeErrorToScrapeErrorDTO(
                                                                                     scrapeErrorService.getAll());
-        List<JobExecutionHistoryDTO> jobExecutionHistoryDTOs = jobExecutionHistoryConverter.jobExecutionToJobExecutionDTO(
+        List<JobExecutionHistoryDTO> jobExecutionHistoryDTOs = JobExecutionHistoryConverter.jobExecutionToJobExecutionDTO(
                                                                                     jobExecutionHistoryService.getAll());
 
         modelMap.addAttribute("scrapeSites", scrapeSiteDTOs);
@@ -69,7 +59,7 @@ public class AdminController {
     @ScrapeSiteReadPrivilege
     @GetMapping("/scrapefields")
     public String showScrapeFields(ModelMap modelMap){
-        List<ScrapeSiteDTO> scrapeSiteDTOs = scrapeSiteConverter.scrapeSitesToScrapeSiteDTOs(scrapeSiteService.getAll());
+        List<ScrapeSiteDTO> scrapeSiteDTOs = ScrapeSiteConverter.scrapeSitesToScrapeSiteDTOs(scrapeSiteService.getAll());
         modelMap.addAttribute("scrapeSites", scrapeSiteDTOs);
         return "admin/scrapeFields";
     }
@@ -77,7 +67,7 @@ public class AdminController {
     @JobReadPrivilege
     @GetMapping("/jobs")
     public String showJobDashboard(ModelMap modelMap) {
-        List<JobDTO> jobDTOs = jobConverter.jobsToJobDTOs(jobService.getAll());
+        List<JobDTO> jobDTOs = JobConverter.jobsToJobDTOs(jobService.getAll());
         modelMap.addAttribute("jobs", jobDTOs);
         return "admin/jobDashboard";
     }

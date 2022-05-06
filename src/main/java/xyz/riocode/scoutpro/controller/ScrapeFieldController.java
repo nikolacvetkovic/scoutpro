@@ -18,18 +18,16 @@ import java.util.List;
 public class ScrapeFieldController {
 
     private final ScrapeFieldService scrapeFieldService;
-    private final ScrapeFieldConverter scrapeFieldConverter;
 
-    public ScrapeFieldController(ScrapeFieldService scrapeFieldService, ScrapeFieldConverter scrapeFieldConverter) {
+    public ScrapeFieldController(ScrapeFieldService scrapeFieldService) {
         this.scrapeFieldService = scrapeFieldService;
-        this.scrapeFieldConverter = scrapeFieldConverter;
     }
 
     @ScrapeFieldReadPrivilege
     @GetMapping(value = "/{scrapeSiteId}/site",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ScrapeFieldDTO>> getScrapeFieldsByScrapeSite(@PathVariable Long scrapeSiteId) {
-        return new ResponseEntity<>(scrapeFieldConverter.scrapeFieldsToScrapeFieldDTOs(
+        return new ResponseEntity<>(ScrapeFieldConverter.scrapeFieldsToScrapeFieldDTOs(
                 scrapeFieldService.getByScrapeSite(scrapeSiteId)), HttpStatus.OK);
     }
 
@@ -40,8 +38,8 @@ public class ScrapeFieldController {
     public ResponseEntity<ScrapeFieldDTO> updateScrapeField(@PathVariable Long scrapeFieldId,
                                                             @RequestBody ScrapeFieldDTO scrapeFieldDTO){
 
-        return new ResponseEntity<>(scrapeFieldConverter.scrapeFieldToScrapeFieldDTO(
+        return new ResponseEntity<>(ScrapeFieldConverter.scrapeFieldToScrapeFieldDTO(
                                     scrapeFieldService.update(
-                                        scrapeFieldConverter.scrapeFieldDTOToScrapeField(scrapeFieldDTO))), HttpStatus.OK);
+                                        ScrapeFieldConverter.scrapeFieldDTOToScrapeField(scrapeFieldDTO))), HttpStatus.OK);
     }
 }

@@ -15,23 +15,21 @@ import java.util.List;
 public class JobController {
 
     private final JobService jobService;
-    private final JobConverter jobConverter;
 
-    public JobController(JobService jobService, JobConverter jobConverter) {
+    public JobController(JobService jobService) {
         this.jobService = jobService;
-        this.jobConverter = jobConverter;
     }
     @JobReadPrivilege
     @GetMapping
     public List<JobDTO> getAllJobs(){
-        return jobConverter.jobsToJobDTOs(jobService.getAll());
+        return JobConverter.jobsToJobDTOs(jobService.getAll());
     }
 
     @JobUpdatePrivilege
     @PutMapping("/{jobId}/update")
     public JobDTO updateJob(@PathVariable Long jobId, @Valid @RequestBody JobDTO job){
-        return jobConverter.jobToJobDTO(
-                    jobService.updateJob(jobId, jobConverter.jobDTOToJobInfo(job)));
+        return JobConverter.jobToJobDTO(
+                    jobService.updateJob(jobId, JobConverter.jobDTOToJobInfo(job)));
     }
 
     @JobStartPrivilege
@@ -44,30 +42,30 @@ public class JobController {
     @JobSchedulePrivilege
     @PutMapping("/{jobId}/schedule")
     public JobDTO scheduleJob(@PathVariable Long jobId, @RequestBody JobDTO job){
-        return jobConverter.jobToJobDTO(jobService.scheduleJob(jobId, jobConverter.jobDTOToJobInfo(job)));
+        return JobConverter.jobToJobDTO(jobService.scheduleJob(jobId, JobConverter.jobDTOToJobInfo(job)));
     }
 
     @JobSchedulePrivilege
     @PutMapping("/{jobId}/reschedule")
     public JobDTO rescheduleJob(@PathVariable Long jobId, @RequestBody JobDTO job){
-        return jobConverter.jobToJobDTO(jobService.rescheduleJob(jobId, jobConverter.jobDTOToJobInfo(job)));
+        return JobConverter.jobToJobDTO(jobService.rescheduleJob(jobId, JobConverter.jobDTOToJobInfo(job)));
     }
 
     @JobUnschedulePrivilege
     @PutMapping("/{jobId}/unschedule")
     public JobDTO unscheduleJob(@PathVariable Long jobId){
-        return jobConverter.jobToJobDTO(jobService.unscheduleJob(jobId));
+        return JobConverter.jobToJobDTO(jobService.unscheduleJob(jobId));
     }
 
     @JobPausePrivilege
     @PutMapping("/{jobId}/pause")
     public JobDTO pauseJob(@PathVariable Long jobId){
-        return jobConverter.jobToJobDTO(jobService.pauseJob(jobId));
+        return JobConverter.jobToJobDTO(jobService.pauseJob(jobId));
     }
 
     @JobResumePrivilege
     @PutMapping("/{jobId}/resume")
     public JobDTO resumeJob(@PathVariable Long jobId){
-        return jobConverter.jobToJobDTO(jobService.resumeJob(jobId));
+        return JobConverter.jobToJobDTO(jobService.resumeJob(jobId));
     }
 }

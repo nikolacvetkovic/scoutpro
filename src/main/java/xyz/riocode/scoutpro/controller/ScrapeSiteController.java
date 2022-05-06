@@ -16,17 +16,15 @@ import xyz.riocode.scoutpro.security.privilege.ScrapeSiteCheckPrivilege;
 public class ScrapeSiteController {
 
     private final ScrapeSiteService scrapeSiteService;
-    private final ScrapeSiteConverter scrapeSiteConverter;
 
-    public ScrapeSiteController(ScrapeSiteService scrapeSiteService, ScrapeSiteConverter scrapeSiteConverter) {
+    public ScrapeSiteController(ScrapeSiteService scrapeSiteService) {
         this.scrapeSiteService = scrapeSiteService;
-        this.scrapeSiteConverter = scrapeSiteConverter;
     }
 
     @ScrapeSiteCheckPrivilege
     @GetMapping(value = "/{scrapeSiteId}/check")
     public ResponseEntity<ScrapeSiteDTO> checkScrapeStatus(@PathVariable Long scrapeSiteId) {
-        return new ResponseEntity<ScrapeSiteDTO>(scrapeSiteConverter.scrapeSiteToScrapeSiteDTO(
+        return new ResponseEntity<ScrapeSiteDTO>(ScrapeSiteConverter.scrapeSiteToScrapeSiteDTO(
                                                         scrapeSiteService.checkScrape(scrapeSiteId)), HttpStatus.OK);
     }
 }
