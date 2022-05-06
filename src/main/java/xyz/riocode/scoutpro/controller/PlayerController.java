@@ -28,11 +28,9 @@ import java.util.List;
 public class PlayerController {
     
     private final PlayerService playerService;
-    private final PlayerConverter playerConverter;
 
-    public PlayerController(PlayerService playerService, PlayerConverter playerConverter) {
+    public PlayerController(PlayerService playerService) {
         this.playerService = playerService;
-        this.playerConverter = playerConverter;
     }
 
     @PlayerCreatePrivilege
@@ -55,9 +53,9 @@ public class PlayerController {
             modelMap.addAttribute("player", player);
             return "player/playerForm";
         }
-        PlayerCompleteDTO createdPlayer = playerConverter.playerToPlayerCompleteDTO(
+        PlayerCompleteDTO createdPlayer = PlayerConverter.playerToPlayerCompleteDTO(
                                             playerService.createAndAddToUser(
-                                                playerConverter.playerFormDTOToPlayer(player), principal.getName()),
+                                                PlayerConverter.playerFormDTOToPlayer(player), principal.getName()),
                                                 principal.getName());
 
         return "redirect:/player/"+ createdPlayer.getId() +"/show";
@@ -83,7 +81,7 @@ public class PlayerController {
     public String show(@PathVariable Long playerId,
                        ModelMap modelMap,
                        Principal principal){
-        PlayerCompleteDTO foundPlayer = playerConverter.playerToPlayerCompleteDTO(
+        PlayerCompleteDTO foundPlayer = PlayerConverter.playerToPlayerCompleteDTO(
                                                 playerService.getByIdAndUserComplete(playerId, principal.getName()),
                                                 principal.getName());
         modelMap.addAttribute("player", foundPlayer);
@@ -102,7 +100,7 @@ public class PlayerController {
     public String compare(@PathVariable Long playerId,
                           ModelMap modelMap,
                           Principal principal){
-        PlayerCompleteDTO playerCompleteDTO = playerConverter.playerToPlayerCompleteDTO(
+        PlayerCompleteDTO playerCompleteDTO = PlayerConverter.playerToPlayerCompleteDTO(
                                                 playerService.getByIdAndUserComplete(playerId, principal.getName()),
                                                 principal.getName());
         modelMap.addAttribute("player1", playerCompleteDTO);
@@ -133,11 +131,11 @@ public class PlayerController {
         log.info("Get players by page number: {}", pageNumber);
         DashboardDTO dashboardDTO;
         if (position == null) {
-            dashboardDTO = playerConverter.playersToDashboardDTO(
+            dashboardDTO = PlayerConverter.playersToDashboardDTO(
                                         playerService.getByUserPaging(principal.getName(), pageNumber),
                                         principal.getName());
         } else {
-            dashboardDTO = playerConverter.playersToDashboardDTO(
+            dashboardDTO = PlayerConverter.playersToDashboardDTO(
                                         playerService.getByUserAndPositionPaging(principal.getName(), position, pageNumber),
                                         principal.getName());
         }
@@ -148,7 +146,7 @@ public class PlayerController {
     @GetMapping(value = "/{playerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PlayerCompleteDTO> getPlayerById(@PathVariable Long playerId,
                                                            Principal principal){
-        PlayerCompleteDTO playerCompleteDTO = playerConverter.playerToPlayerCompleteDTO(
+        PlayerCompleteDTO playerCompleteDTO = PlayerConverter.playerToPlayerCompleteDTO(
                                         playerService.getByIdAndUserComplete(playerId, principal.getName()),
                                         principal.getName());
         return new ResponseEntity<>(playerCompleteDTO, HttpStatus.OK);
@@ -158,7 +156,7 @@ public class PlayerController {
     @GetMapping("/{playerName}/name")
     public ResponseEntity<List<PlayerSearchDTO>> getPlayerByName(@PathVariable String playerName,
                                                                  Principal principal){
-        List<PlayerSearchDTO> playerSearchDTOS = playerConverter.playersToPlayerSearchDTO(
+        List<PlayerSearchDTO> playerSearchDTOS = PlayerConverter.playersToPlayerSearchDTO(
                                                         playerService.getByName(playerName), principal.getName());
         return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
     }
@@ -167,7 +165,7 @@ public class PlayerController {
     @GetMapping("/{playerName}/name/unfollowed")
     public ResponseEntity<List<PlayerSearchDTO>> getPlayerByNameUnfollowed(@PathVariable String playerName,
                                                                            Principal principal){
-        List<PlayerSearchDTO> playerSearchDTOS = playerConverter.playersToAddPlayerSearchDTO(
+        List<PlayerSearchDTO> playerSearchDTOS = PlayerConverter.playersToAddPlayerSearchDTO(
                                                         playerService.getByNameAndUserUnfollowed(playerName, principal.getName()),
                                                         principal.getName());
         return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
@@ -177,7 +175,7 @@ public class PlayerController {
     @GetMapping("/{playerName}/name/followed")
     public ResponseEntity<List<PlayerSearchDTO>> getPlayerByNameFollowed(@PathVariable String playerName,
                                                                          Principal principal){
-        List<PlayerSearchDTO> playerSearchDTOS = playerConverter.playersToPlayerSearchDTO(
+        List<PlayerSearchDTO> playerSearchDTOS = PlayerConverter.playersToPlayerSearchDTO(
                                                         playerService.getByNameAndUserFollowed(playerName, principal.getName()),
                                                         principal.getName());
         return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);

@@ -1,6 +1,5 @@
 package xyz.riocode.scoutpro.converter;
 
-import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.dto.TransferDTO;
 import xyz.riocode.scoutpro.model.Transfer;
 
@@ -10,20 +9,25 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
 public class TransferConverter {
 
-    public List<TransferDTO> transfersToTransferDTOs(Set<Transfer> transfers){
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
-        return transfers.stream().map(t -> {
-            TransferDTO transferDTO = new TransferDTO();
-            transferDTO.setDateOfTransfer(t.getDateOfTransfer().format(dateFormatter));
-            transferDTO.setFromTeam(t.getFromTeam());
-            transferDTO.setToTeam(t.getToTeam());
-            transferDTO.setMarketValue(t.getMarketValue());
-            transferDTO.setTransferFee(t.getTransferFee());
-            return transferDTO;
-        }).collect(Collectors.toList());
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
+
+    public static List<TransferDTO> transfersToTransferDTOs(Set<Transfer> transfers){
+        return transfers.stream()
+                .map(TransferConverter::transferToTransferDTO)
+                .collect(Collectors.toList());
+    }
+
+    public static TransferDTO transferToTransferDTO(Transfer transfer) {
+        return TransferDTO.builder()
+                .fromTeam(transfer.getFromTeam())
+                .toTeam(transfer.getToTeam())
+                .dateOfTransfer(transfer.getDateOfTransfer().format(dateFormatter))
+                .marketValue(transfer.getMarketValue())
+                .transferFee(transfer.getTransferFee())
+                .player(PlayerConverter.playerToPlayerDTO(transfer.getPlayer()))
+                .build();
     }
 
 }

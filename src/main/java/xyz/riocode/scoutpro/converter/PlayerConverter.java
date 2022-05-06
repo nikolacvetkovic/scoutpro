@@ -1,7 +1,6 @@
 package xyz.riocode.scoutpro.converter;
 
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.dto.*;
 import xyz.riocode.scoutpro.model.MarketValue;
 import xyz.riocode.scoutpro.model.Player;
@@ -16,27 +15,12 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Component
 public class PlayerConverter {
 
-    private final TransferConverter transferConverter;
-    private final MarketValueConverter marketValueConverter;
-    private final CompetitionStatisticConverter competitionStatisticConverter;
-    private final GameStatisticConverter gameStatisticConverter;
-    private final PsmlTransferConverter psmlTransferConverter;
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withLocale(Locale.US);
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
 
-    public PlayerConverter(TransferConverter transferConverter, MarketValueConverter marketValueConverter,
-                           CompetitionStatisticConverter competitionStatisticConverter, GameStatisticConverter gameStatisticConverter, PsmlTransferConverter psmlTransferConverter) {
-        this.transferConverter = transferConverter;
-        this.marketValueConverter = marketValueConverter;
-        this.competitionStatisticConverter = competitionStatisticConverter;
-        this.gameStatisticConverter = gameStatisticConverter;
-        this.psmlTransferConverter = psmlTransferConverter;
-    }
-
-    public PlayerFormDTO playerToPlayerFormDTO(Player player, String username) {
+    public static PlayerFormDTO playerToPlayerFormDTO(Player player, String username) {
         PlayerFormDTO playerFormDTO = new PlayerFormDTO();
         playerFormDTO.setId(player.getId().toString());
         playerFormDTO.setPlayerName(player.getName());
@@ -53,7 +37,7 @@ public class PlayerConverter {
         return playerFormDTO;
     }
 
-    public Player playerFormDTOToPlayer(PlayerFormDTO playerDTO) {
+    public static Player playerFormDTOToPlayer(PlayerFormDTO playerDTO) {
         Player player = new Player();
         if (playerDTO.getId() != null && playerDTO.getId().length() != 0) player.setId(Long.valueOf(playerDTO.getId()));
         AppUserPlayerId appUserPlayerId = new AppUserPlayerId();
@@ -70,7 +54,7 @@ public class PlayerConverter {
         return player;
     }
 
-    public DashboardDTO playersToDashboardDTO(Page<Player> playersPage, String username) {
+    public static DashboardDTO playersToDashboardDTO(Page<Player> playersPage, String username) {
         DashboardDTO dashboardDTO = new DashboardDTO();
         List<PlayerDashboardDTO> playerDashboardDTOS = new ArrayList<>();
         for (Player player : playersPage.getContent()) {
@@ -157,7 +141,7 @@ public class PlayerConverter {
         return dashboardDTO;
     }
 
-    public PlayerCompleteDTO playerToPlayerCompleteDTO(Player player, String username) {
+    public static PlayerCompleteDTO playerToPlayerCompleteDTO(Player player, String username) {
         PlayerCompleteDTO playerCompleteDTO = new PlayerCompleteDTO();
 
         playerCompleteDTO.setId(player.getId().toString());
@@ -180,13 +164,13 @@ public class PlayerConverter {
             playerCompleteDTO.setContractUntil(player.getContractUntil());
             playerCompleteDTO.setTmPosition(player.getTransfermarktPosition());
 
-            playerCompleteDTO.setTransferDTOS(transferConverter.transfersToTransferDTOs(player.getTransfers()));
+            playerCompleteDTO.setTransferDTOS(TransferConverter.transfersToTransferDTOs(player.getTransfers()));
             playerCompleteDTO.setTransferLastCheck(player.getTransferLastCheck() != null ? player.getTransferLastCheck().format(dateTimeFormatter) : " - ");
-            playerCompleteDTO.setMarketValueDTOS(marketValueConverter.marketValuesToMarketValueDTOs(player.getMarketValues()));
+            playerCompleteDTO.setMarketValueDTOS(MarketValueConverter.marketValuesToMarketValueDTOs(player.getMarketValues()));
             playerCompleteDTO.setMarketValueLastCheck(player.getMarketValueLastCheck() != null ? player.getMarketValueLastCheck().format(dateTimeFormatter) : " - ");
 
-            playerCompleteDTO.setCompetitionStatisticDTOS(competitionStatisticConverter.competitionStatisticsToCompetitionStatisticDTOs(player.getCompetitionStatistics()));
-            playerCompleteDTO.setGameStatisticDTOS(gameStatisticConverter.gameStatisticsToGameStatisticDTOs(player.getGameStatistics()));
+            playerCompleteDTO.setCompetitionStatisticDTOS(CompetitionStatisticConverter.competitionStatisticsToCompetitionStatisticDTOs(player.getCompetitionStatistics()));
+            playerCompleteDTO.setGameStatisticDTOS(GameStatisticConverter.gameStatisticsToGameStatisticDTOs(player.getGameStatistics()));
             playerCompleteDTO.setStatisticLastCheck(player.getStatisticLastCheck().format(dateTimeFormatter));
 
             playerCompleteDTO.setPesDbPlayerName(player.getPesDbPlayerName());
@@ -232,14 +216,14 @@ public class PlayerConverter {
 
             playerCompleteDTO.setPsmlTeam(player.getPsmlTeam());
             playerCompleteDTO.setPsmlValue(player.getPsmlValue().toString());
-            playerCompleteDTO.setPsmlTransferDTOS(psmlTransferConverter.psmlTransfersToPsmlTransferDTOs(player.getPsmlTransfers()));
+            playerCompleteDTO.setPsmlTransferDTOS(PsmlTransferConverter.psmlTransfersToPsmlTransferDTOs(player.getPsmlTransfers()));
             playerCompleteDTO.setPsmlLastCheck(player.getPsmlLastCheck() != null ? player.getPsmlLastCheck().format(dateTimeFormatter) : " - ");
         }
 
         return playerCompleteDTO;
     }
 
-    public List<PlayerSearchDTO> playersToAddPlayerSearchDTO(List<Player> players, String username) {
+    public static List<PlayerSearchDTO> playersToAddPlayerSearchDTO(List<Player> players, String username) {
         return players.stream()
                 .map(player -> {
                     PlayerSearchDTO playerSearchDTO = new PlayerSearchDTO();
@@ -254,7 +238,7 @@ public class PlayerConverter {
                 }).collect(Collectors.toList());
     }
 
-    public List<PlayerSearchDTO> playersToPlayerSearchDTO(List<Player> players, String username){
+    public static List<PlayerSearchDTO> playersToPlayerSearchDTO(List<Player> players, String username){
         return players.stream()
                     .map(player -> {
                         PlayerSearchDTO playerSearchDTO = new PlayerSearchDTO();
@@ -264,5 +248,13 @@ public class PlayerConverter {
                         playerSearchDTO.setOverallRating(player.getOverallRating());
                         return playerSearchDTO;
                     }).collect(Collectors.toList());
+    }
+
+    public static PlayerDTO playerToPlayerDTO(Player player) {
+        return PlayerDTO.builder()
+                .name(player.getName())
+                .psmlTeam(player.getPsmlTeam())
+                .psmlValue(player.getPsmlValue().toString())
+                .build();
     }
 }

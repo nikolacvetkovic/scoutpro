@@ -1,6 +1,5 @@
 package xyz.riocode.scoutpro.converter;
 
-import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.dto.PsmlTransferDTO;
 import xyz.riocode.scoutpro.model.PsmlTransfer;
 
@@ -10,18 +9,23 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
 public class PsmlTransferConverter {
 
-    public List<PsmlTransferDTO> psmlTransfersToPsmlTransferDTOs(Set<PsmlTransfer> psmlTransfers){
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
-        return psmlTransfers.stream().map(psmlTransfer -> {
-            PsmlTransferDTO psmlTransferDTO = new PsmlTransferDTO();
-            psmlTransferDTO.setDateOfTransfer(psmlTransfer.getDateOfTransfer() != null ? psmlTransfer.getDateOfTransfer().format(dateTimeFormatter) : " - ");
-            psmlTransferDTO.setFromTeam(psmlTransfer.getFromTeam());
-            psmlTransferDTO.setToTeam(psmlTransfer.getToTeam());
-            psmlTransferDTO.setTransferFee(psmlTransfer.getTransferFee() != null ? psmlTransfer.getTransferFee().toString() : " - ");
-            return psmlTransferDTO;
-        }).collect(Collectors.toList());
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
+
+    public static List<PsmlTransferDTO> psmlTransfersToPsmlTransferDTOs(Set<PsmlTransfer> psmlTransfers){
+        return psmlTransfers.stream()
+                .map(PsmlTransferConverter::psmlTransferToPsmlTransferDTO)
+                .collect(Collectors.toList());
+    }
+
+    public static PsmlTransferDTO psmlTransferToPsmlTransferDTO(PsmlTransfer psmlTransfer) {
+        return PsmlTransferDTO.builder()
+                .dateOfTransfer(psmlTransfer.getDateOfTransfer()!=null?
+                        psmlTransfer.getDateOfTransfer().format(dateTimeFormatter):" - ")
+                .fromTeam(psmlTransfer.getFromTeam())
+                .toTeam(psmlTransfer.getToTeam())
+                .transferFee(psmlTransfer.getTransferFee()!=null?psmlTransfer.getTransferFee():" - ")
+                .build();
     }
 }

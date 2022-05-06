@@ -1,12 +1,12 @@
 package xyz.riocode.scoutpro.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 public class TransferDTO {
 
     private String fromTeam;
@@ -14,5 +14,6 @@ public class TransferDTO {
     private String dateOfTransfer;
     private String marketValue;
     private String transferFee;
+    private PlayerDTO player;
 
 }

@@ -1,6 +1,5 @@
 package xyz.riocode.scoutpro.converter;
 
-import org.springframework.stereotype.Component;
 import xyz.riocode.scoutpro.dto.GameStatisticDTO;
 import xyz.riocode.scoutpro.model.GameStatistic;
 
@@ -10,18 +9,17 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
 public class GameStatisticConverter {
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
 
-    public List<GameStatisticDTO> gameStatisticsToGameStatisticDTOs(Set<GameStatistic> gameStatistics) {
+    public static List<GameStatisticDTO> gameStatisticsToGameStatisticDTOs(Set<GameStatistic> gameStatistics) {
         return gameStatistics.stream()
-                .map(this::gameStatisticToGameStatisticDTO)
+                .map(GameStatisticConverter::gameStatisticToGameStatisticDTO)
                 .collect(Collectors.toList());
     }
 
-    public GameStatisticDTO gameStatisticToGameStatisticDTO(GameStatistic gs) {
+    public static GameStatisticDTO gameStatisticToGameStatisticDTO(GameStatistic gs) {
         return GameStatisticDTO.builder()
                 .dateOfGame(gs.getDateOfGame().format(dateFormatter))
                 .playerTeam(gs.getPlayerTeam())
