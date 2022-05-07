@@ -5,6 +5,9 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import xyz.riocode.scoutpro.dto.PlayerDTO;
 import xyz.riocode.scoutpro.dto.PsmlTransferDTO;
 import xyz.riocode.scoutpro.model.PsmlTransfer;
 
@@ -13,9 +16,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.mockito.ArgumentMatchers.any;
+
 class PsmlTransferConverterTest {
 
     Set<PsmlTransfer> psmlTransfers;
+    PlayerDTO playerDTO;
 
     @BeforeEach
     void setUp() {
@@ -42,17 +48,23 @@ class PsmlTransferConverterTest {
         psmlTransfer3.setDateOfTransfer(LocalDate.of(2019, 8, 8));
         psmlTransfers.add(psmlTransfer3);
 
-
+        playerDTO = PlayerDTO.builder()
+                .name("Roberto Firmino")
+                .psmlTeam("Atomic Ants FC")
+                .psmlValue("72000000")
+                .build();
     }
 
     @Test
     void psmlTransfersToPsmlTransferDTOs() {
 
-        PsmlTransferConverter transferConverter = new PsmlTransferConverter();
-        List<PsmlTransferDTO> transferDTOS = transferConverter.psmlTransfersToPsmlTransferDTOs(psmlTransfers);
+        try (MockedStatic<PlayerConverter> mockedStatic = Mockito.mockStatic(PlayerConverter.class)) {
+            mockedStatic.when(() -> PlayerConverter.playerToPlayerDTO(any())).thenReturn(playerDTO);
+            List<PsmlTransferDTO> transferDTOS = PsmlTransferConverter.psmlTransfersToPsmlTransferDTOs(psmlTransfers);
+            Assertions.assertNotNull(transferDTOS);
+            MatcherAssert.assertThat(transferDTOS, Matchers.hasSize(3));
+        }
 
-        Assertions.assertNotNull(transferDTOS);
-        MatcherAssert.assertThat(transferDTOS, Matchers.hasSize(3));
 
     }
 
