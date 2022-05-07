@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import xyz.riocode.scoutpro.exception.AppUserNotFoundException;
 import xyz.riocode.scoutpro.exception.DuplicateAppUserUsernameException;
 import xyz.riocode.scoutpro.model.security.AppUser;
@@ -30,6 +31,8 @@ class AppUserServiceImplTest {
 
     @Mock
     AppUserRepository appUserRepository;
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @InjectMocks
     AppUserServiceImpl appUserService;
@@ -57,7 +60,7 @@ class AppUserServiceImplTest {
         AppUser savedUser = argumentCaptor.getValue();
         assertEquals(APP_USER_ID, savedUser.getId());
         assertEquals(APP_USER_USERNAME, savedUser.getUsername());
-        assertEquals(false, savedUser.isEnabled());
+        assertFalse(savedUser.isEnabled());
     }
 
     @Test
@@ -105,11 +108,13 @@ class AppUserServiceImplTest {
         appUserForUpdate.setPassword(pass);
 
         when(appUserRepository.findByUsername(anyString())).thenReturn(Optional.of(appUserForUpdate));
+        when(passwordEncoder.encode(anyString())).thenReturn("12345");
         ArgumentCaptor<AppUser> argumentCaptor = ArgumentCaptor.forClass(AppUser.class);
 
         appUserService.changePassword(user);
 
         verify(appUserRepository).findByUsername(anyString());
+        verify(passwordEncoder).encode(anyString());
         verify(appUserRepository).save(argumentCaptor.capture());
         AppUser updatedUser = argumentCaptor.getValue();
         assertNotEquals(pass, updatedUser.getPassword());
@@ -134,7 +139,7 @@ class AppUserServiceImplTest {
         verify(appUserRepository).save(argumentCaptor.capture());
         AppUser disabledAppUser = argumentCaptor.getValue();
         assertNotNull(disabledAppUser);
-        assertEquals(false, disabledAppUser.isEnabled());
+        assertFalse(disabledAppUser.isEnabled());
     }
 
     @Test
