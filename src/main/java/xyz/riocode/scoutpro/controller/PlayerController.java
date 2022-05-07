@@ -9,14 +9,16 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.riocode.scoutpro.converter.PlayerConverter;
-import xyz.riocode.scoutpro.dto.DashboardDTO;
-import xyz.riocode.scoutpro.dto.PlayerCompleteDTO;
-import xyz.riocode.scoutpro.dto.PlayerFormDTO;
-import xyz.riocode.scoutpro.dto.PlayerSearchDTO;
+import xyz.riocode.scoutpro.converter.PsmlTransferConverter;
+import xyz.riocode.scoutpro.converter.TransferConverter;
+import xyz.riocode.scoutpro.dto.*;
 import xyz.riocode.scoutpro.security.privilege.PlayerCreatePrivilege;
 import xyz.riocode.scoutpro.security.privilege.PlayerDeletePrivilege;
 import xyz.riocode.scoutpro.security.privilege.PlayerReadPrivilege;
+import xyz.riocode.scoutpro.security.privilege.PlayerTransferReadPrivilege;
 import xyz.riocode.scoutpro.service.PlayerService;
+import xyz.riocode.scoutpro.service.PsmlTransferService;
+import xyz.riocode.scoutpro.service.TransferService;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -28,9 +30,13 @@ import java.util.List;
 public class PlayerController {
     
     private final PlayerService playerService;
+    private final TransferService transferService;
+    private final PsmlTransferService psmlTransferService;
 
-    public PlayerController(PlayerService playerService) {
+    public PlayerController(PlayerService playerService, TransferService transferService, PsmlTransferService psmlTransferService) {
         this.playerService = playerService;
+        this.transferService = transferService;
+        this.psmlTransferService = psmlTransferService;
     }
 
     @PlayerCreatePrivilege
@@ -179,5 +185,18 @@ public class PlayerController {
                                                         playerService.getByNameAndUserFollowed(playerName, principal.getName()),
                                                         principal.getName());
         return new ResponseEntity<>(playerSearchDTOS, HttpStatus.OK);
+    }
+
+    @PlayerTransferReadPrivilege
+    @GetMapping("/transfers")
+    public String showTransfers(ModelMap modelMap, Principal principal){
+        List<TransferDTO> transfers = TransferConverter.transfersToTransferDTOs(
+                transferService.getInLastMonthByUser(principal.getName()));
+        List<PsmlTransferDTO> psmlTransfers = PsmlTransferConverter.psmlTransfersToPsmlTransferDTOs(
+                psmlTransferService.getInLastMonthByUser(principal.getName()));
+
+        modelMap.addAttribute("transfers", transfers);
+        modelMap.addAttribute("psmlTransfers", psmlTransfers);
+        return "player/transfers";
     }
 }

@@ -4,16 +4,16 @@ import xyz.riocode.scoutpro.dto.TransferDTO;
 import xyz.riocode.scoutpro.model.Transfer;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TransferConverter {
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withLocale(Locale.US);
 
-    public static List<TransferDTO> transfersToTransferDTOs(Set<Transfer> transfers){
+    public static List<TransferDTO> transfersToTransferDTOs(Collection<Transfer> transfers){
         return transfers.stream()
                 .map(TransferConverter::transferToTransferDTO)
                 .collect(Collectors.toList());

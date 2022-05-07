@@ -51,7 +51,7 @@
                     <a class="nav-link" th:href="@{/player/compare}" href="#">Compare players</a>
                 </li>
                 <li sec:authorize="hasAuthority('player.transfer.read')" class="nav-item">
-                    <a class="nav-link" th:href="@{/transfers}" href="#">Transfers</a>
+                    <a class="nav-link" th:href="@{/player/transfers}" href="#">Transfers</a>
                 </li>
                 <li sec:authorize="hasAuthority('player.news.read')" class="nav-item">
                     <a class="nav-link" th:href="@{/news}" href="#">News</a>

@@ -5,5 +5,5 @@ import xyz.riocode.scoutpro.model.Transfer;
 import java.util.List;
 
 public interface TransferService {
-    List<Transfer> update(List<Transfer> transfers);
+    List<Transfer> getInLastMonthByUser(String username);
 }
