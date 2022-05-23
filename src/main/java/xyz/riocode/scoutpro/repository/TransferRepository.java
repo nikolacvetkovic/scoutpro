@@ -13,6 +13,7 @@ public interface TransferRepository extends JpaRepository<Transfer, Long> {
                     " WHERE t.dateOfTransfer > :dateOfTransfer" +
                     " AND pl IN (SELECT pl FROM pl.users u " +
                     "            JOIN u.appUser au " +
-                    "            WHERE au.username = :username)")
+                    "            WHERE au.username = :username)" +
+                    " ORDER BY t.dateOfTransfer DESC")
     List<Transfer> findByDateOfTransferAndUser(LocalDate dateOfTransfer, String username);
 }

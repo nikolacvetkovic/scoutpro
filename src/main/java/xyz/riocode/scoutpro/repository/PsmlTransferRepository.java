@@ -13,6 +13,7 @@ public interface PsmlTransferRepository extends JpaRepository<PsmlTransfer, Long
             " WHERE pt.dateOfTransfer > :dateOfTransfer" +
             " AND pl IN (SELECT pl FROM pl.users u " +
             "            JOIN u.appUser au " +
-            "            WHERE au.username = :username)")
+            "            WHERE au.username = :username)" +
+            " ORDER BY pt.dateOfTransfer DESC")
     List<PsmlTransfer> findByDateOfTransferAndUser(LocalDate dateOfTransfer, String username);
 }
