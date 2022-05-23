@@ -65,12 +65,12 @@
                             <th>Date</th>
                         </thead>
                         <tbody>
-                            <tr th:each="transfer : ${transfers}">
-                                <td th:text="${transfer.player.name}">Sommer</td>
-                                <td th:text="${transfer.fromTeam}">Atomic Ants FC</td>
-                                <td th:text="${transfer.toTeam}">Real Madrid</td>
-                                <td th:text="${transfer.transferFee}">20000000</td>
-                                <td th:text="${transfer.dateOfTransfer}">06.05.2022</td>
+                            <tr th:each="psmlTransfer : ${psmlTransfers}">
+                                <td th:text="${psmlTransfer.player.name}">Sommer</td>
+                                <td th:text="${psmlTransfer.fromTeam}">Atomic Ants FC</td>
+                                <td th:text="${psmlTransfer.toTeam}">Real Madrid</td>
+                                <td th:text="${psmlTransfer.transferFee}">20000000</td>
+                                <td th:text="${psmlTransfer.dateOfTransfer}">06.05.2022</td>
                             </tr>
                         </tbody>
                     </table>
@@ -93,13 +93,13 @@
                             <th>Date</th>
                         </thead>
                         <tbody>
-                            <tr th:each="psmlTransfer : ${psmlTransfers}">
-                                <td th:text="${psmlTransfer.player.name}">Winks</td>
-                                <td th:text="${psmlTransfer.player.psmlTeam}">Winks</td>
-                                <td th:text="${psmlTransfer.fromTeam}">Barcelona</td>
-                                <td th:text="${psmlTransfer.toTeam}">Tottenham</td>
-                                <td th:text="${psmlTransfer.transferFee}">36000000</td>
-                                <td th:text="${psmlTransfer.dateOfTransfer}">30.06.2022</td>
+                            <tr th:each="transfer : ${transfers}">
+                                <td th:text="${transfer.player.name}">Winks</td>
+                                <td th:text="${transfer.player.psmlTeam}">Winks</td>
+                                <td th:text="${transfer.fromTeam}">Barcelona</td>
+                                <td th:text="${transfer.toTeam}">Tottenham</td>
+                                <td th:text="${transfer.transferFee}">36000000</td>
+                                <td th:text="${transfer.dateOfTransfer}">30.06.2022</td>
                             </tr>
                         </tbody>
                     </table>
