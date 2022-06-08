@@ -1,7 +1,10 @@
 package xyz.riocode.scoutpro.config;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,7 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .formLogin(loginConfigurer -> {
                     loginConfigurer.loginProcessingUrl("/login")
-                            .loginPage("/login");
+                            .loginPage("/login")
+                            .failureUrl("/login?error");
                 })
                 .logout(logoutConfigurer -> {
                     logoutConfigurer.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
@@ -58,6 +62,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
         return new SecurityEvaluationContextExtension();
+    }
+
+    @Bean
+    public AuthenticationEventPublisher authenticationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        return new DefaultAuthenticationEventPublisher(applicationEventPublisher);
     }
 
 }
